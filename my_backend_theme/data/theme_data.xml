@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="quick_create_contact" model="my.theme.quick.create">
+        <field name="name">Contact</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="icon">person_add</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="search_model_contact" model="my.theme.search.model">
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="sequence">10</field>
+    </record>
+</odoo>

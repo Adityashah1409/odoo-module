@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Quick create entries -->
+    <record id="my_theme_quick_create_view_list" model="ir.ui.view">
+        <field name="name">my.theme.quick.create.list</field>
+        <field name="model">my.theme.quick.create</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id" options="{'no_create': True}"/>
+                <field name="icon"/>
+                <field name="group_ids" widget="many2many_tags" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_my_theme_quick_create" model="ir.actions.act_window">
+        <field name="name">Quick Create</field>
+        <field name="res_model">my.theme.quick.create</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a record type to the Quick Create menu</p>
+            <p>Users see an entry only if they are allowed to create that kind of record.</p>
+        </field>
+    </record>
+
+    <!-- Global search models -->
+    <record id="my_theme_search_model_view_list" model="ir.ui.view">
+        <field name="name">my.theme.search.model.list</field>
+        <field name="model">my.theme.search.model</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="model_id" options="{'no_create': True}"/>
+                <field name="model"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_my_theme_search_model" model="ir.actions.act_window">
+        <field name="name">Global Search Models</field>
+        <field name="res_model">my.theme.search.model</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Choose what the global search looks through</p>
+            <p>Each user only finds the records they are allowed to read.</p>
+        </field>
+    </record>
+
+    <!-- Bookmarks (each user only ever sees their own) -->
+    <record id="my_theme_bookmark_view_list" model="ir.ui.view">
+        <field name="name">my.theme.bookmark.list</field>
+        <field name="model">my.theme.bookmark</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="url" widget="url" readonly="1"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_my_theme_bookmark" model="ir.actions.act_window">
+        <field name="name">My Bookmarks</field>
+        <field name="res_model">my.theme.bookmark</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No bookmark yet</p>
+            <p>Use the bookmark button in the top bar to save the page you are on.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_backend_theme_root" name="Backend Theme"
+              parent="base.menu_administration" sequence="90" groups="base.group_system"/>
+    <menuitem id="menu_backend_theme_quick_create" action="action_my_theme_quick_create"
+              parent="menu_backend_theme_root" sequence="10"/>
+    <menuitem id="menu_backend_theme_search_model" action="action_my_theme_search_model"
+              parent="menu_backend_theme_root" sequence="20"/>
+</odoo>

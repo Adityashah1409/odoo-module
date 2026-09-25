@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_my_theme_quick_create_user,Quick create entries: read,my.theme.quick.create,base.group_user,r,
+access_my_theme_quick_create_system,Quick create entries: manage,my.theme.quick.create,base.group_system,crud,
+access_my_theme_search_model_user,Global search models: read,my.theme.search.model,base.group_user,r,
+access_my_theme_search_model_system,Global search models: manage,my.theme.search.model,base.group_system,crud,
+access_my_theme_bookmark_user,Bookmarks: own entries only,my.theme.bookmark,base.group_user,crud,"[('user_id', '=', user.id)]"
+access_my_theme_recent_user,Recently viewed: own entries only,my.theme.recent,base.group_user,crud,"[('user_id', '=', user.id)]"

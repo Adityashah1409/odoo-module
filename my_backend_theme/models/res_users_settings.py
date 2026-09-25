@@ -1,6 +1,6 @@
 from odoo import fields, models
 
-from .theme_config import UI_SCALES
+from .theme_config import THEME_MODES, UI_SCALES
 
 
 class ResUsersSettings(models.Model):
@@ -15,3 +15,9 @@ class ResUsersSettings(models.Model):
         help="Leave empty to use the company default.",
     )
     mbt_reduce_motion = fields.Boolean(string="Reduce Motion")
+    mbt_theme_mode = fields.Selection(
+        THEME_MODES,
+        string="Color Scheme",
+        help="Leave empty to use the company default.",
+    )
+    mbt_sidebar_collapsed = fields.Boolean(string="Collapse Sidebar")

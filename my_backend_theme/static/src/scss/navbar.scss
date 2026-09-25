@@ -1,0 +1,23 @@
+// = Compact navbar
+// ============================================================================
+// Exposed on the root so fixed elements (the sidebar) can sit below the bar.
+html {
+    --mbt-navbar-height: #{$o-navbar-height};
+}
+html[data-mbt-compact-navbar] {
+    --mbt-navbar-height: 38px;
+
+    .o_main_navbar {
+        --o-navbar-height: var(--mbt-navbar-height);
+        font-size: 0.95em;
+    }
+}
+
+// = Theme items in the systray
+// ============================================================================
+.o_mbt_systray_item > button,
+.o_mbt_systray_item.dropdown-toggle {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}

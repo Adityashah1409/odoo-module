@@ -3,3 +3,8 @@ from . import res_config_settings
 from . import res_users_settings
 from . import res_users
 from . import ir_http
+from . import navigation_mixin
+from . import quick_create
+from . import bookmark
+from . import recent_record
+from . import search_model

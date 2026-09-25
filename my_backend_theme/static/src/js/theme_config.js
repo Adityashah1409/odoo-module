@@ -2,14 +2,15 @@
  * Pure helpers turning the theme configuration into DOM state.
  *
  * Kept free of Odoo services so they can be unit tested and reused by every
- * theme component. Nothing here trusts its input: values that fail validation
- * fall back to defaults, so a bad configuration can only ever produce Odoo's
- * standard look, never arbitrary CSS.
+ * theme component. The server already validates the configuration; values
+ * that end up in CSS (colors, sizes) are validated once more here, so a bad
+ * value can only ever produce Odoo's standard look, never arbitrary CSS.
  */
 
 const COLOR_RE = /^#[0-9a-f]{6}$/i;
 
 export const UI_SCALES = [90, 100, 110, 120];
+export const THEME_MODES = ["light", "dark", "system"];
 
 const SANS_FALLBACK =
     'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
@@ -23,13 +24,59 @@ export const FONT_STACKS = {
     poppins: `"Poppins", ${SANS_FALLBACK}`,
 };
 
+export const SIDEBAR_STYLES = ["sidebar", "compact", "icons"];
+
 export const DEFAULT_CONFIG = Object.freeze({
     primary_color: false,
     navbar_color: false,
+    sidebar_color: false,
+    accent_color: false,
     ui_scale: 100,
     font_family: "system",
     reduce_motion: false,
+    enable_dark_mode: true,
+    default_theme_mode: "light",
+    theme_mode: "light",
+    menu_style: "horizontal",
+    sidebar_width: 240,
+    sidebar_hover_expand: true,
+    sidebar_collapsed: false,
+    icon_style: "default",
+    compact_navbar: false,
+    list_density: "default",
+    list_striped: false,
+    list_borderless: false,
+    form_style: "default",
+    form_sticky_statusbar: true,
+    chatter_position: "auto",
+    button_style: "default",
+    checkbox_style: "default",
+    scrollbar_style: "default",
+    rounded_fields: false,
 });
+
+/**
+ * Settings reflected as `data-mbt-<name>` attributes on <html> when they
+ * differ from their default. Attribute values are never interpreted as CSS,
+ * so enumerated values can be passed through as they are.
+ */
+const ATTRIBUTE_SETTINGS = [
+    "menu_style",
+    "icon_style",
+    "list_density",
+    "form_style",
+    "chatter_position",
+    "button_style",
+    "checkbox_style",
+    "scrollbar_style",
+];
+const FLAG_SETTINGS = [
+    "compact_navbar",
+    "list_striped",
+    "list_borderless",
+    "rounded_fields",
+    "reduce_motion",
+];
 
 /** Names of the CSS custom properties this module may set on the root. */
 const CSS_VARIABLES = [
@@ -41,6 +88,12 @@ const CSS_VARIABLES = [
     "--mbt-navbar-bg",
     "--mbt-navbar-fg",
     "--mbt-navbar-hover-bg",
+    "--mbt-sidebar-bg",
+    "--mbt-sidebar-fg",
+    "--mbt-sidebar-hover-bg",
+    "--mbt-accent",
+    "--mbt-accent-fg",
+    "--mbt-sidebar-width",
     "--mbt-ui-scale",
     "--mbt-font-family",
 ];
@@ -51,7 +104,14 @@ export function sanitizeColor(value) {
 
 function sanitizeScale(value) {
     const scale = Number(value);
-    return UI_SCALES.includes(scale) ? scale : null;
+    return value && UI_SCALES.includes(scale) ? scale : null;
+}
+
+function sanitizeWidth(value) {
+    const width = Number(value);
+    return Number.isInteger(width) && width >= 180 && width <= 360
+        ? width
+        : DEFAULT_CONFIG.sidebar_width;
 }
 
 /**
@@ -62,19 +122,37 @@ function sanitizeScale(value) {
  * @returns {typeof DEFAULT_CONFIG}
  */
 export function resolveConfig(globalConfig = {}, userSettings = {}) {
-    const fontFamily = Object.hasOwn(FONT_STACKS, globalConfig.font_family)
+    const config = { ...DEFAULT_CONFIG };
+    for (const key in DEFAULT_CONFIG) {
+        if (key in globalConfig && typeof globalConfig[key] === typeof DEFAULT_CONFIG[key]) {
+            config[key] = globalConfig[key];
+        }
+    }
+    for (const key of ["primary_color", "navbar_color", "sidebar_color", "accent_color"]) {
+        config[key] = sanitizeColor(globalConfig[key]);
+    }
+    config.font_family = Object.hasOwn(FONT_STACKS, globalConfig.font_family)
         ? globalConfig.font_family
         : DEFAULT_CONFIG.font_family;
-    return {
-        primary_color: sanitizeColor(globalConfig.primary_color),
-        navbar_color: sanitizeColor(globalConfig.navbar_color),
-        ui_scale:
-            sanitizeScale(userSettings.mbt_ui_scale) ??
-            sanitizeScale(globalConfig.ui_scale) ??
-            DEFAULT_CONFIG.ui_scale,
-        font_family: fontFamily,
-        reduce_motion: Boolean(globalConfig.reduce_motion || userSettings.mbt_reduce_motion),
-    };
+    config.sidebar_width = sanitizeWidth(globalConfig.sidebar_width);
+    config.ui_scale =
+        sanitizeScale(userSettings.mbt_ui_scale) ??
+        sanitizeScale(globalConfig.ui_scale) ??
+        DEFAULT_CONFIG.ui_scale;
+    config.reduce_motion = Boolean(globalConfig.reduce_motion || userSettings.mbt_reduce_motion);
+    config.sidebar_collapsed = Boolean(userSettings.mbt_sidebar_collapsed);
+    if (!config.enable_dark_mode) {
+        config.theme_mode = "light";
+    } else if (THEME_MODES.includes(userSettings.mbt_theme_mode)) {
+        config.theme_mode = userSettings.mbt_theme_mode;
+    } else if (THEME_MODES.includes(config.default_theme_mode)) {
+        config.theme_mode = config.default_theme_mode;
+    }
+    return config;
+}
+
+export function isSidebarStyle(menuStyle) {
+    return SIDEBAR_STYLES.includes(menuStyle);
 }
 
 function hexToRgb(hex) {
@@ -101,6 +179,10 @@ function shade(hex, percent) {
     return `color-mix(in srgb, ${hex} ${100 - percent}%, #000000)`;
 }
 
+function translucent(color, percent) {
+    return `color-mix(in srgb, ${color} ${percent}%, transparent)`;
+}
+
 /**
  * Compute the attributes and CSS variables to put on the root element.
  *
@@ -125,7 +207,20 @@ export function computeRootState(config) {
         attributes["data-mbt-navbar"] = "";
         variables["--mbt-navbar-bg"] = color;
         variables["--mbt-navbar-fg"] = foreground;
-        variables["--mbt-navbar-hover-bg"] = `color-mix(in srgb, ${foreground} 12%, transparent)`;
+        variables["--mbt-navbar-hover-bg"] = translucent(foreground, 12);
+    }
+    if (config.sidebar_color) {
+        const color = config.sidebar_color;
+        const foreground = contrastColor(color);
+        attributes["data-mbt-sidebar-color"] = "";
+        variables["--mbt-sidebar-bg"] = color;
+        variables["--mbt-sidebar-fg"] = foreground;
+        variables["--mbt-sidebar-hover-bg"] = translucent(foreground, 10);
+    }
+    if (config.accent_color) {
+        attributes["data-mbt-accent"] = "";
+        variables["--mbt-accent"] = config.accent_color;
+        variables["--mbt-accent-fg"] = contrastColor(config.accent_color);
     }
     if (config.ui_scale !== DEFAULT_CONFIG.ui_scale) {
         attributes["data-mbt-ui-scale"] = String(config.ui_scale);
@@ -136,8 +231,28 @@ export function computeRootState(config) {
         attributes["data-mbt-font"] = config.font_family;
         variables["--mbt-font-family"] = fontStack;
     }
-    if (config.reduce_motion) {
-        attributes["data-mbt-reduce-motion"] = "";
+    for (const key of ATTRIBUTE_SETTINGS) {
+        if (config[key] !== DEFAULT_CONFIG[key]) {
+            attributes[`data-mbt-${key.replaceAll("_", "-")}`] = String(config[key]);
+        }
+    }
+    for (const key of FLAG_SETTINGS) {
+        if (config[key]) {
+            attributes[`data-mbt-${key.replaceAll("_", "-")}`] = "";
+        }
+    }
+    // Odoo's status bar is sticky by default: only its opt-out is flagged.
+    if (!config.form_sticky_statusbar) {
+        attributes["data-mbt-static-statusbar"] = "";
+    }
+    if (isSidebarStyle(config.menu_style)) {
+        variables["--mbt-sidebar-width"] = `${config.sidebar_width}px`;
+        if (config.menu_style === "sidebar" && config.sidebar_collapsed) {
+            attributes["data-mbt-sidebar-collapsed"] = "";
+        }
+        if (config.sidebar_hover_expand) {
+            attributes["data-mbt-sidebar-hover-expand"] = "";
+        }
     }
     return { attributes, variables };
 }
@@ -148,16 +263,20 @@ export function computeRootState(config) {
  *
  * @param {HTMLElement} root
  * @param {typeof DEFAULT_CONFIG} config
+ * @param {Object<string, string>} [extraAttributes] attributes managed elsewhere
  */
-export function applyRootState(root, config) {
+export function applyRootState(root, config, extraAttributes = {}) {
     const { attributes, variables } = computeRootState(config);
+    Object.assign(attributes, extraAttributes);
     for (const name of root.getAttributeNames()) {
         if (name.startsWith("data-mbt-") && !(name in attributes)) {
             root.removeAttribute(name);
         }
     }
     for (const [name, value] of Object.entries(attributes)) {
-        root.setAttribute(name, value);
+        if (root.getAttribute(name) !== value) {
+            root.setAttribute(name, value);
+        }
     }
     for (const name of CSS_VARIABLES) {
         if (name in variables) {

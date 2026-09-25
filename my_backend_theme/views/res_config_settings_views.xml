@@ -8,6 +8,10 @@
             <xpath expr="//form" position="inside">
                 <app data-string="Backend Theme" string="Backend Theme" name="my_backend_theme" groups="base.group_system">
                     <block title="Colors" name="mbt_colors_container">
+                        <setting id="mbt_color_preset_setting" string="Color Preset"
+                                 help="Fill the colors from a ready-made palette, then adjust them if you like.">
+                            <field name="mbt_color_preset" class="mt-2"/>
+                        </setting>
                         <setting id="mbt_primary_color_setting" string="Primary Color"
                                  help="Buttons, links and highlights. Leave empty to keep Odoo's color.">
                             <div class="d-flex align-items-center gap-2 mt-2">
@@ -22,7 +26,59 @@
                                 <field name="mbt_navbar_color" placeholder="#1e293b" class="w-50"/>
                             </div>
                         </setting>
+                        <setting id="mbt_sidebar_color_setting" string="Sidebar Color"
+                                 help="Background of the sidebar menu. Leave empty to use the page background.">
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <field name="mbt_sidebar_color" widget="color" class="w-auto"/>
+                                <field name="mbt_sidebar_color" placeholder="#111827" class="w-50"/>
+                            </div>
+                        </setting>
+                        <setting id="mbt_accent_color_setting" string="Accent Color"
+                                 help="Highlights the current app and menu in the sidebar.">
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <field name="mbt_accent_color" widget="color" class="w-auto"/>
+                                <field name="mbt_accent_color" placeholder="#38bdf8" class="w-50"/>
+                            </div>
+                        </setting>
                     </block>
+
+                    <block title="Color Scheme" name="mbt_scheme_container">
+                        <setting id="mbt_enable_dark_mode_setting"
+                                 help="Let users switch the backend to dark colors from their user menu.">
+                            <field name="mbt_enable_dark_mode"/>
+                        </setting>
+                        <setting id="mbt_default_theme_mode_setting" string="Default Color Scheme"
+                                 help="Used for users who have not picked one themselves."
+                                 invisible="not mbt_enable_dark_mode">
+                            <field name="mbt_default_theme_mode" class="mt-2"/>
+                        </setting>
+                    </block>
+
+                    <block title="Navigation" name="mbt_navigation_container">
+                        <setting id="mbt_menu_style_setting" string="Menu Style"
+                                 help="Where app menus are shown. Phones always use Odoo's mobile menu.">
+                            <field name="mbt_menu_style" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_sidebar_width_setting" string="Sidebar Width"
+                                 help="Width of the expanded sidebar, from 180 to 360 pixels."
+                                 invisible="mbt_menu_style == 'horizontal'">
+                            <div class="mt-2"><field name="mbt_sidebar_width" class="w-25"/> px</div>
+                        </setting>
+                        <setting id="mbt_sidebar_hover_expand_setting"
+                                 help="Temporarily expand a collapsed sidebar while the pointer is over it."
+                                 invisible="mbt_menu_style == 'horizontal'">
+                            <field name="mbt_sidebar_hover_expand"/>
+                        </setting>
+                        <setting id="mbt_icon_style_setting" string="App Icon Style"
+                                 help="How app icons are drawn in the sidebar."
+                                 invisible="mbt_menu_style == 'horizontal'">
+                            <field name="mbt_icon_style" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_compact_navbar_setting" help="Reduce the height of the top bar.">
+                            <field name="mbt_compact_navbar"/>
+                        </setting>
+                    </block>
+
                     <block title="Typography" name="mbt_typography_container">
                         <setting id="mbt_font_family_setting" string="Font"
                                  help="Used when installed on the user's device; nothing is downloaded.">
@@ -33,15 +89,125 @@
                             <field name="mbt_ui_scale" class="mt-2"/>
                         </setting>
                     </block>
+
+                    <block title="List Views" name="mbt_list_container">
+                        <setting id="mbt_list_density_setting" string="Row Density">
+                            <field name="mbt_list_density" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_list_striped_setting" help="Alternate the background of list rows.">
+                            <field name="mbt_list_striped"/>
+                        </setting>
+                        <setting id="mbt_list_borderless_setting" help="Hide the lines between list rows.">
+                            <field name="mbt_list_borderless"/>
+                        </setting>
+                    </block>
+
+                    <block title="Form Views" name="mbt_form_container">
+                        <setting id="mbt_form_style_setting" string="Form Style">
+                            <field name="mbt_form_style" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_form_sticky_statusbar_setting"
+                                 help="Keep a form's buttons and status bar visible while scrolling.">
+                            <field name="mbt_form_sticky_statusbar"/>
+                        </setting>
+                        <setting id="mbt_rounded_fields_setting"
+                                 help="Show editable fields as rounded boxes instead of underlines.">
+                            <field name="mbt_rounded_fields"/>
+                        </setting>
+                        <setting id="mbt_chatter_position_setting" string="Chatter Position"
+                                 help="Where messages and activities appear next to a record (needs Discuss).">
+                            <field name="mbt_chatter_position" class="mt-2"/>
+                        </setting>
+                    </block>
+
+                    <block title="Controls" name="mbt_controls_container">
+                        <setting id="mbt_button_style_setting" string="Buttons">
+                            <field name="mbt_button_style" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_checkbox_style_setting" string="Checkboxes">
+                            <field name="mbt_checkbox_style" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_scrollbar_style_setting" string="Scrollbars"
+                                 help="Scrollbars always stay visible.">
+                            <field name="mbt_scrollbar_style" class="mt-2"/>
+                        </setting>
+                    </block>
+
+                    <block title="Productivity" name="mbt_productivity_container">
+                        <setting id="mbt_enable_quick_create_setting"
+                                 help="A + button in the top bar to create records without leaving the page.">
+                            <field name="mbt_enable_quick_create"/>
+                            <div class="mt-2" invisible="not mbt_enable_quick_create">
+                                <button name="%(action_my_theme_quick_create)d" type="action" string="Choose Record Types"
+                                        icon="east" class="btn-link"/>
+                            </div>
+                        </setting>
+                        <setting id="mbt_enable_global_search_setting"
+                                 help="Search contacts, orders, invoices and more at once (command palette, then ?).">
+                            <field name="mbt_enable_global_search"/>
+                            <div class="mt-2" invisible="not mbt_enable_global_search">
+                                <field name="mbt_search_limit" class="w-25"/> results per model
+                                <br/>
+                                <button name="%(action_my_theme_search_model)d" type="action" string="Choose Searched Models"
+                                        icon="east" class="btn-link"/>
+                            </div>
+                        </setting>
+                        <setting id="mbt_suggested_entries_setting" string="Installed Apps"
+                                 help="Add the usual record types of your installed apps (leads, quotations, invoices, tasks...) to Quick Create and Global Search.">
+                            <button name="action_mbt_add_suggested_entries" type="object" string="Add Suggested Entries"
+                                    icon="east" class="btn-link"/>
+                        </setting>
+                        <setting id="mbt_enable_bookmarks_setting" help="Let users bookmark any page or record.">
+                            <field name="mbt_enable_bookmarks"/>
+                        </setting>
+                        <setting id="mbt_enable_recent_setting" help="Remember the records each user opens.">
+                            <field name="mbt_enable_recent"/>
+                            <div class="mt-2" invisible="not mbt_enable_recent">
+                                Keep the last <field name="mbt_recent_limit" class="w-25"/> records
+                            </div>
+                        </setting>
+                        <setting id="mbt_enable_tabs_setting" help="Keep several pages open as tabs below the top bar.">
+                            <field name="mbt_enable_tabs"/>
+                            <div class="mt-2" invisible="not mbt_enable_tabs">
+                                Up to <field name="mbt_max_tabs" class="w-25"/> tabs
+                            </div>
+                        </setting>
+                        <setting id="mbt_enable_split_view_setting"
+                                 help="Browse a list and edit the selected record side by side (from a list's gear menu).">
+                            <field name="mbt_enable_split_view"/>
+                        </setting>
+                    </block>
+
+                    <block title="Keyboard Shortcuts" name="mbt_shortcuts_container">
+                        <setting id="mbt_shortcuts_setting" string="Shortcuts"
+                                 help="Combinations with control or alt, e.g. alt+shift+q. Type none to turn one off. Ctrl+K always opens the command palette.">
+                            <div class="row mt-2">
+                                <label for="mbt_shortcut_quick_create" string="Quick Create" class="col-6 o_light_label"/>
+                                <field name="mbt_shortcut_quick_create" class="col-6"/>
+                                <label for="mbt_shortcut_search" string="Global Search" class="col-6 o_light_label"/>
+                                <field name="mbt_shortcut_search" class="col-6"/>
+                                <label for="mbt_shortcut_bookmarks" string="Bookmarks" class="col-6 o_light_label"/>
+                                <field name="mbt_shortcut_bookmarks" class="col-6"/>
+                                <label for="mbt_shortcut_recent" string="Recently Viewed" class="col-6 o_light_label"/>
+                                <field name="mbt_shortcut_recent" class="col-6"/>
+                                <label for="mbt_shortcut_dark_mode" string="Dark Mode" class="col-6 o_light_label"/>
+                                <field name="mbt_shortcut_dark_mode" class="col-6"/>
+                                <label for="mbt_shortcut_new_tab" string="New Tab" class="col-6 o_light_label"/>
+                                <field name="mbt_shortcut_new_tab" class="col-6"/>
+                            </div>
+                        </setting>
+                    </block>
+
                     <block title="Accessibility" name="mbt_accessibility_container">
                         <setting id="mbt_reduce_motion_setting"
                                  help="Turn off animations and transitions for every user.">
                             <field name="mbt_reduce_motion"/>
                         </setting>
                     </block>
+
                     <block title="Advanced" name="mbt_advanced_container">
                         <setting id="mbt_reset_setting" string="Reset Theme"
-                                 help="Restore every theme setting above to its default value. User preferences are kept.">
+                                 help="Restore every theme setting to its default value. User preferences are kept.">
                             <button name="action_mbt_reset_defaults" type="object" string="Reset to Defaults"
                                     icon="east" class="btn-link"
                                     confirm="Reset every backend theme setting to its default value?"/>
@@ -51,5 +217,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>

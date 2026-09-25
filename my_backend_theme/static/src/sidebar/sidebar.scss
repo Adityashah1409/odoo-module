@@ -1,0 +1,271 @@
+// = Sidebar layout
+// ============================================================================
+// The sidebar is fixed below the navbar; the action manager is pushed aside
+// only once the sidebar is actually mounted (data-mbt-sidebar-mounted), so a
+// failure to render it can never leave an empty gap.
+
+$mbt-sidebar-collapsed-width: 64px;
+$mbt-sidebar-compact-width: 96px;
+
+html {
+    --mbt-sidebar-current-width: 0px;
+}
+html[data-mbt-sidebar-mounted] {
+    &[data-mbt-menu-style="sidebar"] {
+        --mbt-sidebar-current-width: var(--mbt-sidebar-width, 240px);
+    }
+    &[data-mbt-menu-style="sidebar"][data-mbt-sidebar-collapsed],
+    &[data-mbt-menu-style="icons"] {
+        --mbt-sidebar-current-width: #{$mbt-sidebar-collapsed-width};
+    }
+    &[data-mbt-menu-style="compact"] {
+        --mbt-sidebar-current-width: #{$mbt-sidebar-compact-width};
+    }
+
+    .o_web_client > .o_action_manager {
+        margin-inline-start: var(--mbt-sidebar-current-width);
+        transition: margin-inline-start 0.2s ease;
+    }
+
+    // The sidebar lists every app: the apps dropdown would duplicate it.
+    .o_main_navbar .o_navbar_apps_menu {
+        display: none;
+    }
+    .o_main_navbar .o_menu_brand {
+        padding-inline-start: $o-horizontal-padding;
+    }
+    // The expanded sidebar also shows the current app's menus.
+    &[data-mbt-menu-style="sidebar"]:not([data-mbt-sidebar-collapsed]) .o_main_navbar .o_menu_sections {
+        visibility: hidden;
+    }
+}
+
+.o_mbt_sidebar {
+    --mbt-sidebar-item-radius: 6px;
+
+    position: fixed;
+    top: var(--mbt-navbar-height);
+    bottom: 0;
+    inset-inline-start: 0;
+    z-index: $zindex-dropdown - 2;
+    width: var(--mbt-sidebar-current-width);
+    background: var(--mbt-sidebar-bg, var(--body-bg));
+    color: var(--mbt-sidebar-fg, var(--body-color));
+    border-inline-end: 1px solid var(--border-color);
+    transition: width 0.2s ease, box-shadow 0.2s ease;
+    font-size: $o-font-size-base;
+    overflow: hidden;
+
+    .o_mbt_sidebar_search {
+        position: relative;
+        padding: 0.75rem 0.75rem 0.5rem;
+
+        .oi {
+            position: absolute;
+            inset-inline-start: 1.3rem;
+            top: 50%;
+            transform: translateY(-40%);
+            opacity: 0.6;
+        }
+    }
+
+    .o_mbt_sidebar_search_input {
+        width: 100%;
+        padding: 0.35rem 0.5rem 0.35rem 2rem;
+        border: 1px solid var(--border-color);
+        border-radius: var(--mbt-sidebar-item-radius);
+        background: transparent;
+        color: inherit;
+
+        &::placeholder {
+            color: inherit;
+            opacity: 0.6;
+        }
+        &:focus {
+            outline: 2px solid var(--mbt-accent, var(--primary));
+            outline-offset: -1px;
+        }
+    }
+
+    .o_mbt_sidebar_body {
+        padding: 0.25rem 0.5rem 0.75rem;
+        scrollbar-width: thin;
+    }
+
+    .o_mbt_sidebar_item {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        width: 100%;
+        min-height: 2.25rem;
+        padding: 0.3rem 0.5rem;
+        border: 0;
+        border-radius: var(--mbt-sidebar-item-radius);
+        background: transparent;
+        color: inherit;
+        text-align: start;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+
+        &:hover {
+            background: var(--mbt-sidebar-hover-bg, rgba(var(--emphasis-color-rgb), 0.06));
+            color: inherit;
+        }
+        &:focus-visible {
+            outline: 2px solid var(--mbt-accent, var(--primary));
+            outline-offset: -2px;
+        }
+    }
+
+    .o_mbt_sidebar_label {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .o_mbt_current > .o_mbt_sidebar_app_link {
+        font-weight: $o-font-weight-medium;
+        background: color-mix(in srgb, var(--mbt-accent, var(--primary)) 16%, transparent);
+    }
+
+    .o_mbt_sidebar_sections {
+        margin: 0.15rem 0 0.35rem;
+        padding-inline-start: 1.25rem;
+
+        ul {
+            padding-inline-start: 0.75rem;
+        }
+        .o_mbt_sidebar_item {
+            min-height: 1.9rem;
+            font-size: 0.95em;
+        }
+        .o_mbt_active {
+            color: var(--mbt-accent-fg, inherit);
+            background: var(--mbt-accent, rgba(var(--primary-rgb), 0.16));
+            font-weight: $o-font-weight-medium;
+        }
+    }
+
+    .o_mbt_sidebar_group_toggle {
+        font-weight: $o-font-weight-medium;
+        opacity: 0.85;
+    }
+
+    .o_mbt_sidebar_empty {
+        padding: 0.5rem;
+    }
+
+    .o_mbt_sidebar_toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.5rem;
+        border-top: 1px solid var(--border-color);
+        border-radius: 0;
+        color: inherit;
+        opacity: 0.75;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    // = Collapsed and icon-only styles
+    &.o_mbt_sidebar_collapsed {
+        .o_mbt_sidebar_label,
+        .o_mbt_sidebar_search {
+            display: none;
+        }
+        .o_mbt_sidebar_item {
+            justify-content: center;
+            padding-inline: 0;
+        }
+    }
+
+    // = Compact style: icons with a small caption underneath
+    &[data-style="compact"] {
+        .o_mbt_sidebar_search {
+            display: none;
+        }
+        .o_mbt_sidebar_app_link {
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.5rem 0.25rem;
+            white-space: normal;
+            text-align: center;
+            font-size: 0.75rem;
+            line-height: 1.15;
+        }
+        .o_mbt_sidebar_label {
+            max-width: 100%;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    }
+}
+
+// Hovering a collapsed sidebar shows it expanded above the page, without
+// moving the page itself.
+html[data-mbt-sidebar-hover-expand] .o_mbt_sidebar.o_mbt_sidebar_collapsed:hover {
+    width: var(--mbt-sidebar-width, 240px);
+    box-shadow: $box-shadow;
+
+    .o_mbt_sidebar_label {
+        display: block;
+    }
+    .o_mbt_sidebar_item {
+        justify-content: flex-start;
+        padding-inline: 0.5rem;
+    }
+}
+
+// = App icons
+// ============================================================================
+.o_mbt_app_icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: 2rem;
+    height: 2rem;
+
+    img,
+    .o_mbt_app_icon_font {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        object-fit: contain;
+    }
+    .o_mbt_app_icon_font {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+}
+
+html[data-mbt-icon-style="rounded"] .o_mbt_app_icon :is(img, .o_mbt_app_icon_font) {
+    border-radius: 10px;
+}
+html[data-mbt-icon-style="circle"] .o_mbt_app_icon :is(img, .o_mbt_app_icon_font) {
+    border-radius: 50%;
+}
+html[data-mbt-icon-style="minimal"] .o_mbt_app_icon {
+    filter: grayscale(1) contrast(1.1);
+    opacity: 0.85;
+}
+html[data-mbt-icon-style="glass"] .o_mbt_app_icon :is(img, .o_mbt_app_icon_font) {
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45), 0 3px 8px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(6px);
+}
+html[data-mbt-icon-style="outline"] .o_mbt_app_icon {
+    padding: 3px;
+    border: 1.5px solid currentColor;
+    border-radius: 10px;
+    filter: grayscale(1);
+
+    :is(img, .o_mbt_app_icon_font) {
+        background: transparent !important;
+    }
+}
