@@ -1,0 +1,40 @@
+// The chatter's place is decided in two steps: mailLayout() picks the layout
+// (patched in form_renderer_patch.js) and the form's own classes pick the
+// direction (a row from XXL screens). These rules align the direction with
+// the chosen position.
+
+// "Always below the form": undo the XXL side-by-side row.
+html[data-mbt-chatter-position="bottom"] .o_form_view.o_xxl_form_view {
+    .o_form_renderer.flex-nowrap {
+        flex-direction: column;
+        height: auto !important;
+    }
+
+    .o_form_sheet_bg {
+        flex: 0 0 auto;
+        overflow: visible;
+    }
+}
+
+// "Beside the form on wide screens": XL screens get the XXL row too.
+@include media-breakpoint-only(xl) {
+    html[data-mbt-chatter-position="side"] .o_form_renderer.flex-column:has(> .o-mail-Form-chatter.o-aside) {
+        flex-direction: row !important;
+        align-items: flex-start;
+
+        > .o_form_sheet_bg {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        > .o-mail-Form-chatter.o-aside {
+            flex: 0 0 40%;
+            width: 40%;
+            min-width: 0;
+            position: sticky;
+            top: 0;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+    }
+}

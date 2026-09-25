@@ -93,6 +93,8 @@ class MyThemeQuickCreate(models.Model):
     def get_quick_create_items(self):
         """Entries the current user may use: visible to their groups and on a
         model they are allowed to create records of."""
+        if not self.has_access('read'):
+            return []
         items = []
         user_groups = self.env.user.all_group_ids
         for entry in self.search([]):

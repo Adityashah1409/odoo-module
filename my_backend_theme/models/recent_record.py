@@ -41,10 +41,10 @@ class MyThemeRecentRecord(models.Model):
         entry = self.search([
             ('user_id', '=', self.env.uid), ('res_model', '=', res_model), ('res_id', '=', res_id),
         ], limit=1)
-        if entry:
-            entry.write(values)
-        else:
-            self.create({**values, 'res_model': res_model, 'res_id': res_id})
+        # Re-created rather than updated: dates are stored to the second, so
+        # the newest id breaks ties between records opened in the same second.
+        entry.unlink()
+        self.create({**values, 'res_model': res_model, 'res_id': res_id})
         self.search([('user_id', '=', self.env.uid)], offset=config['recent_limit']).unlink()
         return True
 

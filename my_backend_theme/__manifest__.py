@@ -35,6 +35,9 @@ and keyboard shortcuts.
         ],
         # The dark stylesheet is Odoo's own `web.assets_web_dark` bundle, built
         # with the theme's dark palette defined before Odoo's defaults.
+        'web.assets_unit_tests': [
+            'my_backend_theme/static/tests/**/*',
+        ],
         'web.assets_web_dark': [
             ('before', 'web/static/src/scss/primary_variables.scss',
              'my_backend_theme/static/src/scss/dark/primary_variables.dark.scss'),

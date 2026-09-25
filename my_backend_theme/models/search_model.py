@@ -49,6 +49,8 @@ class MyThemeSearchModel(models.Model):
         query = (query or '').strip()
         if not config['enable_global_search'] or len(query) < MIN_QUERY_LENGTH:
             return []
+        if not self.has_access('read'):
+            return []
         limit = config['search_limit']
         groups = []
         for entry in self.search([]):
@@ -59,7 +61,9 @@ class MyThemeSearchModel(models.Model):
             if not Model.has_access('read'):
                 continue
             try:
-                matches = Model.name_search(query, limit=limit)
+                # A savepoint keeps the transaction usable if the search fails.
+                with self.env.cr.savepoint():
+                    matches = Model.name_search(query, limit=limit)
             except Exception:
                 # One misbehaving model must not break the whole search.
                 _logger.warning("Global search failed on model %s", model_name, exc_info=True)
