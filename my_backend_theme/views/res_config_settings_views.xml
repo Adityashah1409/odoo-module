@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.my_backend_theme</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Backend Theme" string="Backend Theme" name="my_backend_theme" groups="base.group_system">
+                    <block title="Colors" name="mbt_colors_container">
+                        <setting id="mbt_primary_color_setting" string="Primary Color"
+                                 help="Buttons, links and highlights. Leave empty to keep Odoo's color.">
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <field name="mbt_primary_color" widget="color" class="w-auto"/>
+                                <field name="mbt_primary_color" placeholder="#1f6feb" class="w-50"/>
+                            </div>
+                        </setting>
+                        <setting id="mbt_navbar_color_setting" string="Navbar Color"
+                                 help="Background of the top bar. Text color adapts automatically.">
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <field name="mbt_navbar_color" widget="color" class="w-auto"/>
+                                <field name="mbt_navbar_color" placeholder="#1e293b" class="w-50"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Typography" name="mbt_typography_container">
+                        <setting id="mbt_font_family_setting" string="Font"
+                                 help="Used when installed on the user's device; nothing is downloaded.">
+                            <field name="mbt_font_family" class="mt-2"/>
+                        </setting>
+                        <setting id="mbt_ui_scale_setting" string="Default UI Scale"
+                                 help="Users can override it in their preferences.">
+                            <field name="mbt_ui_scale" class="mt-2"/>
+                        </setting>
+                    </block>
+                    <block title="Accessibility" name="mbt_accessibility_container">
+                        <setting id="mbt_reduce_motion_setting"
+                                 help="Turn off animations and transitions for every user.">
+                            <field name="mbt_reduce_motion"/>
+                        </setting>
+                    </block>
+                    <block title="Advanced" name="mbt_advanced_container">
+                        <setting id="mbt_reset_setting" string="Reset Theme"
+                                 help="Restore every theme setting above to its default value. User preferences are kept.">
+                            <button name="action_mbt_reset_defaults" type="object" string="Reset to Defaults"
+                                    icon="east" class="btn-link"
+                                    confirm="Reset every backend theme setting to its default value?"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

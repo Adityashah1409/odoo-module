@@ -1,0 +1,108 @@
+// = Primary color
+// ============================================================================
+// Bootstrap 5 components read their colors from CSS variables (Odoo compiles
+// Bootstrap with an empty prefix, hence `--primary` rather than `--bs-primary`),
+// so overriding those variables recolors them without recompiling SCSS.
+html[data-mbt-primary] {
+    --primary: var(--mbt-primary);
+    --primary-rgb: var(--mbt-primary-rgb);
+    --link-color: var(--mbt-primary);
+    --link-color-rgb: var(--mbt-primary-rgb);
+    --link-hover-color: var(--mbt-primary-hover);
+    --link-hover-color-rgb: var(--mbt-primary-rgb);
+
+    .btn-primary {
+        --btn-color: var(--mbt-primary-contrast);
+        --btn-bg: var(--mbt-primary);
+        --btn-border-color: var(--mbt-primary);
+        --btn-hover-color: var(--mbt-primary-contrast);
+        --btn-hover-bg: var(--mbt-primary-hover);
+        --btn-hover-border-color: var(--mbt-primary-hover);
+        --btn-active-color: var(--mbt-primary-contrast);
+        --btn-active-bg: var(--mbt-primary-active);
+        --btn-active-border-color: var(--mbt-primary-active);
+        --btn-disabled-color: var(--mbt-primary-contrast);
+        --btn-disabled-bg: var(--mbt-primary);
+        --btn-disabled-border-color: var(--mbt-primary);
+        --btn-focus-shadow-rgb: var(--mbt-primary-rgb);
+    }
+
+    .btn-outline-primary {
+        --btn-color: var(--mbt-primary);
+        --btn-border-color: var(--mbt-primary);
+        --btn-hover-color: var(--mbt-primary-contrast);
+        --btn-hover-bg: var(--mbt-primary);
+        --btn-hover-border-color: var(--mbt-primary);
+        --btn-active-color: var(--mbt-primary-contrast);
+        --btn-active-bg: var(--mbt-primary-active);
+        --btn-active-border-color: var(--mbt-primary-active);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--mbt-primary);
+        border-color: var(--mbt-primary);
+    }
+
+    .form-check-input:focus,
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--mbt-primary);
+    }
+}
+
+// = Navbar color
+// ============================================================================
+// Odoo's navbar exposes `--NavBar-*` hooks for its entries; the background
+// itself is compiled, so it is overridden directly.
+html[data-mbt-navbar] .o_main_navbar {
+    --NavBar-entry-color: var(--mbt-navbar-fg);
+    --NavBar-entry-color--hover: var(--mbt-navbar-fg);
+    --NavBar-entry-color--active: var(--mbt-navbar-fg);
+    --NavBar-brand-color: var(--mbt-navbar-fg);
+    --NavBar-entry-backgroundColor: transparent;
+    --NavBar-entry-backgroundColor--hover: var(--mbt-navbar-hover-bg);
+    --NavBar-entry-backgroundColor--focus: var(--mbt-navbar-hover-bg);
+    --NavBar-entry-backgroundColor--active: var(--mbt-navbar-hover-bg);
+
+    background: var(--mbt-navbar-bg);
+    color: var(--mbt-navbar-fg);
+    border-bottom-color: transparent;
+}
+
+// = Typography
+// ============================================================================
+// Odoo sizes the backend in rem, so scaling the root font size scales the
+// whole interface consistently.
+html[data-mbt-ui-scale] {
+    font-size: calc(100% * var(--mbt-ui-scale));
+}
+
+html[data-mbt-font] {
+    --body-font-family: var(--mbt-font-family);
+    --font-sans-serif: var(--mbt-font-family);
+}
+
+// = Motion
+// ============================================================================
+// Applied when an administrator or the user asks for it, and always when the
+// operating system requests reduced motion.
+@mixin mbt-reduced-motion {
+    *,
+    *::before,
+    *::after {
+        animation-duration: $mbt-transition-duration !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: $mbt-transition-duration !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+html[data-mbt-reduce-motion] {
+    @include mbt-reduced-motion;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        @include mbt-reduced-motion;
+    }
+}

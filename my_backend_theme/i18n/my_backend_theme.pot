@@ -1,0 +1,276 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* my_backend_theme
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-25 19:17+0000\n"
+"PO-Revision-Date: 2026-09-25 19:17+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: my_backend_theme
+#: model:ir.module.module,description:base.module_my_backend_theme
+msgid ""
+"\n"
+"Configurable backend theme for the Odoo 20 web client.\n"
+"\n"
+"Phase 1 provides the foundation every later feature builds on: global theme\n"
+"settings, per-user preferences, a central theme plugin in the web client and\n"
+"CSS-variable based styling.\n"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "#1e293b"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "#1f6feb"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+msgid "%(field)s must be a hexadecimal color such as #1f6feb, not %(value)s."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Accessibility"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Advanced"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.module.module,shortdesc:base.module_my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.view_users_form_simple_modif
+msgid "Backend Theme"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_config
+msgid "Backend Theme Configuration"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_navbar_color
+msgid ""
+"Background color of the top navigation bar. Leave empty to keep Odoo's "
+"color."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Background of the top bar. Text color adapts automatically."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Buttons, links and highlights. Leave empty to keep Odoo's color."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_primary_color
+msgid ""
+"Color of primary buttons, links and highlights. Leave empty to keep Odoo's "
+"color."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Colors"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.view_users_form_simple_modif
+msgid "Company default"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.module.module,summary:base.module_my_backend_theme
+msgid "Configurable colors, typography and UI scale for the Odoo backend"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_ui_scale
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Default UI Scale"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_ir_http__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_config__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_font_family
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Font"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_ir_http__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_config__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__inter
+msgid "Inter"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_ui_scale
+#: model:ir.model.fields,help:my_backend_theme.field_res_users_settings__mbt_ui_scale
+msgid "Leave empty to use the company default."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_navbar_color
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Navbar Color"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_font_family
+msgid ""
+"No font is downloaded: the chosen font is used when it is installed on the "
+"user's device, otherwise the system font is used."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__open_sans
+msgid "Open Sans"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__poppins
+msgid "Poppins"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_primary_color
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Primary Color"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_reduce_motion
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_reduce_motion
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_reduce_motion
+msgid "Reduce Motion"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.view_users_form_simple_modif
+msgid "Reset My Theme Preferences"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reset Theme"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reset every backend theme setting to its default value?"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reset to Defaults"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Restore every theme setting above to its default value. User preferences are"
+" kept."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__roboto
+msgid "Roboto"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__system
+msgid "System default"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_ui_scale
+msgid ""
+"Text size of the backend. Each user can override it in their preferences."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_reduce_motion
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Turn off animations and transitions for every user."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_reduce_motion
+msgid "Turn off animations and transitions for you."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Typography"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_ui_scale
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_ui_scale
+msgid "UI Scale"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Used when installed on the user's device; nothing is downloaded."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_res_users_settings
+msgid "User Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Users can override it in their preferences."
+msgstr ""
