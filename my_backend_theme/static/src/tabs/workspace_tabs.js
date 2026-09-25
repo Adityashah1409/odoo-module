@@ -21,29 +21,11 @@ import { user } from "@web/core/user";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { logError, ThemePlugin } from "../js/theme_plugin";
-import { isModifiedClick, NavigationPlugin } from "../navigation/navigation_plugin";
+import { isModifiedClick, navigateTo, NavigationPlugin } from "../navigation/navigation_plugin";
 import { useThemeHotkey } from "../navigation/systray_menus";
 import { TabStore } from "./tab_store";
 
 const HOME_URL = "/odoo";
-
-/**
- * Navigate inside the web client exactly like a click on an internal link:
- * Odoo's router intercepts clicks on `/odoo/...` anchors.
- *
- * @param {string} url
- */
-export function navigateTo(url) {
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.hidden = true;
-    document.body.append(anchor);
-    try {
-        anchor.click();
-    } finally {
-        anchor.remove();
-    }
-}
 
 function storageKeys() {
     const suffix = `${session.db || ""}:${user.userId}`;

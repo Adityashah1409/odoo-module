@@ -62,7 +62,7 @@ export const DEFAULT_CONFIG = Object.freeze({
     enable_split_view: true,
     enable_global_search: true,
     search_limit: 5,
-    shortcut_quick_create: "alt+shift+q",
+    shortcut_quick_create: "alt+shift+n",
     shortcut_bookmarks: "alt+shift+b",
     shortcut_recent: "alt+shift+r",
     shortcut_search: "alt+shift+f",

@@ -152,8 +152,8 @@ CONFIG_SCHEMA = {
     'enable_split_view': ('bool', True, None),
     'enable_global_search': ('bool', True, None),
     'search_limit': ('int', 5, (1, 20)),
-    # Keyboard shortcuts (Odoo hotkey syntax, e.g. "alt+shift+q")
-    'shortcut_quick_create': ('hotkey', 'alt+shift+q', None),
+    # Keyboard shortcuts (Odoo hotkey syntax, e.g. "alt+shift+n")
+    'shortcut_quick_create': ('hotkey', 'alt+shift+n', None),
     'shortcut_bookmarks': ('hotkey', 'alt+shift+b', None),
     'shortcut_recent': ('hotkey', 'alt+shift+r', None),
     'shortcut_search': ('hotkey', 'alt+shift+f', None),

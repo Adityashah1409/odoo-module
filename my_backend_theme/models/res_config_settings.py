@@ -161,7 +161,7 @@ class ResConfigSettings(models.TransientModel):
 
     # Keyboard shortcuts
     mbt_shortcut_quick_create = fields.Char(
-        string="Quick Create Shortcut", default='alt+shift+q', config_parameter=_param('shortcut_quick_create'),
+        string="Quick Create Shortcut", default='alt+shift+n', config_parameter=_param('shortcut_quick_create'),
     )
     mbt_shortcut_bookmarks = fields.Char(
         string="Bookmarks Shortcut", default='alt+shift+b', config_parameter=_param('shortcut_bookmarks'),
@@ -219,7 +219,7 @@ class ResConfigSettings(models.TransientModel):
                     continue
                 if not tc.is_valid_hotkey(value):
                     raise ValidationError(_(
-                        "%(field)s: use a combination such as alt+shift+q (with control or alt), "
+                        "%(field)s: use a combination such as alt+shift+n (with control or alt), "
                         "or \"none\" to turn it off.",
                         field=settings._fields[fname].string,
                     ))

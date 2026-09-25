@@ -19,6 +19,24 @@ export function recordUrl(resModel, resId) {
 }
 
 /**
+ * Navigate inside the web client exactly like a click on an internal link:
+ * Odoo's router intercepts clicks on `/odoo/...` anchors.
+ *
+ * @param {string} url
+ */
+export function navigateTo(url) {
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.hidden = true;
+    document.body.append(anchor);
+    try {
+        anchor.click();
+    } finally {
+        anchor.remove();
+    }
+}
+
+/**
  * Whether a click on a link should be left to the browser (new tab, new
  * window, download...) instead of navigating inside the web client.
  *

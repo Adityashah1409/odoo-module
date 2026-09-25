@@ -180,7 +180,7 @@
 
                     <block title="Keyboard Shortcuts" name="mbt_shortcuts_container">
                         <setting id="mbt_shortcuts_setting" string="Shortcuts"
-                                 help="Combinations with control or alt, e.g. alt+shift+q. Type none to turn one off. Ctrl+K always opens the command palette.">
+                                 help="Combinations with control or alt, e.g. alt+shift+n. Type none to turn one off. Ctrl+K always opens the command palette.">
                             <div class="row mt-2">
                                 <label for="mbt_shortcut_quick_create" string="Quick Create" class="col-6 o_light_label"/>
                                 <field name="mbt_shortcut_quick_create" class="col-6"/>

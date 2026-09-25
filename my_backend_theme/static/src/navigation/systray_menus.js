@@ -11,7 +11,7 @@ import { NavigationPlugin, onThemeLinkClick, recordUrl } from "./navigation_plug
 /**
  * Register a configurable global shortcut for the lifetime of a component.
  *
- * @param {string|false} hotkey e.g. "alt+shift+q", or false when turned off
+ * @param {string|false} hotkey e.g. "alt+shift+n", or false when turned off
  * @param {Function} callback
  */
 export function useThemeHotkey(hotkey, callback) {
@@ -22,7 +22,13 @@ export function useThemeHotkey(hotkey, callback) {
             return;
         }
         try {
-            remove = hotkeyService.add(hotkey, callback, { global: true });
+            remove = hotkeyService.add(hotkey, callback, {
+                global: true,
+                // Work while a text field has the focus, except for
+                // alt+control: AltGr sends it to type characters on many
+                // keyboard layouts.
+                bypassEditableProtection: !(hotkey.includes("alt+") && hotkey.includes("control+")),
+            });
         } catch (error) {
             logError(`Invalid shortcut ${hotkey}.`, error);
         }

@@ -1,0 +1,15 @@
+.o_mbt_command {
+    .o_mbt_command_icon {
+        flex: 0 0 auto;
+        opacity: .7;
+    }
+
+    .o_mbt_command_detail {
+        min-width: 0;
+        max-width: 40%;
+    }
+
+    .o_mbt_command_shortcut {
+        font-size: $o-font-size-base-smaller;
+    }
+}
