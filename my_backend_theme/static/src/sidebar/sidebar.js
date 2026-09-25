@@ -1,4 +1,4 @@
-import { Component, computed, onMounted, onWillDestroy, proxy, signal, usePlugin } from "@odoo/owl";
+import { Component, computed, onWillDestroy, proxy, signal, useEffect, usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -36,7 +36,10 @@ export class Sidebar extends Component {
         });
         useBus(this.env.bus, "ACTION_MANAGER:UI-UPDATED", () => this.updateCurrentAction());
         useBus(this.env.bus, "MENUS:APP-CHANGED", () => this.updateCurrentAction());
-        onMounted(() => document.documentElement.setAttribute(MOUNTED_ATTRIBUTE, ""));
+        // The layout makes room for the sidebar only while it is shown.
+        useEffect(() => {
+            document.documentElement.toggleAttribute(MOUNTED_ATTRIBUTE, this.isVisible());
+        });
         onWillDestroy(() => document.documentElement.removeAttribute(MOUNTED_ATTRIBUTE));
     }
 
@@ -45,7 +48,7 @@ export class Sidebar extends Component {
     }
 
     get isCollapsed() {
-        return this.style === "icons" || (this.style === "sidebar" && this.theme.get("sidebar_collapsed"));
+        return this.style === "icons" || this.theme.sidebarCollapsed();
     }
 
     get showSections() {
@@ -108,7 +111,7 @@ export class Sidebar extends Component {
     }
 
     toggleCollapsed() {
-        this.theme.setUserPreference("mbt_sidebar_collapsed", !this.theme.get("sidebar_collapsed"));
+        this.theme.toggleSidebar();
     }
 
     onSearchKeydown(ev) {

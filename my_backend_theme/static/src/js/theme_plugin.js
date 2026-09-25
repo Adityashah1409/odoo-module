@@ -1,7 +1,9 @@
-import { computed, Plugin, signal, useEffect, useListener } from "@odoo/owl";
+import { computed, Plugin, signal, useEffect, useListener, usePlugin } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { services } from "@web/core/services";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { SIZES } from "@web/core/ui/ui_utils";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { applyRootState, isSidebarStyle, resolveConfig, THEME_MODES, UI_SCALES } from "./theme_config";
@@ -31,6 +33,23 @@ export function logError(message, error) {
  */
 export function startupConfig() {
     return resolveConfig(session.backend_theme || {});
+}
+
+/**
+ * Color of the browser's toolbar on mobile and of the installed web app's
+ * title bar. Odoo's own value is restored when the theme has no color.
+ *
+ * @param {string|false} color a validated #rrggbb color
+ */
+function syncThemeColorMeta(color) {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+        return;
+    }
+    if (!meta.dataset.mbtOriginal) {
+        meta.dataset.mbtOriginal = meta.getAttribute("content") || "";
+    }
+    meta.setAttribute("content", color || meta.dataset.mbtOriginal);
 }
 
 function isDarkBundleLoaded() {
@@ -70,19 +89,45 @@ export class ThemePlugin extends Plugin {
 
     hasSidebar = computed(() => isSidebarStyle(this.config().menu_style));
 
+    ui = usePlugin(UIPlugin);
+    /** Below 1200px the full sidebar would take too much room. */
+    isCompactScreen = computed(() => this.ui.size() >= 0 && this.ui.size() < SIZES.XL);
+    /** On compact screens the sidebar is expanded for the session only. */
+    expandedOnCompactScreen = signal(false);
+
+    /** Whether the "sidebar" menu style currently shows icons only. */
+    sidebarCollapsed = computed(() => {
+        const config = this.config();
+        if (config.menu_style !== "sidebar") {
+            return false;
+        }
+        if (this.isCompactScreen()) {
+            return !this.expandedOnCompactScreen();
+        }
+        return config.sidebar_collapsed;
+    });
+
     setup() {
         const darkQuery = browser.matchMedia?.("(prefers-color-scheme: dark)");
         if (darkQuery) {
             useListener(darkQuery, "change", (ev) => this.deviceDark.set(ev.matches));
         }
         useEffect(() => {
-            const config = this.config();
+            const config = { ...this.config(), sidebar_collapsed: this.sidebarCollapsed() };
             try {
                 applyRootState(document.documentElement, config, {
                     "data-mbt-color-scheme": this.loadedScheme,
                 });
             } catch (error) {
                 logError("Could not apply the theme.", error);
+            }
+        });
+        useEffect(() => {
+            const color = this.config().navbar_color || this.config().primary_color;
+            try {
+                syncThemeColorMeta(color);
+            } catch (error) {
+                logError("Could not set the browser theme color.", error);
             }
         });
         useEffect(() => {
@@ -146,6 +191,15 @@ export class ThemePlugin extends Plugin {
         }
         this.userSettings.set(user.settings);
         return true;
+    }
+
+    /** Collapse or expand the sidebar, remembered per user on wide screens. */
+    toggleSidebar() {
+        if (this.isCompactScreen()) {
+            this.expandedOnCompactScreen.set(!this.expandedOnCompactScreen());
+            return Promise.resolve(true);
+        }
+        return this.setUserPreference("mbt_sidebar_collapsed", !this.config().sidebar_collapsed);
     }
 
     /** Switch between light and dark, leaving "follow the device" if set. */

@@ -74,12 +74,7 @@ export class WorkspaceTabs extends Component {
             syncActiveTab();
         });
         useEffect(() => {
-            const root = document.documentElement;
-            if (this.isVisible()) {
-                root.setAttribute("data-mbt-tabs-mounted", "");
-            } else {
-                root.removeAttribute("data-mbt-tabs-mounted");
-            }
+            document.documentElement.toggleAttribute("data-mbt-tabs-mounted", this.isVisible());
         });
         onWillUnmount(() => document.documentElement.removeAttribute("data-mbt-tabs-mounted"));
 

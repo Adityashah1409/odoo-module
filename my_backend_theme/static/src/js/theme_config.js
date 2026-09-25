@@ -299,7 +299,8 @@ export function applyRootState(root, config, extraAttributes = {}) {
     const { attributes, variables } = computeRootState(config);
     Object.assign(attributes, extraAttributes);
     for (const name of root.getAttributeNames()) {
-        if (name.startsWith("data-mbt-") && !(name in attributes)) {
+        // "*-mounted" flags belong to the components that set them.
+        if (name.startsWith("data-mbt-") && !name.endsWith("-mounted") && !(name in attributes)) {
             root.removeAttribute(name);
         }
     }

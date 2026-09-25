@@ -105,6 +105,7 @@ export class SplitView extends Component {
                         this.context = { ...sourceContext, ...this.context };
                     }
                     if (source?.res_model === this.resModel) {
+                        this.sourceName = source.display_name || source.name;
                         const viewId = (type) => source.views?.find((v) => v[1] === type)?.[0];
                         this.listViewId = viewId("list") || false;
                         this.formViewId = viewId("form") || false;
@@ -113,6 +114,10 @@ export class SplitView extends Component {
                 } catch {
                     // Keep the model's records without the action's domain.
                 }
+            }
+            // Reopened from the URL, the action has no name of its own.
+            if (!this.env.config.getDisplayName?.()) {
+                this.env.config.setDisplayName?.(this.sourceName || _t("Split View"));
             }
         });
 
