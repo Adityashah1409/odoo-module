@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="my_backend_theme.WorkspaceTabs">
+        <div t-if="this.isVisible()" class="o_mbt_tabs d-flex align-items-stretch" role="tablist" aria-label="Workspace tabs">
+            <div class="o_mbt_tabs_list d-flex align-items-stretch">
+                <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
+                    <div class="o_mbt_tab d-flex align-items-center"
+                         t-att-class="{ 'o_mbt_tab_active': tab.id === this.activeId, 'o_mbt_tab_pinned': tab.pinned, 'o_mbt_tab_dragging': tab.id === this.state.dragId }"
+                         t-att-data-tab-id="tab.id"
+                         draggable="true"
+                         t-on-dragstart="(ev) => this.onDragStart(ev, tab)"
+                         t-on-dragover="this.onDragOver"
+                         t-on-drop="(ev) => this.onDrop(ev, tab)"
+                         t-on-dragend="this.onDragEnd">
+                        <a class="o_mbt_tab_link d-flex align-items-center text-truncate" role="tab"
+                           t-att-href="tab.url"
+                           t-att-title="this.tabTitle(tab)"
+                           t-att-aria-selected="tab.id === this.activeId ? 'true' : 'false'"
+                           t-on-click="(ev) => this.onTabClick(ev, tab)"
+                           t-on-auxclick="(ev) => this.onTabAuxClick(ev, tab)"
+                           t-on-contextmenu="(ev) => this.onTabContextMenu(ev, tab)">
+                            <i t-if="tab.pinned" class="oi me-1" data-icon="push_pin_f" aria-hidden="true"/>
+                            <span t-if="!tab.pinned" class="text-truncate" t-out="this.tabTitle(tab)"/>
+                        </a>
+                        <button t-if="!tab.pinned" type="button" class="o_mbt_tab_close btn btn-link p-0"
+                                t-on-click="() => this.close(tab.id)" aria-label="Close tab" title="Close tab">
+                            <i class="oi" data-icon="close" aria-hidden="true"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+            <button type="button" class="o_mbt_tab_new btn btn-link" t-on-click="this.newTab" title="New tab" aria-label="New tab">
+                <i class="oi" data-icon="add" aria-hidden="true"/>
+            </button>
+            <div class="ms-auto d-flex align-items-center">
+                <Dropdown state="this.menu" position="'bottom-end'" menuClass="'o_mbt_tabs_menu'">
+                    <button type="button" class="o_mbt_tabs_menu_toggle btn btn-link" t-on-click="this.onMenuToggle" title="Tab actions" aria-label="Tab actions">
+                        <i class="oi" data-icon="more_vert" aria-hidden="true"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-set="tab" t-value="this.menuTab"/>
+                        <t t-if="tab">
+                            <div class="dropdown-header text-truncate" t-out="this.tabTitle(tab)"/>
+                            <DropdownItem onSelected="() => this.reload(tab.id)">
+                                <i class="oi me-2" data-icon="refresh" aria-hidden="true"/>Reload
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.duplicate(tab.id)">
+                                <i class="oi me-2" data-icon="content_copy" aria-hidden="true"/>Duplicate
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.togglePin(tab.id)">
+                                <i class="oi me-2" t-att-data-icon="tab.pinned ? 'push_pin' : 'push_pin_f'" aria-hidden="true"/>
+                                <t t-if="tab.pinned">Unpin</t><t t-else="">Pin</t>
+                            </DropdownItem>
+                            <DropdownItem onSelected="() => this.openInBrowserTab(tab)">
+                                <i class="oi me-2" data-icon="open_in_new" aria-hidden="true"/>Open in a new browser tab
+                            </DropdownItem>
+                            <div class="dropdown-divider"/>
+                            <DropdownItem t-if="!tab.pinned" onSelected="() => this.close(tab.id)">Close</DropdownItem>
+                            <DropdownItem onSelected="() => this.closeOthers(tab.id)">Close other tabs</DropdownItem>
+                            <DropdownItem onSelected="() => this.closeToTheRight(tab.id)">Close tabs to the right</DropdownItem>
+                            <DropdownItem onSelected="() => this.closeAll()">Close all tabs</DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+            </div>
+        </div>
+    </t>
+
+</templates>

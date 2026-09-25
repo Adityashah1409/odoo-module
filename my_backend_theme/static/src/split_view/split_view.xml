@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="my_backend_theme.SplitView">
+        <div class="o_mbt_split o_action h-100 d-flex" t-att-class="{ 'o_mbt_split_resizing': this.state.resizing }">
+            <t t-if="!this.resModel or !this.isEnabled">
+                <div class="o_mbt_split_empty m-auto text-center text-muted p-4">
+                    <p t-if="!this.isEnabled">Split view is turned off.</p>
+                    <p t-else="">Open a list, then choose Split View in its gear menu.</p>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_mbt_split_list d-flex flex-column" t-attf-style="flex-basis: {{ this.state.listWidth }}%">
+                    <SplitPane t-key="this.state.listKey" t-props="this.listPaneProps"/>
+                </div>
+                <div class="o_mbt_split_handle" role="separator" tabindex="0"
+                     aria-orientation="vertical" aria-label="Resize the list"
+                     t-att-aria-valuenow="this.state.listWidth" aria-valuemin="25" aria-valuemax="75"
+                     t-on-pointerdown="this.startResize" t-on-keydown="this.onResizeKeydown"/>
+                <div class="o_mbt_split_form d-flex flex-column flex-grow-1">
+                    <div class="o_mbt_split_form_bar d-flex align-items-center justify-content-end gap-1 px-2">
+                        <button t-if="this.state.resId" type="button" class="btn btn-link btn-sm" t-on-click="this.openFullForm" title="Open the full form">
+                            <i class="oi" data-icon="open_in_new" aria-hidden="true"/>
+                            <span class="ms-1">Open</span>
+                        </button>
+                        <button t-if="this.state.formOpen" type="button" class="btn btn-link btn-sm" t-on-click="this.closeForm" title="Close" aria-label="Close the form">
+                            <i class="oi" data-icon="close" aria-hidden="true"/>
+                        </button>
+                    </div>
+                    <t t-if="this.state.formOpen">
+                        <SplitPane t-key="this.state.formKey" t-props="this.formPaneProps"/>
+                    </t>
+                    <div t-else="" class="o_mbt_split_placeholder m-auto text-center text-muted p-4">
+                        <i class="oi d-block mb-2" data-icon="dock_to_right" aria-hidden="true"/>
+                        Select a record in the list to see it here.
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

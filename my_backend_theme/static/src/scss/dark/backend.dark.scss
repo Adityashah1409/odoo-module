@@ -1,0 +1,16 @@
+// Fine-tuning for the dark color scheme (web.assets_web_dark only).
+
+.o_web_client {
+    // Images and app icons designed for light backgrounds.
+    .o_mbt_app_icon img {
+        filter: brightness(0.92);
+    }
+}
+
+// Keep primary button text readable: Bootstrap picks the contrast color from
+// $white/$black, which are swapped in dark mode.
+.btn-primary {
+    --btn-color: #ffffff;
+    --btn-hover-color: #ffffff;
+    --btn-active-color: #ffffff;
+}

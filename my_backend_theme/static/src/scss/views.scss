@@ -1,0 +1,131 @@
+// Visual options for Odoo's views. Every rule is scoped to an attribute the
+// theme plugin sets only when the option differs from Odoo's default, and
+// only changes appearance: renderers, widgets and their DOM are untouched.
+
+// = List view
+// ============================================================================
+html[data-mbt-list-density="compact"] .o_list_renderer .o_list_table .o_data_row > td {
+    padding-top: 0.15rem;
+    padding-bottom: 0.15rem;
+}
+html[data-mbt-list-density="comfortable"] .o_list_renderer .o_list_table .o_data_row > td {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+html[data-mbt-list-striped] .o_list_renderer .o_list_table tbody > .o_data_row:nth-of-type(even):not(.o_data_row_selected) > td {
+    background-color: rgba(var(--emphasis-color-rgb), 0.03);
+}
+
+html[data-mbt-list-borderless] .o_list_renderer .o_list_table {
+    > tbody > tr > td,
+    > tfoot > tr > td {
+        border-bottom-color: transparent;
+    }
+}
+
+// = Form view
+// ============================================================================
+html[data-mbt-form-style="card"] .o_form_view .o_form_sheet {
+    @include media-breakpoint-up(md) {
+        --formView-sheet-border-width-md: 0;
+        --formView-sheet-border-radius-md: 12px;
+
+        margin-top: 0.5rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 20px rgba(0, 0, 0, 0.07);
+    }
+}
+
+html[data-mbt-form-style="flat"] .o_form_view .o_form_sheet {
+    @include media-breakpoint-up(md) {
+        --formView-sheet-border-width-md: 0;
+        --formView-sheet-border-radius-md: 0;
+    }
+}
+
+html[data-mbt-form-style="compact"] .o_form_view {
+    .o_form_sheet {
+        --formView-sheet-padding-y-md: 0.5rem;
+        --formView-sheet-padding-y-lg: 0.75rem;
+        --formView-sheet-padding-x-lg: 1rem;
+        --formView-sheet-padding-y-xxl: 0.75rem;
+        --formView-sheet-padding-x-xxl: 1rem;
+    }
+    .o_inner_group .o_cell {
+        padding-bottom: 0.15rem;
+    }
+}
+
+html[data-mbt-static-statusbar] .o_form_view .o_form_statusbar {
+    position: relative;
+}
+
+// = Fields
+// ============================================================================
+html[data-mbt-rounded-fields] .o_form_view .o_form_editable,
+html[data-mbt-rounded-fields] .modal .o_form_editable {
+    .o_field_widget:not(.o_field_boolean, .o_field_boolean_toggle, .o_field_priority, .o_field_statusbar, .o_field_radio, .o_field_many2many_tags, .o_field_html) > .o_input,
+    .o_field_widget.o_field_many2one .o_input,
+    .o_field_widget select.o_input {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background-color: var(--body-bg);
+
+        &:focus,
+        &:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.15rem rgba(var(--primary-rgb), 0.18);
+        }
+    }
+}
+
+// = Buttons
+// ============================================================================
+html[data-mbt-button-style="rounded"] .o_web_client .btn:not(.btn-link) {
+    --btn-border-radius: 8px;
+}
+html[data-mbt-button-style="square"] .o_web_client .btn:not(.btn-link) {
+    --btn-border-radius: 0;
+}
+html[data-mbt-button-style="pill"] .o_web_client .btn:not(.btn-link) {
+    --btn-border-radius: 50rem;
+    padding-inline: 0.9rem;
+}
+
+// = Checkboxes
+// ============================================================================
+html[data-mbt-checkbox-style="rounded"] .form-check-input[type="checkbox"] {
+    border-radius: 50%;
+}
+html[data-mbt-checkbox-style="square"] .form-check-input[type="checkbox"] {
+    border-radius: 0;
+}
+
+// = Scrollbars
+// ============================================================================
+// Scrollbars stay visible in every style so the scroll position is always
+// readable.
+html[data-mbt-scrollbar-style="thin"] {
+    * {
+        scrollbar-width: thin;
+    }
+}
+html[data-mbt-scrollbar-style="modern"] {
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(var(--emphasis-color-rgb), 0.3) transparent;
+    }
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        border-radius: 8px;
+        background: rgba(var(--emphasis-color-rgb), 0.3) padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(var(--emphasis-color-rgb), 0.5);
+    }
+}

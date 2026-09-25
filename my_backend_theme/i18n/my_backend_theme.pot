@@ -1,0 +1,1598 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* my_backend_theme
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-25 20:30+0000\n"
+"PO-Revision-Date: 2026-09-25 20:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: my_backend_theme
+#: model:ir.module.module,description:base.module_my_backend_theme
+msgid ""
+"\n"
+"Configurable backend theme for the Odoo 20 web client: colors and presets,\n"
+"dark mode, sidebar menu styles, list and form view styles, quick create,\n"
+"bookmarks, recently viewed records, workspace tabs, split view, global search\n"
+"and keyboard shortcuts.\n"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "#1e293b"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "#1f6feb"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "#38bdf8"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+msgid "%(field)s must be a hexadecimal color such as #1f6feb, not %(value)s."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+msgid "%(field)s must be between %(low)s and %(high)s."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+msgid ""
+"%(field)s: use a combination such as alt+shift+n (with control or alt), or "
+"\"none\" to turn it off."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+msgid "%(first)s and %(second)s use the same shortcut."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "A + button in the top bar to create records without leaving the page."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/bookmark.py:0
+msgid "A bookmark must point to a page of the Odoo backend."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.constraint,message:my_backend_theme.constraint_my_theme_recent_unique_user_record
+msgid "A record is listed once per user."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_accent_color
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Accent Color"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Accessibility"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__active
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__active
+msgid "Active"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Add Suggested Entries"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.actions.act_window,help:my_backend_theme.action_my_theme_quick_create
+msgid "Add a record type to the Quick Create menu"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Add the usual record types of your installed apps (leads, quotations, "
+"invoices, tasks...) to Quick Create and Global Search."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Advanced"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Alternate the background of list rows."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_chatter_position__bottom
+msgid "Always below the form"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_icon_style
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "App Icon Style"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_chatter_position__auto
+msgid "Automatic (Odoo default)"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/js/user_menu_items.js:0
+#: model:ir.module.module,shortdesc:base.module_my_backend_theme
+#: model:ir.ui.menu,name:my_backend_theme.menu_backend_theme_root
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.view_users_form_simple_modif
+msgid "Backend Theme"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_bookmark
+msgid "Backend Theme Bookmark"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_config
+msgid "Backend Theme Configuration"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_search_model
+msgid "Backend Theme Global Search Model"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_quick_create
+msgid "Backend Theme Quick Create Entry"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_recent
+msgid "Backend Theme Recently Viewed Record"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_record_link_mixin
+msgid "Backend Theme Record Link"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_sidebar_color
+msgid ""
+"Background color of the sidebar menu. Leave empty to use the page "
+"background."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_navbar_color
+msgid ""
+"Background color of the top navigation bar. Leave empty to keep Odoo's "
+"color."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Background of the sidebar menu. Leave empty to use the page background."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Background of the top bar. Text color adapts automatically."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_chatter_position__side
+msgid "Beside the form on wide screens"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Bookmark"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Bookmark this page"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.js:0
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_bookmarks
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Bookmarks"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_bookmarks
+msgid "Bookmarks Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_list_borderless
+msgid "Borderless Lists"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Browse a list and edit the selected record side by side (from a list's gear "
+"menu)."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_split_view
+msgid "Browse a list and edit the selected record side by side."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_scrollbar_style__default
+msgid "Browser default"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_button_style
+msgid "Button Style"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Buttons"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Buttons, links and highlights. Leave empty to keep Odoo's color."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_form_style__card
+msgid "Card"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_chatter_position
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Chatter Position"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_checkbox_style
+msgid "Checkbox Style"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Checkboxes"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Choose Record Types"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Choose Searched Models"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.actions.act_window,help:my_backend_theme.action_my_theme_search_model
+msgid "Choose what the global search looks through"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_icon_style__circle
+msgid "Circle"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Clear"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Close"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Close all tabs"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Close other tabs"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Close tab"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Close tabs to the right"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Close the form"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_sidebar_collapsed
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_sidebar_collapsed
+msgid "Collapse Sidebar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_color_preset
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Color Preset"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_theme_mode
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_theme_mode
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Color Scheme"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_primary_color
+msgid ""
+"Color of primary buttons, links and highlights. Leave empty to keep Odoo's "
+"color."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Colors"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Combinations with control or alt, e.g. alt+shift+n. Type none to turn one "
+"off. Ctrl+K always opens the command palette."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_list_density__comfortable
+msgid "Comfortable"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_form_style__compact
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_list_density__compact
+msgid "Compact"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_compact_navbar
+msgid "Compact Navbar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_menu_style__compact
+msgid "Compact sidebar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__company_id
+msgid "Company"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.view_users_form_simple_modif
+msgid "Company default"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:my.theme.quick.create,name:my_backend_theme.quick_create_contact
+msgid "Contact"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__context
+msgid "Context"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Controls"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Could not load this list. Please try again."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_quick_create
+msgid "Create records from anywhere with the + button in the top bar."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Create: %(name)s"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__create_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__create_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__create_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__create_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__create_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__create_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__crimson
+msgid "Crimson"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__custom
+msgid "Custom"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_default_theme_mode__dark
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_users__mbt_theme_mode__dark
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_users_settings__mbt_theme_mode__dark
+msgid "Dark"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/js/user_menu_items.js:0
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_dark_mode
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Dark Mode"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_dark_mode
+msgid "Dark Mode Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_button_style__default
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_checkbox_style__default
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_form_style__default
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_list_density__default
+msgid "Default"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_default_theme_mode
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Default Color Scheme"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_ui_scale
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Default UI Scale"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_my_theme_quick_create__context
+msgid ""
+"Default values for the new record, as a dictionary, e.g. "
+"{'default_move_type': 'out_invoice'}."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_ir_http__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_config__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_record_link_mixin__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Duplicate"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.actions.act_window,help:my_backend_theme.action_my_theme_search_model
+msgid "Each user only finds the records they are allowed to read."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_sidebar_hover_expand
+msgid "Expand Sidebar on Hover"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_color_preset
+msgid ""
+"Fill the colors below from a ready-made palette. You can still adjust them "
+"afterwards."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Fill the colors from a ready-made palette, then adjust them if you like."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_form_style__flat
+msgid "Flat"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_default_theme_mode__system
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_users__mbt_theme_mode__system
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_users_settings__mbt_theme_mode__system
+msgid "Follow the device"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_font_family
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Font"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__forest
+msgid "Forest"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_form_style
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Form Style"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Form Views"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_search_limit
+msgid "From 1 to 20."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_max_tabs
+msgid ""
+"From 2 to 30. The oldest unpinned tab closes when the limit is reached."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_icon_style__glass
+msgid "Glass"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_global_search
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Global Search"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.actions.act_window,name:my_backend_theme.action_my_theme_search_model
+#: model:ir.ui.menu,name:my_backend_theme.menu_backend_theme_search_model
+msgid "Global Search Models"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_search
+msgid "Global Search Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Hide the lines between list rows."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_accent_color
+msgid "Highlights the active app and menu in the sidebar."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Highlights the current app and menu in the sidebar."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "How app icons are drawn in the sidebar."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_ir_http__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_config__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_record_link_mixin__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__icon
+msgid "Icon"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_menu_style__icons
+msgid "Icon-only sidebar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Installed Apps"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__inter
+msgid "Inter"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_form_sticky_statusbar
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Keep a form's buttons and status bar visible while scrolling."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_tabs
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Keep several pages open as tabs below the top bar."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Keep the last"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Keyboard Shortcuts"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__name
+msgid "Label"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__write_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__write_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__write_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__write_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__write_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__write_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__last_viewed
+msgid "Last Viewed"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_theme_mode
+#: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_ui_scale
+#: model:ir.model.fields,help:my_backend_theme.field_res_users_settings__mbt_theme_mode
+#: model:ir.model.fields,help:my_backend_theme.field_res_users_settings__mbt_ui_scale
+msgid "Leave empty to use the company default."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_bookmarks
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Let users bookmark any page or record."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_dark_mode
+msgid "Let users switch the backend to a dark color scheme."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Let users switch the backend to dark colors from their user menu."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_default_theme_mode__light
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_users__mbt_theme_mode__light
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_users_settings__mbt_theme_mode__light
+msgid "Light"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_list_density
+msgid "List Row Density"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "List Views"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Loading…"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/sidebar/sidebar.xml:0
+msgid "Main menu"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Manage bookmarks"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_max_tabs
+msgid "Maximum Tabs"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_dark_mode_available
+msgid "Mbt Dark Mode Available"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_menu_style
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Menu Style"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__res_model
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__model_id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__res_model
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__model_id
+msgid "Model"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__model
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__model
+msgid "Model Name"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_scrollbar_style__modern
+msgid "Modern"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_icon_style__minimal
+msgid "Monochrome"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.actions.act_window,name:my_backend_theme.action_my_theme_bookmark
+msgid "My Bookmarks"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__name
+msgid "Name"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_my_theme_quick_create__icon
+msgid ""
+"Name of an Odoo UI icon, for example: person, shopping_cart, description."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_navbar_color
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Navbar Color"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Navigation"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "New Tab"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_new_tab
+msgid "New Tab Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.js:0
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "New tab"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.actions.act_window,help:my_backend_theme.action_my_theme_bookmark
+msgid "No bookmark yet"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "No bookmarks yet."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_font_family
+msgid ""
+"No font is downloaded: the chosen font is used when it is installed on the "
+"user's device, otherwise the system font is used."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/sidebar/sidebar.xml:0
+msgid "No menu found"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "No record found. Type at least 2 characters."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid ""
+"Nothing to create here. An administrator can add entries in\n"
+"                        Settings, Backend Theme."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__ocean
+msgid "Ocean"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__default
+msgid "Odoo default"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_recent_limit
+msgid "Older entries are deleted automatically (5 to 100)."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_my_theme_quick_create__group_ids
+msgid ""
+"Only members of these groups see the entry. Leave empty for everyone who can"
+" create such records."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Open"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__open_sans
+msgid "Open Sans"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Open a list, then choose Split View in its gear menu."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Open in a new browser tab"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Open in split view"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Open the full form"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Open this page in a new browser tab"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_icon_style__default
+msgid "Original"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_icon_style__outline
+msgid "Outlined"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_button_style__pill
+msgid "Pill"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Pin"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__poppins
+msgid "Poppins"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_primary_color
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Primary Color"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Productivity"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.js:0
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+#: model:ir.actions.act_window,name:my_backend_theme.action_my_theme_quick_create
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_quick_create
+#: model:ir.ui.menu,name:my_backend_theme.menu_backend_theme_quick_create
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Quick Create"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_quick_create
+msgid "Quick Create Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+msgid "Quick Create and Global Search now include the installed apps."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.js:0
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_recent
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Recently Viewed"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_recent
+msgid "Recently Viewed Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__res_id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__res_id
+msgid "Record"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_recent_limit
+msgid "Records Remembered"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Records you open will show up here."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_reduce_motion
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_reduce_motion
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_reduce_motion
+msgid "Reduce Motion"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_compact_navbar
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reduce the height of the top bar."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Reload"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_recent
+msgid "Remember the records each user opened."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Remember the records each user opens."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Remove"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Remove bookmark"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+msgid "Remove this page"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Remove this page from bookmarks"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.view_users_form_simple_modif
+msgid "Reset My Theme Preferences"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reset Theme"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reset every backend theme setting to its default value?"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Reset to Defaults"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Resize the list"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Restore every theme setting to its default value. User preferences are kept."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__group_ids
+msgid "Restricted to Groups"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_search_limit
+msgid "Results per Model"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__roboto
+msgid "Roboto"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_button_style__rounded
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_checkbox_style__rounded
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_icon_style__rounded
+msgid "Rounded"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_rounded_fields
+msgid "Rounded Input Fields"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Row Density"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__royal
+msgid "Royal"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_scrollbar_style
+msgid "Scrollbar Style"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Scrollbars"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Scrollbars always stay visible."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Search contacts, orders, invoices and more at once (command palette, then "
+"?)."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/sidebar/sidebar.xml:0
+msgid "Search menus"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/sidebar/sidebar.xml:0
+msgid "Search menus..."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Search records"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Search records in every app..."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_global_search
+msgid "Search records of several models at once from the command palette."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Select a record in the list to see it here."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__sequence
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__sequence
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Shortcuts"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_rounded_fields
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Show editable fields as rounded boxes instead of underlines."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_menu_style__sidebar
+msgid "Sidebar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_sidebar_color
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Sidebar Color"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Sidebar Width"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_sidebar_width
+msgid "Sidebar Width (px)"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.module.module,summary:base.module_my_backend_theme
+msgid ""
+"Sidebar, dark mode, colors, quick create, bookmarks, tabs and global search "
+"for the backend"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__slate
+msgid "Slate"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+#: code:addons/my_backend_theme/static/src/split_view/split_view.js:0
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_split_view
+msgid "Split View"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
+msgid "Split view is turned off."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_button_style__square
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_checkbox_style__square
+msgid "Square"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_form_sticky_statusbar
+msgid "Sticky Form Status Bar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_list_striped
+msgid "Striped List Rows"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__sunset
+msgid "Sunset"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Switch to dark mode"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Switch to light mode"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_font_family__system
+msgid "System default"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Tab actions"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_sidebar_hover_expand
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Temporarily expand a collapsed sidebar while the pointer is over it."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_ui_scale
+msgid ""
+"Text size of the backend. Each user can override it in their preferences."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/quick_create.py:0
+msgid "The context must be a dictionary such as {'default_name': 'New'}."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/quick_create.py:0
+msgid ""
+"The icon name may only contain lowercase letters, digits and underscores."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Theme"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/js/user_menu_items.js:0
+msgid "Theme Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Theme settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_scrollbar_style__thin
+msgid "Thin"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.constraint,message:my_backend_theme.constraint_my_theme_search_model_unique_model
+msgid "This model is already searchable."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.constraint,message:my_backend_theme.constraint_my_theme_bookmark_unique_user_url
+msgid "This page is already bookmarked."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_menu_style__horizontal
+msgid "Top bar (Odoo default)"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_reduce_motion
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Turn off animations and transitions for every user."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_reduce_motion
+msgid "Turn off animations and transitions for you."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Typography"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_ui_scale
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_ui_scale
+msgid "UI Scale"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__url
+msgid "URL"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/bookmark.py:0
+msgid "Unknown model: %s"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Unnamed"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Unpin"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Up to"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.actions.act_window,help:my_backend_theme.action_my_theme_bookmark
+msgid "Use the bookmark button in the top bar to save the page you are on."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_default_theme_mode
+msgid "Used for users who have not picked a color scheme themselves."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Used for users who have not picked one themselves."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Used when installed on the user's device; nothing is downloaded."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_res_users
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__user_id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__user_id
+msgid "User"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_res_users_settings
+msgid "User Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Users can override it in their preferences."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.actions.act_window,help:my_backend_theme.action_my_theme_quick_create
+msgid ""
+"Users see an entry only if they are allowed to create that kind of record."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_my_theme_bookmark__company_id
+msgid "When set, the bookmark is only listed while working in this company."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_menu_style
+msgid ""
+"Where app menus are shown. On phones Odoo's own mobile menu is always used."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Where app menus are shown. Phones always use Odoo's mobile menu."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Where messages and activities appear next to a record (needs Discuss)."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Width of the expanded sidebar, from 180 to 360 pixels."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_tabs
+msgid "Workspace Tabs"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+msgid "Workspace tabs"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "px"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "records"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"results per model\n"
+"                                <br/>"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "tabs"
+msgstr ""

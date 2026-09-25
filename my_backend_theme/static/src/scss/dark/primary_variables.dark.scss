@@ -1,0 +1,21 @@
+// Dark color scheme: Odoo builds its whole palette from these variables, so
+// redefining them before Odoo's own defaults recolors every compiled rule.
+// Loaded only in the `web.assets_web_dark` bundle.
+
+$o-webclient-color-scheme: dark;
+
+$o-white: #1e2130;
+$o-black: #f3f4f7;
+
+$o-gray-100: #252938;
+$o-gray-200: #2d3243;
+$o-gray-300: #3a4054;
+$o-gray-400: #4b5268;
+$o-gray-500: #6c748b;
+$o-gray-600: #9aa1b4;
+$o-gray-700: #bcc1ce;
+$o-gray-800: #d8dbe3;
+$o-gray-900: #eef0f4;
+
+$o-webclient-background-color: #171a24;
+$o-view-background-color: #1e2130;

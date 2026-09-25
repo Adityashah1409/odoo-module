@@ -1,0 +1,8 @@
+// Backend theme design tokens.
+//
+// The theme plugin sets `--mbt-*` custom properties and `data-mbt-*`
+// attributes on <html> only for values an administrator or user changed.
+// Every rule in backend.scss is scoped to one of those attributes, so an
+// unconfigured theme leaves Odoo's compiled styles untouched.
+
+$mbt-transition-duration: 0.01ms;

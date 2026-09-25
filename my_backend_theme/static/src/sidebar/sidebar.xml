@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="my_backend_theme.Sidebar">
+        <nav t-if="this.isVisible()"
+             class="o_mbt_sidebar d-print-none d-flex flex-column"
+             t-att-class="{ 'o_mbt_sidebar_collapsed': this.isCollapsed }"
+             t-att-data-style="this.style"
+             aria-label="Main menu">
+            <div t-if="this.style !== 'icons'" class="o_mbt_sidebar_search">
+                <i class="oi" data-icon="search" aria-hidden="true"/>
+                <input type="search"
+                       class="o_mbt_sidebar_search_input"
+                       placeholder="Search menus..."
+                       aria-label="Search menus"
+                       t-model="this.search"
+                       t-on-keydown="this.onSearchKeydown"/>
+            </div>
+
+            <div class="o_mbt_sidebar_body flex-grow-1 overflow-auto">
+                <t t-set="results" t-value="this.searchResults"/>
+                <ul t-if="results" class="o_mbt_sidebar_list list-unstyled m-0" role="menu">
+                    <li t-foreach="results" t-as="item" t-key="item.id" role="none">
+                        <a class="o_mbt_sidebar_item" role="menuitem" t-att-href="item.href"
+                           t-on-click="(ev) => this.onMenuClick(ev, item)">
+                            <span class="o_mbt_sidebar_label">
+                                <small t-if="item.parents" class="d-block text-muted text-truncate" t-out="item.parents"/>
+                                <t t-out="item.label"/>
+                            </span>
+                        </a>
+                    </li>
+                    <li t-if="!results.length" class="o_mbt_sidebar_empty text-muted">No menu found</li>
+                </ul>
+
+                <ul t-else="" class="o_mbt_sidebar_list list-unstyled m-0" role="menu">
+                    <t t-foreach="this.apps" t-as="app" t-key="app.id">
+                        <t t-set="isCurrent" t-value="this.currentApp and this.currentApp.id === app.id"/>
+                        <li class="o_mbt_sidebar_app" t-att-class="{ 'o_mbt_current': isCurrent }" role="none">
+                            <a class="o_mbt_sidebar_item o_mbt_sidebar_app_link" role="menuitem"
+                               t-att-href="this.getHref(app)"
+                               t-att-title="app.name"
+                               t-att-aria-current="isCurrent ? 'true' : undefined"
+                               t-att-data-menu-xmlid="app.xmlid"
+                               t-on-click="(ev) => this.onMenuClick(ev, app)">
+                                <span class="o_mbt_app_icon" aria-hidden="true">
+                                    <img t-if="app.iconInfo.src" t-att-src="app.iconInfo.src" alt=""/>
+                                    <span t-else="" class="o_mbt_app_icon_font"
+                                          t-att-style="'color:' + app.iconInfo.color + ';background-color:' + app.iconInfo.background">
+                                        <i class="oi" t-att-data-icon="app.iconInfo.icon"/>
+                                    </span>
+                                </span>
+                                <span class="o_mbt_sidebar_label" t-out="app.name"/>
+                            </a>
+                            <ul t-if="isCurrent and this.showSections and !this.isCollapsed and this.currentAppSections.length"
+                                class="o_mbt_sidebar_sections list-unstyled m-0" role="menu">
+                                <t t-foreach="this.currentAppSections" t-as="section" t-key="section.id">
+                                    <t t-call="my_backend_theme.Sidebar.Section"/>
+                                </t>
+                            </ul>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+
+            <button t-if="this.style === 'sidebar'"
+                    type="button"
+                    class="o_mbt_sidebar_toggle btn btn-link"
+                    t-att-title="this.isCollapsed ? 'Expand menu' : 'Collapse menu'"
+                    t-att-aria-label="this.isCollapsed ? 'Expand menu' : 'Collapse menu'"
+                    t-att-aria-expanded="this.isCollapsed ? 'false' : 'true'"
+                    t-on-click="this.toggleCollapsed">
+                <i class="oi" t-att-data-icon="this.isCollapsed ? 'chevron_right' : 'chevron_left'" aria-hidden="true"/>
+            </button>
+        </nav>
+    </t>
+
+    <t t-name="my_backend_theme.Sidebar.Section">
+        <li role="none" t-att-class="{ 'o_mbt_sidebar_group': section.childrenTree.length }">
+            <t t-if="section.childrenTree.length">
+                <button type="button" class="o_mbt_sidebar_item o_mbt_sidebar_group_toggle"
+                        t-att-aria-expanded="this.isExpanded(section) ? 'true' : 'false'"
+                        t-on-click="() => this.toggleSection(section)">
+                    <span class="o_mbt_sidebar_label" t-out="section.name"/>
+                    <i class="oi ms-auto" t-att-data-icon="this.isExpanded(section) ? 'expand_more' : 'chevron_right'" aria-hidden="true"/>
+                </button>
+                <ul t-if="this.isExpanded(section)" class="list-unstyled m-0" role="menu">
+                    <t t-foreach="section.childrenTree" t-as="section" t-key="section.id">
+                        <t t-call="my_backend_theme.Sidebar.Section"/>
+                    </t>
+                </ul>
+            </t>
+            <a t-else="" class="o_mbt_sidebar_item" role="menuitem"
+               t-att-class="{ 'o_mbt_active': this.isActive(section) }"
+               t-att-aria-current="this.isActive(section) ? 'page' : undefined"
+               t-att-href="this.getHref(section)"
+               t-att-data-menu-xmlid="section.xmlid"
+               t-on-click="(ev) => this.onMenuClick(ev, section)">
+                <span class="o_mbt_sidebar_label" t-out="section.name"/>
+            </a>
+        </li>
+    </t>
+
+</templates>

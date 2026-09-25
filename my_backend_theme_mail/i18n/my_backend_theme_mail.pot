@@ -1,0 +1,35 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* my_backend_theme_mail
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 20.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-25 20:30+0000\n"
+"PO-Revision-Date: 2026-09-25 20:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: my_backend_theme_mail
+#: model:ir.module.module,description:base.module_my_backend_theme_mail
+msgid ""
+"\n"
+"Glue module installed automatically when both Backend Theme and Discuss\n"
+"(mail) are installed. It applies the theme's chatter position setting, so the\n"
+"main theme does not have to depend on Discuss.\n"
+msgstr ""
+
+#. module: my_backend_theme_mail
+#: model:ir.module.module,shortdesc:base.module_my_backend_theme_mail
+msgid "Backend Theme - Discuss"
+msgstr ""
+
+#. module: my_backend_theme_mail
+#: model:ir.module.module,summary:base.module_my_backend_theme_mail
+msgid "Chatter position setting of the Backend Theme"
+msgstr ""
