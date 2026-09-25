@@ -214,7 +214,7 @@ class ResConfigSettings(models.TransientModel):
         for settings in self:
             used = {}
             for fname in SHORTCUT_FIELDS:
-                value = (settings[fname] or '').strip().lower()
+                value = tc.normalize_hotkey(settings[fname] or '')
                 if not value or value == 'none':
                     continue
                 if not tc.is_valid_hotkey(value):

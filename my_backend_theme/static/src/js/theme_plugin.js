@@ -24,6 +24,15 @@ export function logError(message, error) {
     console.error(`[my_backend_theme] ${message}`, error);
 }
 
+/**
+ * Global configuration as sent when the web client started, for code that
+ * runs outside components (registry `isDisplayed` checks). It only changes
+ * on reload, like the settings themselves.
+ */
+export function startupConfig() {
+    return resolveConfig(session.backend_theme || {});
+}
+
 function isDarkBundleLoaded() {
     return Boolean(document.querySelector('link[href*="web.assets_web_dark"]'));
 }

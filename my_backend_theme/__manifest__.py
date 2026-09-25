@@ -28,6 +28,9 @@ and keyboard shortcuts.
             'my_backend_theme/static/src/scss/views.scss',
             'my_backend_theme/static/src/js/**/*',
             'my_backend_theme/static/src/sidebar/**/*',
+            'my_backend_theme/static/src/navigation/**/*',
+            'my_backend_theme/static/src/tabs/**/*',
+            'my_backend_theme/static/src/split_view/**/*',
         ],
         # The dark stylesheet is Odoo's own `web.assets_web_dark` bundle, built
         # with the theme's dark palette defined before Odoo's defaults.

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="my_backend_theme.SystrayMenu.Status">
+        <div t-if="this.state.error" class="text-danger px-3 py-2 small">
+            Could not load this list. Please try again.
+        </div>
+        <div t-elif="this.state.loading and !isLoaded" class="text-muted px-3 py-2 small">
+            Loading…
+        </div>
+    </t>
+
+    <t t-name="my_backend_theme.QuickCreateMenu">
+        <DropdownGroup group="'web-navbar-group'">
+            <Dropdown position="'bottom-end'" state="this.dropdown" beforeOpen.bind="this.onBeforeOpen"
+                      menuClass="'mbt-systray-menu mbt-quick-create-menu'" bottomSheet="false">
+                <button class="mbt-systray-toggle" t-att-title="this.title" t-att-aria-label="this.title">
+                    <i class="oi" data-icon="add_box" role="img"/>
+                </button>
+                <t t-set-slot="content">
+                    <div class="mbt-systray-header dropdown-header">Quick Create</div>
+                    <t t-set="isLoaded" t-value="this.navigation.quickCreateItems() !== null"/>
+                    <t t-call="my_backend_theme.SystrayMenu.Status"/>
+                    <div t-if="isLoaded and !this.items.length and !this.state.error" class="text-muted px-3 py-2 small mbt-systray-empty">
+                        Nothing to create here. An administrator can add entries in
+                        Settings, Backend Theme.
+                    </div>
+                    <div class="mbt-quick-create-grid" role="menu">
+                        <t t-foreach="this.items" t-as="item" t-key="item.id">
+                            <button type="button" class="mbt-quick-create-item dropdown-item o-navigable" role="menuitem"
+                                    t-att-data-model="item.model" t-on-click="() => this.onItemClick(item)">
+                                <i class="oi" t-att-data-icon="item.icon" role="img" aria-hidden="true"/>
+                                <span t-out="item.name"/>
+                            </button>
+                        </t>
+                    </div>
+                </t>
+            </Dropdown>
+        </DropdownGroup>
+    </t>
+
+    <t t-name="my_backend_theme.BookmarksMenu">
+        <DropdownGroup group="'web-navbar-group'">
+            <Dropdown position="'bottom-end'" state="this.dropdown" beforeOpen.bind="this.onBeforeOpen"
+                      menuClass="'mbt-systray-menu mbt-bookmarks-menu'" bottomSheet="false">
+                <button class="mbt-systray-toggle" t-att-title="this.title" t-att-aria-label="this.title">
+                    <i class="oi" data-icon="bookmark" role="img"/>
+                </button>
+                <t t-set-slot="content">
+                    <div class="d-flex align-items-center justify-content-between mbt-systray-header">
+                        <span class="dropdown-header p-0">Bookmarks</span>
+                        <button type="button" class="btn btn-sm btn-link mbt-bookmark-toggle o-navigable"
+                                t-on-click="this.toggleCurrent"
+                                t-att-aria-pressed="this.isCurrentBookmarked ? 'true' : 'false'">
+                            <i class="oi me-1" t-att-data-icon="this.isCurrentBookmarked ? 'bookmark_f' : 'bookmark'" aria-hidden="true"/>
+                            <t t-if="this.isCurrentBookmarked">Remove this page</t>
+                            <t t-else="">Bookmark this page</t>
+                        </button>
+                    </div>
+                    <t t-set="isLoaded" t-value="this.navigation.bookmarks() !== null"/>
+                    <t t-call="my_backend_theme.SystrayMenu.Status"/>
+                    <div t-if="isLoaded and !this.bookmarks.length and !this.state.error" class="text-muted px-3 py-2 small mbt-systray-empty">
+                        No bookmarks yet.
+                    </div>
+                    <div class="mbt-systray-list" role="menu">
+                        <t t-foreach="this.bookmarks" t-as="bookmark" t-key="bookmark.id">
+                            <div class="mbt-systray-row d-flex align-items-center">
+                                <a class="dropdown-item o-navigable text-truncate flex-grow-1 mbt-bookmark-link" role="menuitem"
+                                   t-att-href="bookmark.url" t-att-title="bookmark.name" t-on-click="this.onLinkClick">
+                                    <i class="oi me-2" data-icon="bookmark_f" aria-hidden="true"/>
+                                    <span t-out="bookmark.name"/>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-link text-muted mbt-row-action"
+                                        t-on-click.stop="() => this.remove(bookmark)" title="Remove" aria-label="Remove bookmark">
+                                    <i class="oi" data-icon="close" aria-hidden="true"/>
+                                </button>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="dropdown-divider"/>
+                    <button type="button" class="dropdown-item o-navigable" t-on-click="this.manage">
+                        <i class="oi me-2" data-icon="edit" aria-hidden="true"/>Manage bookmarks
+                    </button>
+                </t>
+            </Dropdown>
+        </DropdownGroup>
+    </t>
+
+    <t t-name="my_backend_theme.RecentMenu">
+        <DropdownGroup group="'web-navbar-group'">
+            <Dropdown position="'bottom-end'" state="this.dropdown" beforeOpen.bind="this.onBeforeOpen"
+                      menuClass="'mbt-systray-menu mbt-recent-menu'" bottomSheet="false">
+                <button class="mbt-systray-toggle" t-att-title="this.title" t-att-aria-label="this.title">
+                    <i class="oi" data-icon="history" role="img"/>
+                </button>
+                <t t-set-slot="content">
+                    <div class="d-flex align-items-center justify-content-between mbt-systray-header">
+                        <span class="dropdown-header p-0">Recently Viewed</span>
+                        <button t-if="this.entries.length" type="button" class="btn btn-sm btn-link o-navigable" t-on-click="this.clear">
+                            Clear
+                        </button>
+                    </div>
+                    <t t-set="isLoaded" t-value="this.navigation.recent() !== null"/>
+                    <t t-call="my_backend_theme.SystrayMenu.Status"/>
+                    <div t-if="isLoaded and !this.entries.length and !this.state.error" class="text-muted px-3 py-2 small mbt-systray-empty">
+                        Records you open will show up here.
+                    </div>
+                    <div class="mbt-systray-list" role="menu">
+                        <t t-foreach="this.entries" t-as="entry" t-key="entry.id">
+                            <a class="dropdown-item o-navigable d-flex flex-column mbt-recent-link" role="menuitem"
+                               t-att-href="this.getUrl(entry)" t-att-title="entry.name" t-on-click="this.onLinkClick">
+                                <span class="text-truncate" t-out="entry.name"/>
+                                <small class="text-muted text-truncate" t-out="entry.model_name"/>
+                            </a>
+                        </t>
+                    </div>
+                </t>
+            </Dropdown>
+        </DropdownGroup>
+    </t>
+
+</templates>

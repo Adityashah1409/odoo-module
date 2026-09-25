@@ -5,9 +5,10 @@ from odoo import api, models
 PARAM_PREFIX = 'my_backend_theme.'
 
 COLOR_PATTERN = re.compile(r'^#[0-9a-fA-F]{6}$')
-# At least one of control/alt, optionally shift, then one letter or digit.
-# Shortcuts without control/alt would fire while typing.
-HOTKEY_PATTERN = re.compile(r'^(control\+)?(alt\+)?(shift\+)?[a-z0-9]$')
+# Odoo hotkey syntax: modifiers in the order alt, control, shift, then one
+# letter or digit. At least one of alt/control is required, otherwise the
+# shortcut would fire while typing.
+HOTKEY_PATTERN = re.compile(r'^(alt\+)?(control\+)?(shift\+)?[a-z0-9]$')
 
 UI_SCALES = [
     ('90', '90%'),
@@ -172,6 +173,23 @@ def sanitize_color(value):
     return value.lower() if isinstance(value, str) and is_valid_color(value) else False
 
 
+HOTKEY_MODIFIER_ALIASES = {'ctrl': 'control', 'cmd': 'control', 'option': 'alt'}
+HOTKEY_MODIFIER_ORDER = ('alt', 'control', 'shift')
+
+
+def normalize_hotkey(value):
+    """Write a shortcut the way Odoo's hotkey service reports it: lowercase,
+    modifiers in the order alt, control, shift. "Ctrl+Alt+K" becomes
+    "alt+control+k". Unknown parts are kept so validation can reject them."""
+    if not isinstance(value, str):
+        return value
+    parts = [part.strip() for part in value.strip().lower().split('+') if part.strip()]
+    parts = [HOTKEY_MODIFIER_ALIASES.get(part, part) for part in parts]
+    modifiers = [m for m in HOTKEY_MODIFIER_ORDER if m in parts[:-1]]
+    others = [part for part in parts[:-1] if part not in HOTKEY_MODIFIER_ORDER]
+    return '+'.join(modifiers + others + parts[-1:])
+
+
 def is_valid_hotkey(value):
     return (
         isinstance(value, str)
@@ -207,7 +225,7 @@ def sanitize_value(key, value):
     if kind == 'int':
         return sanitize_int(value, extra, default)
     if kind == 'hotkey':
-        value = value.strip().lower() if isinstance(value, str) else value
+        value = normalize_hotkey(value)
         # An explicitly cleared shortcut is stored as "none".
         if value == 'none':
             return False

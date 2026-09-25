@@ -1,0 +1,109 @@
+// = Workspace tabs
+// ============================================================================
+// A bar fixed below the navbar, next to the sidebar when there is one. The
+// action manager moves down only while the bar is shown.
+
+$mbt-tabs-height: 36px;
+
+html {
+    --mbt-tabs-height: #{$mbt-tabs-height};
+}
+
+html[data-mbt-tabs-mounted] .o_web_client > .o_action_manager {
+    margin-top: var(--mbt-tabs-height);
+}
+
+.o_mbt_tabs {
+    position: fixed;
+    top: var(--mbt-navbar-height);
+    inset-inline-start: var(--mbt-sidebar-current-width, 0px);
+    inset-inline-end: 0;
+    z-index: $zindex-dropdown - 3;
+    height: var(--mbt-tabs-height);
+    padding-inline: .5rem;
+    background: var(--body-bg);
+    border-bottom: 1px solid var(--border-color);
+    transition: inset-inline-start .2s ease;
+    font-size: $o-font-size-base-small;
+
+    .o_mbt_tabs_list {
+        min-width: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .o_mbt_tab {
+        position: relative;
+        flex: 0 1 12rem;
+        min-width: 6rem;
+        margin-top: .25rem;
+        padding-inline: .75rem .35rem;
+        border: 1px solid transparent;
+        border-bottom: 0;
+        border-radius: .4rem .4rem 0 0;
+        color: var(--body-color);
+        opacity: .75;
+
+        &:hover {
+            background: rgba(var(--emphasis-color-rgb), .05);
+            opacity: 1;
+        }
+
+        &.o_mbt_tab_active {
+            background: $o-view-background-color;
+            border-color: var(--border-color);
+            opacity: 1;
+            font-weight: 500;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: -1px -1px auto;
+                height: 2px;
+                border-radius: .4rem .4rem 0 0;
+                background: var(--mbt-primary, var(--primary));
+            }
+        }
+
+        &.o_mbt_tab_pinned {
+            flex: 0 0 auto;
+            min-width: 0;
+            padding-inline: .6rem;
+        }
+
+        &.o_mbt_tab_dragging {
+            opacity: .4;
+        }
+    }
+
+    .o_mbt_tab_link {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .o_mbt_tab_close {
+        flex: 0 0 auto;
+        margin-inline-start: .25rem;
+        color: inherit;
+        opacity: .5;
+        line-height: 1;
+
+        &:hover,
+        &:focus-visible {
+            opacity: 1;
+        }
+    }
+
+    .o_mbt_tab_new,
+    .o_mbt_tabs_menu_toggle {
+        color: var(--body-color);
+        padding: 0 .5rem;
+    }
+}
+
+html[data-mbt-reduce-motion] .o_mbt_tabs {
+    transition: none;
+}

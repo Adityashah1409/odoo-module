@@ -1,0 +1,54 @@
+// Odoo lays actions out in a column; the split view is a row.
+.o_web_client > .o_action_manager > .o_action.o_mbt_split {
+    flex-direction: row;
+}
+
+.o_mbt_split {
+    overflow: hidden;
+
+    .o_mbt_split_list,
+    .o_mbt_split_form {
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+
+        > .o_view_controller {
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+    }
+
+    .o_mbt_split_list {
+        flex: 0 0 auto;
+    }
+
+    .o_mbt_split_handle {
+        flex: 0 0 6px;
+        cursor: col-resize;
+        background: var(--border-color);
+        opacity: .6;
+
+        &:hover,
+        &:focus-visible {
+            background: var(--mbt-primary, var(--primary));
+            opacity: 1;
+            outline: none;
+        }
+    }
+
+    .o_mbt_split_form_bar {
+        flex: 0 0 auto;
+        min-height: 2rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .o_mbt_split_placeholder .oi {
+        font-size: 2.5rem;
+        opacity: .5;
+    }
+
+    &.o_mbt_split_resizing {
+        cursor: col-resize;
+        user-select: none;
+    }
+}

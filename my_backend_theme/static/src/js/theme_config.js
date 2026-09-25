@@ -53,7 +53,32 @@ export const DEFAULT_CONFIG = Object.freeze({
     checkbox_style: "default",
     scrollbar_style: "default",
     rounded_fields: false,
+    enable_quick_create: true,
+    enable_bookmarks: true,
+    enable_recent: true,
+    recent_limit: 20,
+    enable_tabs: false,
+    max_tabs: 10,
+    enable_split_view: true,
+    enable_global_search: true,
+    search_limit: 5,
+    shortcut_quick_create: "alt+shift+q",
+    shortcut_bookmarks: "alt+shift+b",
+    shortcut_recent: "alt+shift+r",
+    shortcut_search: "alt+shift+f",
+    shortcut_dark_mode: "alt+shift+d",
+    shortcut_new_tab: "alt+shift+t",
 });
+
+/** Mirrors HOTKEY_PATTERN in models/theme_config.py. */
+const HOTKEY_RE = /^(alt\+)?(control\+)?(shift\+)?[a-z0-9]$/;
+const SHORTCUT_KEYS = Object.keys(DEFAULT_CONFIG).filter((key) => key.startsWith("shortcut_"));
+
+export function sanitizeHotkey(value) {
+    return typeof value === "string" && HOTKEY_RE.test(value) && /^(alt|control)\+/.test(value)
+        ? value
+        : false;
+}
 
 /**
  * Settings reflected as `data-mbt-<name>` attributes on <html> when they
@@ -135,6 +160,11 @@ export function resolveConfig(globalConfig = {}, userSettings = {}) {
         ? globalConfig.font_family
         : DEFAULT_CONFIG.font_family;
     config.sidebar_width = sanitizeWidth(globalConfig.sidebar_width);
+    for (const key of SHORTCUT_KEYS) {
+        // false means the shortcut was turned off.
+        config[key] =
+            key in globalConfig ? sanitizeHotkey(globalConfig[key]) : DEFAULT_CONFIG[key];
+    }
     config.ui_scale =
         sanitizeScale(userSettings.mbt_ui_scale) ??
         sanitizeScale(globalConfig.ui_scale) ??
