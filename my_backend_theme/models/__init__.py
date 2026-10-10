@@ -8,3 +8,4 @@ from . import quick_create
 from . import bookmark
 from . import recent_record
 from . import search_model
+from . import settings_transfer

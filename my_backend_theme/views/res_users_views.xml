@@ -13,6 +13,7 @@
                                invisible="not mbt_dark_mode_available"/>
                         <field name="mbt_ui_scale" readonly="0" placeholder="Company default"/>
                         <field name="mbt_reduce_motion" readonly="0"/>
+                        <field name="mbt_high_contrast" readonly="0"/>
                         <field name="mbt_sidebar_collapsed" readonly="0"/>
                     </group>
                     <group>

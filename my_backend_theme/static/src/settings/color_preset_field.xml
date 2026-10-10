@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="my_backend_theme.ColorPresetField">
+        <div class="o_mbt_presets" role="radiogroup" aria-label="Color presets">
+            <t t-foreach="this.cards" t-as="card" t-key="card.key">
+                <button type="button" role="radio"
+                        class="o_mbt_preset"
+                        t-att-class="{ 'o_mbt_preset_active': card.key === this.value }"
+                        t-att-aria-checked="card.key === this.value ? 'true' : 'false'"
+                        t-att-disabled="this.props.readonly"
+                        t-att-data-preset="card.key"
+                        t-att-title="card.title"
+                        t-att-style="card.style"
+                        t-on-click="() => this.select(card.key)">
+                    <span class="o_mbt_preset_preview" aria-hidden="true">
+                        <span class="o_mbt_preset_navbar"/>
+                        <span class="o_mbt_preset_body">
+                            <span class="o_mbt_preset_sidebar">
+                                <span class="o_mbt_preset_accent"/>
+                                <span class="o_mbt_preset_item"/>
+                                <span class="o_mbt_preset_item"/>
+                            </span>
+                            <span class="o_mbt_preset_page">
+                                <span class="o_mbt_preset_line"/>
+                                <span class="o_mbt_preset_line o_mbt_preset_line_short"/>
+                                <span class="o_mbt_preset_button"/>
+                            </span>
+                        </span>
+                    </span>
+                    <span class="o_mbt_preset_label text-truncate" t-out="card.label"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+</templates>

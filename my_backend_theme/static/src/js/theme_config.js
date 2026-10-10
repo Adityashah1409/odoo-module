@@ -9,7 +9,7 @@
 
 const COLOR_RE = /^#[0-9a-f]{6}$/i;
 
-export const UI_SCALES = [90, 100, 110, 120];
+export const UI_SCALES = [90, 100, 110, 120, 130, 140];
 export const THEME_MODES = ["light", "dark", "system"];
 
 const SANS_FALLBACK =
@@ -34,6 +34,7 @@ export const DEFAULT_CONFIG = Object.freeze({
     ui_scale: 100,
     font_family: "system",
     reduce_motion: false,
+    high_contrast: false,
     enable_dark_mode: true,
     default_theme_mode: "light",
     theme_mode: "light",
@@ -62,6 +63,7 @@ export const DEFAULT_CONFIG = Object.freeze({
     enable_split_view: true,
     enable_global_search: true,
     search_limit: 5,
+    enable_workspace: true,
     shortcut_quick_create: "alt+shift+n",
     shortcut_bookmarks: "alt+shift+b",
     shortcut_recent: "alt+shift+r",
@@ -101,6 +103,7 @@ const FLAG_SETTINGS = [
     "list_borderless",
     "rounded_fields",
     "reduce_motion",
+    "high_contrast",
 ];
 
 /** Names of the CSS custom properties this module may set on the root. */
@@ -170,6 +173,8 @@ export function resolveConfig(globalConfig = {}, userSettings = {}) {
         sanitizeScale(globalConfig.ui_scale) ??
         DEFAULT_CONFIG.ui_scale;
     config.reduce_motion = Boolean(globalConfig.reduce_motion || userSettings.mbt_reduce_motion);
+    // Accessibility options can be added by a user, never taken away.
+    config.high_contrast = Boolean(globalConfig.high_contrast || userSettings.mbt_high_contrast);
     config.sidebar_collapsed = Boolean(userSettings.mbt_sidebar_collapsed);
     if (!config.enable_dark_mode) {
         config.theme_mode = "light";

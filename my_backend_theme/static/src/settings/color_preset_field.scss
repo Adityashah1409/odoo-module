@@ -1,0 +1,104 @@
+// Previews of the color presets in the settings. Unset colors fall back to
+// neutral tones taken from the page, like Odoo's own look.
+.o_mbt_presets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+    gap: 0.5rem;
+}
+
+.o_mbt_preset {
+    --mbt-preview-primary-fallback: var(--primary);
+    --mbt-preview-navbar-fallback: var(--body-bg);
+    --mbt-preview-sidebar-fallback: var(--body-bg);
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.35rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: transparent;
+    color: inherit;
+    text-align: start;
+    font-size: 0.8125rem;
+
+    &:hover:not(:disabled) {
+        border-color: var(--primary);
+    }
+
+    &.o_mbt_preset_active {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+}
+
+.o_mbt_preset_preview {
+    display: flex;
+    flex-direction: column;
+    height: 3.5rem;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 0.3rem;
+    background: var(--body-bg);
+}
+
+.o_mbt_preset_navbar {
+    flex: 0 0 0.6rem;
+    background: var(--mbt-preview-navbar, var(--mbt-preview-navbar-fallback));
+    border-bottom: 1px solid var(--border-color);
+}
+
+.o_mbt_preset_body {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.o_mbt_preset_sidebar {
+    display: flex;
+    flex: 0 0 28%;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.25rem;
+    background: var(--mbt-preview-sidebar, var(--mbt-preview-sidebar-fallback));
+    border-inline-end: 1px solid var(--border-color);
+}
+
+.o_mbt_preset_accent,
+.o_mbt_preset_item {
+    height: 0.25rem;
+    border-radius: 0.125rem;
+}
+
+.o_mbt_preset_accent {
+    background: var(--mbt-preview-accent, var(--mbt-preview-primary, var(--mbt-preview-primary-fallback)));
+}
+
+.o_mbt_preset_item {
+    background: color-mix(in srgb, currentColor 25%, transparent);
+}
+
+.o_mbt_preset_page {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.3rem;
+}
+
+.o_mbt_preset_line {
+    height: 0.2rem;
+    border-radius: 0.1rem;
+    background: color-mix(in srgb, currentColor 20%, transparent);
+
+    &.o_mbt_preset_line_short {
+        width: 60%;
+    }
+}
+
+.o_mbt_preset_button {
+    width: 45%;
+    height: 0.5rem;
+    margin-top: auto;
+    border-radius: 0.15rem;
+    background: var(--mbt-preview-primary, var(--mbt-preview-primary-fallback));
+}

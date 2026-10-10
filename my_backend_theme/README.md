@@ -13,12 +13,13 @@ is opt-in from *Settings → Backend Theme*.
 
 | Feature | Where | Notes |
 | --- | --- | --- |
-| Color presets and custom colors | Settings | Primary, navbar, sidebar and accent colors; 6 original presets. Text colors switch automatically for contrast. |
+| Color presets and custom colors | Settings | Primary, navbar, sidebar and accent colors; 6 original presets, each shown as a small preview of the navbar, sidebar and buttons. Text colors switch automatically for contrast. |
 | Dark mode | Settings, user menu, user preferences | Light, dark or follow the device. Uses Odoo's own dark stylesheet; each user chooses. |
 | Menu style | Settings | Odoo's top bar, sidebar, compact sidebar or icon-only sidebar. The sidebar has a menu search, collapses, expands on hover and remembers its state per user. |
 | App icon style | Settings | Original, rounded, circle, monochrome, glass, outlined. |
 | Compact navbar | Settings | Lower top bar. |
-| Font and UI scale | Settings, user preferences | Font stacks (no downloads); 90 to 120 % scale, per user if wanted. |
+| Font and UI scale | Settings, user preferences | Font stacks (no downloads); 90 to 140 % scale, per user if wanted. |
+| High contrast | Settings, user preferences, user menu, `Ctrl+K` | Darker secondary text, stronger borders, underlined links and a thick focus outline. Works in light and dark mode. On for everyone, or per user. |
 | List views | Settings | Compact/comfortable density, striped rows, borderless. |
 | Form views | Settings | Card, flat or compact form, sticky status bar on/off, chatter position (with `my_backend_theme_mail`). |
 | Controls | Settings | Button, checkbox and scrollbar styles, rounded fields. |
@@ -28,6 +29,7 @@ is opt-in from *Settings → Backend Theme*.
 
 | Feature | Default shortcut | Notes |
 | --- | --- | --- |
+| My Workspace | `Ctrl+K` → *Open my workspace* | An app with the user's quick create entries, recently viewed records, bookmarks and a record search box. *Open when I log in* makes it the user's home page. |
 | Quick Create (top bar) | `Alt+Shift+N` | Opens a creation form in a dialog. Entries are managed by administrators (Settings app menu *Backend Theme → Quick Create*) and only shown to users allowed to create those records. "Add Suggested Entries" fills it with the installed apps. |
 | Bookmarks (top bar) | `Alt+Shift+B` | Bookmark any backend page. Private to each user. |
 | Recently viewed (top bar) | `Alt+Shift+R` | Records the user opened, newest first, with a configurable limit. |
@@ -75,10 +77,15 @@ are not used. Every link the theme shows keeps the browser's
 * **Company settings:** *Settings → Backend Theme* (administrators). Changes
   apply when the page reloads, which Odoo does after saving.
 * **User preferences:** avatar menu → *My Preferences → Backend Theme* (color
-  scheme, UI scale, reduce motion, sidebar collapsed), and the *Dark mode*
+  scheme, UI scale, reduce motion, high contrast, sidebar collapsed), and the *Dark mode*
   switch in the avatar menu.
 * **Quick Create and Global Search models:** Settings app menu *Backend
   Theme*, or the *Add Suggested Entries* button in the settings.
+* **Copy the theme to another database:** *Settings → Backend Theme →
+  Advanced → Export Settings* downloads a JSON file with the saved settings and
+  the Quick Create and Global Search entries; *Import Settings* on the other
+  database applies it. Save the settings before exporting: unsaved changes are
+  not in the file.
 
 ## Security
 
@@ -97,6 +104,14 @@ are not used. Every link the theme shows keeps the browser's
   never evaluated. Icons are restricted to icon names.
 * Workspace tabs are stored in the browser (session/local storage); stored
   data is re-validated when read.
+* Imported settings files (administrators only) go through the same
+  validation as the settings form. Unknown keys and invalid values are skipped
+  and listed after the import, entries for models missing from the database
+  are skipped, and contexts are parsed, never evaluated. Files over 512 KB are
+  refused. User preferences, bookmarks and recently viewed records are never
+  exported.
+* *Open when I log in* only ever sets the current user's own home action, and
+  only to My Workspace.
 
 ## Performance
 
@@ -114,6 +129,12 @@ are not used. Every link the theme shows keeps the browser's
   resizable split view divider (arrow keys).
 * Automatic text colors keep contrast on custom colors.
 * Reduce motion (setting or OS preference) turns transitions off.
+* High contrast mode (company-wide or per user): secondary text, borders and
+  placeholders are mixed from the page's own text color, links are
+  underlined, and the keyboard focus gets a 3 px outline in the text color.
+* UI scale up to 140 % for users who need a larger interface.
+* A user can add these options for themselves but not remove what an
+  administrator turned on for everyone.
 
 ## Tests
 
@@ -124,9 +145,11 @@ odoo-bin -d <test-db> -i my_backend_theme --test-enable \
 
 The suite covers configuration validation, per-user privacy of bookmarks and
 recent records, access filtering of quick create and record search, shortcut
-validation, the web manifest and the dark stylesheet selection. It also runs
-the JavaScript unit tests (`static/tests`, Hoot) in a headless browser, which
-needs Chrome/Chromium and the `websocket-client` Python package.
+validation, the web manifest, the dark stylesheet selection, settings
+import/export (round trip and rejected files) and the workspace home page. It
+also runs the JavaScript unit tests (`static/tests`, Hoot) and two browser
+tours (My Workspace, color presets) in a headless browser, which needs
+Chrome/Chromium and the `websocket-client` Python package.
 
 ## Developer architecture
 
@@ -167,6 +190,13 @@ my.theme.search.model.global_search ◄──── command palette providers �
 * `static/src/split_view/`: the split view client action and its gear menu
   entry.
 * `static/src/commands/`: command palette providers and global shortcuts.
+* `static/src/workspace/`: the My Workspace client action
+  (`my_backend_theme.workspace`, URL `/odoo/my-workspace`), built on
+  `NavigationPlugin`.
+* `static/src/settings/`: the `mbt_color_preset` field widget (preset
+  previews).
+* `models/settings_transfer.py`: `my.theme.settings.transfer`, the import and
+  export of the theme settings.
 * SCSS rules are scoped to `html[data-mbt-*]` attributes, so unconfigured
   features never touch Odoo's styles.
 * Only one Odoo method is patched: `FormRenderer.mailLayout` in
