@@ -15,6 +15,7 @@ class ResUsersSettings(models.Model):
         help="Leave empty to use the company default.",
     )
     mbt_reduce_motion = fields.Boolean(string="Reduce Motion")
+    mbt_high_contrast = fields.Boolean(string="High Contrast")
     mbt_theme_mode = fields.Selection(
         THEME_MODES,
         string="Color Scheme",

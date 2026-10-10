@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_my_theme_workspace" model="ir.actions.client">
+        <field name="name">My Workspace</field>
+        <field name="tag">my_backend_theme.workspace</field>
+        <field name="path">my-workspace</field>
+    </record>
+
+    <!-- Hidden by res.config.settings when the feature is turned off. -->
+    <menuitem id="menu_my_theme_workspace" name="My Workspace" action="action_my_theme_workspace"
+              sequence="1" groups="base.group_user"
+              web_icon="my_backend_theme,static/description/workspace_icon.png"/>
+</odoo>

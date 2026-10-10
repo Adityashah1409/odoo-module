@@ -27,6 +27,20 @@ function darkModeItem() {
     };
 }
 
+function highContrastItem() {
+    const theme = usePlugin(ThemePlugin);
+    return {
+        type: "switch",
+        id: "mbt_high_contrast",
+        description: _t("High Contrast"),
+        // Turned on for everyone by an administrator: nothing to switch.
+        hide: Boolean(theme.globalConfig().high_contrast),
+        isChecked: theme.get("high_contrast"),
+        callback: () => theme.toggleHighContrast(),
+        sequence: 46,
+    };
+}
+
 function themeSettingsItem() {
     const action = useService("action");
     return {
@@ -42,4 +56,5 @@ function themeSettingsItem() {
 registry
     .category("user_menuitems")
     .add("mbt_dark_mode", darkModeItem)
+    .add("mbt_high_contrast", highContrastItem)
     .add("mbt_theme_settings", themeSettingsItem);

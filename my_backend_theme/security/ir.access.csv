@@ -5,3 +5,4 @@ access_my_theme_search_model_user,Global search models: read,my.theme.search.mod
 access_my_theme_search_model_system,Global search models: manage,my.theme.search.model,base.group_system,crud,
 access_my_theme_bookmark_user,Bookmarks: own entries only,my.theme.bookmark,base.group_user,crud,"[('user_id', '=', user.id)]"
 access_my_theme_recent_user,Recently viewed: own entries only,my.theme.recent,base.group_user,crud,"[('user_id', '=', user.id)]"
+access_my_theme_settings_transfer_system,Theme settings import/export,my.theme.settings.transfer,base.group_system,crud,

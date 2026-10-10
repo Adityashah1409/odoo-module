@@ -1,0 +1,63 @@
+.o_mbt_workspace {
+    background: var(--body-bg);
+}
+
+.o_mbt_ws_container {
+    // The action is a flex column: without a width it shrinks to its content.
+    width: 100%;
+    max-width: 72rem;
+}
+
+.o_mbt_ws_tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.5rem;
+}
+
+.o_mbt_ws_tile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    text-align: start;
+
+    .oi {
+        color: var(--primary);
+        font-size: 1.25rem;
+    }
+
+    &:hover {
+        border-color: var(--primary);
+    }
+}
+
+.o_mbt_ws_columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.5rem;
+}
+
+.o_mbt_ws_section {
+    min-width: 0;
+}
+
+.o_mbt_ws_item {
+    border-bottom: 1px solid var(--border-color);
+
+    &:last-child {
+        border-bottom: 0;
+    }
+}
+
+.o_mbt_ws_link {
+    min-width: 0;
+    padding: 0.5rem 0.25rem;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--primary);
+    }
+}

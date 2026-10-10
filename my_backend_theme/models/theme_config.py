@@ -15,6 +15,8 @@ UI_SCALES = [
     ('100', '100%'),
     ('110', '110%'),
     ('120', '120%'),
+    ('130', '130%'),
+    ('140', '140%'),
 ]
 
 # Only the name of a font stack is stored; the stacks themselves live in the
@@ -122,6 +124,8 @@ CONFIG_SCHEMA = {
     'ui_scale': ('choice', '100', UI_SCALES),
     'font_family': ('choice', 'system', FONT_FAMILIES),
     'reduce_motion': ('bool', False, None),
+    # Accessibility
+    'high_contrast': ('bool', False, None),
     # Dark mode
     'enable_dark_mode': ('bool', True, None),
     'default_theme_mode': ('choice', 'light', THEME_MODES),
@@ -152,6 +156,7 @@ CONFIG_SCHEMA = {
     'enable_split_view': ('bool', True, None),
     'enable_global_search': ('bool', True, None),
     'search_limit': ('int', 5, (1, 20)),
+    'enable_workspace': ('bool', True, None),
     # Keyboard shortcuts (Odoo hotkey syntax, e.g. "alt+shift+n")
     'shortcut_quick_create': ('hotkey', 'alt+shift+n', None),
     'shortcut_bookmarks': ('hotkey', 'alt+shift+b', None),
@@ -241,6 +246,28 @@ def sanitize_value(key, value):
     raise ValueError(key)
 
 
+def is_acceptable_value(key, value):
+    """Whether ``value`` is a valid setting as it is, without falling back to
+    a default. Used to report what an imported file could not set."""
+    if key not in CONFIG_SCHEMA:
+        return False
+    kind, _default, extra = CONFIG_SCHEMA[key]
+    if kind == 'color':
+        return value in (False, None, '') or (isinstance(value, str) and is_valid_color(value))
+    if kind == 'choice':
+        return isinstance(value, str) and value in dict(extra)
+    if kind == 'int':
+        return (
+            isinstance(value, int) and not isinstance(value, bool)
+            and extra[0] <= value <= extra[1]
+        )
+    if kind == 'bool':
+        return isinstance(value, bool)
+    if kind == 'hotkey':
+        return value in (False, None, 'none') or is_valid_hotkey(normalize_hotkey(value))
+    return False
+
+
 class MyThemeConfig(models.AbstractModel):
     """Single entry point for reading the global (company-wide) theme
     configuration.
@@ -293,3 +320,22 @@ class MyThemeConfig(models.AbstractModel):
         self.env['ir.config_parameter'].sudo().search([
             ('key', 'in', [PARAM_PREFIX + key for key in CONFIG_KEYS]),
         ]).unlink()
+        self._sync_workspace_menu()
+
+    @api.model
+    def _sync_workspace_menu(self):
+        """Show the My Workspace app only while the feature is on."""
+        menu = self.env.ref('my_backend_theme.menu_my_theme_workspace', raise_if_not_found=False)
+        if menu:
+            enabled = self._get_global_config()['enable_workspace']
+            if menu.sudo().active != enabled:
+                menu.sudo().active = enabled
+
+    @api.model
+    def get_color_presets(self):
+        """Palettes of the color presets, for the previews in the settings."""
+        return {
+            key: dict(colors, label=label)
+            for key, label in COLOR_PRESET_SELECTION
+            if (colors := COLOR_PRESETS.get(key)) is not None
+        }

@@ -133,6 +133,26 @@ commandProviderRegistry.add("my_backend_theme.commands", {
             );
         }
 
+        if (!theme.globalConfig().high_contrast) {
+            const on = theme.get("high_contrast");
+            commands.push(
+                command(
+                    on ? _t("Turn off high contrast") : _t("Turn on high contrast"),
+                    () => theme.toggleHighContrast(),
+                    { icon: "contrast" }
+                )
+            );
+        }
+        if (theme.get("enable_workspace")) {
+            commands.push(
+                command(
+                    _t("Open my workspace"),
+                    () => action.doAction("my_backend_theme.action_my_theme_workspace"),
+                    { icon: "grid_view" }
+                )
+            );
+        }
+
         const page = navigation.getCurrentPage();
         commands.push(
             command(_t("Open this page in a new browser tab"), () => {

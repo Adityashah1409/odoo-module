@@ -60,6 +60,13 @@ class ResConfigSettings(models.TransientModel):
         help="Turn off animations and transitions for every user.",
     )
 
+    # Accessibility
+    mbt_high_contrast = fields.Boolean(
+        string="High Contrast", config_parameter=_param('high_contrast'),
+        help="Darker text, stronger borders, underlined links and a clearly visible keyboard "
+             "focus for every user. Users can also turn it on for themselves only.",
+    )
+
     # Dark mode
     mbt_enable_dark_mode = fields.Boolean(
         string="Dark Mode", default=True, config_parameter=_param('enable_dark_mode'),
@@ -159,6 +166,11 @@ class ResConfigSettings(models.TransientModel):
         help="From 1 to 20.",
     )
 
+    mbt_enable_workspace = fields.Boolean(
+        string="My Workspace", default=True, config_parameter=_param('enable_workspace'),
+        help="A home page with each user's quick create entries, bookmarks and recently viewed records.",
+    )
+
     # Keyboard shortcuts
     mbt_shortcut_quick_create = fields.Char(
         string="Quick Create Shortcut", default='alt+shift+n', config_parameter=_param('shortcut_quick_create'),
@@ -242,6 +254,23 @@ class ResConfigSettings(models.TransientModel):
             },
         }
 
+    def set_values(self):
+        super().set_values()
+        self.env['my.theme.config']._sync_workspace_menu()
+
     def action_mbt_reset_defaults(self):
         self.env['my.theme.config']._reset_global_config()
         return {'type': 'ir.actions.client', 'tag': 'reload'}
+
+    def action_mbt_export_settings(self):
+        return self.env['my.theme.settings.transfer'].create({}).action_export()
+
+    def action_mbt_import_settings(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Import Theme Settings"),
+            'res_model': 'my.theme.settings.transfer',
+            'view_mode': 'form',
+            'views': [[self.env.ref('my_backend_theme.my_theme_settings_transfer_view_form').id, 'form']],
+            'target': 'new',
+        }

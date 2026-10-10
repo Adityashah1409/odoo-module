@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 20:30+0000\n"
-"PO-Revision-Date: 2026-09-25 20:30+0000\n"
+"POT-Creation-Date: 2026-10-10 08:21+0000\n"
+"PO-Revision-Date: 2026-10-10 08:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,9 @@ msgid ""
 "\n"
 "Configurable backend theme for the Odoo 20 web client: colors and presets,\n"
 "dark mode, sidebar menu styles, list and form view styles, quick create,\n"
-"bookmarks, recently viewed records, workspace tabs, split view, global search\n"
-"and keyboard shortcuts.\n"
+"bookmarks, recently viewed records, a personal workspace page, workspace\n"
+"tabs, split view, global search, keyboard shortcuts, an accessibility mode and\n"
+"settings import/export.\n"
 msgstr ""
 
 #. module: my_backend_theme
@@ -67,14 +68,34 @@ msgid "%(first)s and %(second)s use the same shortcut."
 msgstr ""
 
 #. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "%(settings)s settings and %(entries)s entries imported."
+msgstr ""
+
+#. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "A + button in the top bar to create records without leaving the page."
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"A My Workspace app with each user's quick create entries, bookmarks and "
+"recently viewed records. Users can make it their home page."
 msgstr ""
 
 #. module: my_backend_theme
 #. odoo-python
 #: code:addons/my_backend_theme/models/bookmark.py:0
 msgid "A bookmark must point to a page of the Odoo backend."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_enable_workspace
+msgid ""
+"A home page with each user's quick create entries, bookmarks and recently "
+"viewed records."
 msgstr ""
 
 #. module: my_backend_theme
@@ -119,6 +140,13 @@ msgstr ""
 #. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Advanced"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_my_theme_settings_transfer__include_entries
+msgid ""
+"Also add the file's Quick Create and Global Search entries. Entries already "
+"present are kept as they are."
 msgstr ""
 
 #. module: my_backend_theme
@@ -183,6 +211,11 @@ msgid "Backend Theme Record Link"
 msgstr ""
 
 #. module: my_backend_theme
+#: model:ir.model,name:my_backend_theme.model_my_theme_settings_transfer
+msgid "Backend Theme Settings Import/Export"
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_sidebar_color
 msgid ""
 "Background color of the sidebar menu. Leave empty to use the page "
@@ -229,6 +262,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/my_backend_theme/static/src/navigation/systray_menus.js:0
 #: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_bookmarks
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Bookmarks"
@@ -277,6 +311,11 @@ msgid "Buttons, links and highlights. Leave empty to keep Odoo's color."
 msgstr ""
 
 #. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.my_theme_settings_transfer_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_form_style__card
 msgid "Card"
 msgstr ""
@@ -305,6 +344,19 @@ msgstr ""
 #. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Choose Searched Models"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.my_theme_settings_transfer_view_form
+msgid ""
+"Choose a file exported from Settings, Backend Theme, Export Settings.\n"
+"                        Its settings replace the current ones; invalid values are skipped."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "Choose a theme settings file to import."
 msgstr ""
 
 #. module: my_backend_theme
@@ -387,6 +439,12 @@ msgid ""
 msgstr ""
 
 #. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/settings/color_preset_field.xml:0
+msgid "Color presets"
+msgstr ""
+
+#. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Colors"
 msgstr ""
@@ -451,8 +509,20 @@ msgstr ""
 
 #. module: my_backend_theme
 #. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Could not load this list. Please reload the page."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
 #: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
 msgid "Could not load this list. Please try again."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Create"
 msgstr ""
 
 #. module: my_backend_theme
@@ -471,6 +541,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__create_uid
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__create_uid
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__create_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__create_uid
 msgid "Created by"
 msgstr ""
 
@@ -479,6 +550,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__create_date
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__create_date
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__create_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__create_date
 msgid "Created on"
 msgstr ""
 
@@ -510,6 +582,29 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_shortcut_dark_mode
 msgid "Dark Mode Shortcut"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Darker text, stronger borders, underlined links and a clearly visible "
+"keyboard focus for every user. Each user can also turn it on just for "
+"themselves, and pick a UI scale up to 140%."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_config_settings__mbt_high_contrast
+msgid ""
+"Darker text, stronger borders, underlined links and a clearly visible "
+"keyboard focus for every user. Users can also turn it on for themselves "
+"only."
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_high_contrast
+msgid ""
+"Darker text, stronger borders, underlined links and a clearly visible "
+"keyboard focus."
 msgstr ""
 
 #. module: my_backend_theme
@@ -547,10 +642,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__display_name
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_record_link_mixin__display_name
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__display_name
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__display_name
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_users__display_name
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__my_theme_settings_transfer__state__done
+msgid "Done"
 msgstr ""
 
 #. module: my_backend_theme
@@ -567,6 +668,16 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_sidebar_hover_expand
 msgid "Expand Sidebar on Hover"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Export Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__filename
+msgid "Filename"
 msgstr ""
 
 #. module: my_backend_theme
@@ -650,6 +761,30 @@ msgid "Global Search Shortcut"
 msgstr ""
 
 #. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "Global Search: %s"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.js:0
+msgid "Good afternoon, %(name)s"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.js:0
+msgid "Good evening, %(name)s"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.js:0
+msgid "Good morning, %(name)s"
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model,name:my_backend_theme.model_ir_http
 msgid "HTTP Routing"
 msgstr ""
@@ -657,6 +792,15 @@ msgstr ""
 #. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Hide the lines between list rows."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/js/user_menu_items.js:0
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_high_contrast
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users__mbt_high_contrast
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__mbt_high_contrast
+msgid "High Contrast"
 msgstr ""
 
 #. module: my_backend_theme
@@ -682,6 +826,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__id
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_record_link_mixin__id
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__id
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__id
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__id
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_users__id
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_users_settings__id
@@ -696,6 +841,29 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_menu_style__icons
 msgid "Icon-only sidebar"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.my_theme_settings_transfer_view_form
+msgid "Import"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Import Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/res_config_settings.py:0
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.my_theme_settings_transfer_view_form
+msgid "Import Theme Settings"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid "Import and Export"
 msgstr ""
 
 #. module: my_backend_theme
@@ -721,6 +889,12 @@ msgid "Keep several pages open as tabs below the top bar."
 msgstr ""
 
 #. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/settings/color_preset_field.js:0
+msgid "Keep the colors below"
+msgstr ""
+
+#. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Keep the last"
 msgstr ""
@@ -740,6 +914,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__write_uid
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__write_uid
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__write_uid
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__write_uid
 msgid "Last Updated by"
 msgstr ""
 
@@ -748,6 +923,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_quick_create__write_date
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__write_date
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_search_model__write_date
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__write_date
 msgid "Last Updated on"
 msgstr ""
 
@@ -811,6 +987,12 @@ msgstr ""
 
 #. module: my_backend_theme
 #. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Manage"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
 #: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
 msgid "Manage bookmarks"
 msgstr ""
@@ -858,6 +1040,19 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.actions.act_window,name:my_backend_theme.action_my_theme_bookmark
 msgid "My Bookmarks"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.actions.client,name:my_backend_theme.action_my_theme_workspace
+#: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_enable_workspace
+#: model:ir.ui.menu,name:my_backend_theme.menu_my_theme_workspace
+msgid "My Workspace"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "My Workspace is turned off."
 msgstr ""
 
 #. module: my_backend_theme
@@ -940,6 +1135,14 @@ msgid ""
 msgstr ""
 
 #. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid ""
+"Nothing to create here. An administrator can add entries in Settings, "
+"Backend Theme."
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_color_preset__ocean
 msgid "Ocean"
 msgstr ""
@@ -992,6 +1195,12 @@ msgstr ""
 
 #. module: my_backend_theme
 #. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Open my workspace"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
 #: code:addons/my_backend_theme/static/src/split_view/split_view.xml:0
 msgid "Open the full form"
 msgstr ""
@@ -1000,6 +1209,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
 msgid "Open this page in a new browser tab"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Open when I log in"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1056,9 +1271,20 @@ msgid "Quick Create Shortcut"
 msgstr ""
 
 #. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__include_entries
+msgid "Quick Create and Global Search Entries"
+msgstr ""
+
+#. module: my_backend_theme
 #. odoo-python
 #: code:addons/my_backend_theme/models/res_config_settings.py:0
 msgid "Quick Create and Global Search now include the installed apps."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "Quick Create: %s"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1076,6 +1302,12 @@ msgid "Recently Viewed Shortcut"
 msgstr ""
 
 #. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Recently viewed"
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_bookmark__res_id
 #: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_recent__res_id
 msgid "Record"
@@ -1089,6 +1321,7 @@ msgstr ""
 #. module: my_backend_theme
 #. odoo-javascript
 #: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
 msgid "Records you open will show up here."
 msgstr ""
 
@@ -1108,7 +1341,13 @@ msgstr ""
 #. module: my_backend_theme
 #. odoo-javascript
 #: code:addons/my_backend_theme/static/src/tabs/workspace_tabs.xml:0
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.my_theme_settings_transfer_view_form
 msgid "Reload"
+msgstr ""
+
+#. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.my_theme_settings_transfer_view_form
+msgid "Reload the page to apply the imported settings."
 msgstr ""
 
 #. module: my_backend_theme
@@ -1124,7 +1363,14 @@ msgstr ""
 #. module: my_backend_theme
 #. odoo-javascript
 #: code:addons/my_backend_theme/static/src/navigation/systray_menus.xml:0
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
 msgid "Remove"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.js:0
+msgid "Remove %(name)s"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1183,6 +1429,11 @@ msgid "Restricted to Groups"
 msgstr ""
 
 #. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__result_message
+msgid "Result Message"
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_search_limit
 msgid "Results per Model"
 msgstr ""
@@ -1215,6 +1466,13 @@ msgid "Royal"
 msgstr ""
 
 #. module: my_backend_theme
+#: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
+msgid ""
+"Save these settings with the Quick Create and Global Search entries to a "
+"file, to copy the theme to another database."
+msgstr ""
+
+#. module: my_backend_theme
 #: model:ir.model.fields,field_description:my_backend_theme.field_res_config_settings__mbt_scrollbar_style
 msgid "Scrollbar Style"
 msgstr ""
@@ -1227,6 +1485,12 @@ msgstr ""
 #. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Scrollbars always stay visible."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Search"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1256,8 +1520,20 @@ msgstr ""
 
 #. module: my_backend_theme
 #. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Search records in every app"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
 #: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
 msgid "Search records in every app..."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Search records in every app…"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1313,8 +1589,14 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.module.module,summary:base.module_my_backend_theme
 msgid ""
-"Sidebar, dark mode, colors, quick create, bookmarks, tabs and global search "
-"for the backend"
+"Sidebar, dark mode, colors, accessibility, quick create, bookmarks, tabs, "
+"workspace and global search for the backend"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "Skipped because they are invalid or unknown here: %s."
 msgstr ""
 
 #. module: my_backend_theme
@@ -1340,6 +1622,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_button_style__square
 #: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_checkbox_style__square
 msgid "Square"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__state
+msgid "State"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1412,6 +1699,11 @@ msgid "Theme"
 msgstr ""
 
 #. module: my_backend_theme
+#: model:ir.model.fields,field_description:my_backend_theme.field_my_theme_settings_transfer__file
+msgid "Theme File"
+msgstr ""
+
+#. module: my_backend_theme
 #. odoo-javascript
 #: code:addons/my_backend_theme/static/src/js/user_menu_items.js:0
 msgid "Theme Settings"
@@ -1426,6 +1718,30 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.model.fields.selection,name:my_backend_theme.selection__res_config_settings__mbt_scrollbar_style__thin
 msgid "Thin"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "This file is too large to be a theme settings file."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "This file was exported by a newer version of Backend Theme."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "This is not a theme settings file exported by Backend Theme."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-python
+#: code:addons/my_backend_theme/models/settings_transfer.py:0
+msgid "This is not a theme settings file: it could not be read as JSON."
 msgstr ""
 
 #. module: my_backend_theme
@@ -1452,6 +1768,18 @@ msgstr ""
 #. module: my_backend_theme
 #: model:ir.model.fields,help:my_backend_theme.field_res_users__mbt_reduce_motion
 msgid "Turn off animations and transitions for you."
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Turn off high contrast"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/commands/theme_commands.js:0
+msgid "Turn on high contrast"
 msgstr ""
 
 #. module: my_backend_theme
@@ -1491,6 +1819,17 @@ msgstr ""
 #. module: my_backend_theme
 #: model_terms:ir.ui.view,arch_db:my_backend_theme.res_config_settings_view_form
 msgid "Up to"
+msgstr ""
+
+#. module: my_backend_theme
+#: model:ir.model.fields.selection,name:my_backend_theme.selection__my_theme_settings_transfer__state__upload
+msgid "Upload"
+msgstr ""
+
+#. module: my_backend_theme
+#. odoo-javascript
+#: code:addons/my_backend_theme/static/src/workspace/workspace.xml:0
+msgid "Use the bookmark button in the top bar to save pages you come back to."
 msgstr ""
 
 #. module: my_backend_theme

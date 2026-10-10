@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="my_backend_theme.Workspace.Error">
+        <p class="o_mbt_ws_error text-danger small mb-0">Could not load this list. Please reload the page.</p>
+    </t>
+
+    <t t-name="my_backend_theme.Workspace">
+        <div class="o_action o_mbt_workspace h-100 overflow-auto">
+            <div t-if="!this.isEnabled" class="m-auto text-center text-muted p-4">
+                <p>My Workspace is turned off.</p>
+            </div>
+            <div t-else="" class="o_mbt_ws_container mx-auto p-3 p-md-4">
+                <header class="o_mbt_ws_header d-flex flex-wrap align-items-center gap-3 mb-4">
+                    <h1 class="o_mbt_ws_greeting h3 mb-0 me-auto" t-out="this.greeting"/>
+                    <div class="form-check form-switch mb-0">
+                        <input id="mbt_ws_home" type="checkbox" class="form-check-input" role="switch"
+                               t-att-checked="this.state.isHome" t-on-change="this.toggleHome"/>
+                        <label for="mbt_ws_home" class="form-check-label">Open when I log in</label>
+                    </div>
+                </header>
+
+                <form t-if="this.theme.get('enable_global_search')" class="o_mbt_ws_search mb-4" role="search"
+                      t-on-submit="this.onSearch">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="oi" data-icon="search" aria-hidden="true"/></span>
+                        <input type="search" class="form-control" placeholder="Search records in every app…"
+                               aria-label="Search records in every app"
+                               t-att-value="this.state.query" t-on-input="this.onQueryInput"/>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+
+                <section t-if="this.theme.get('enable_quick_create')" class="o_mbt_ws_section o_mbt_ws_create mb-4"
+                         aria-labelledby="mbt_ws_create_title">
+                    <h2 id="mbt_ws_create_title" class="h5">Create</h2>
+                    <t t-if="this.state.errors.quickCreate" t-call="my_backend_theme.Workspace.Error"/>
+                    <p t-elif="!this.quickCreateItems.length" class="text-muted small mb-0">
+                        Nothing to create here. An administrator can add entries in Settings, Backend Theme.
+                    </p>
+                    <div t-else="" class="o_mbt_ws_tiles">
+                        <t t-foreach="this.quickCreateItems" t-as="item" t-key="item.id">
+                            <button type="button" class="o_mbt_ws_tile btn" t-att-data-model="item.model"
+                                    t-on-click="() => this.navigation.openQuickCreate(item)">
+                                <i class="oi" t-att-data-icon="item.icon" aria-hidden="true"/>
+                                <span class="text-truncate" t-out="item.name"/>
+                            </button>
+                        </t>
+                    </div>
+                </section>
+
+                <div class="o_mbt_ws_columns">
+                    <section t-if="this.theme.get('enable_recent')" class="o_mbt_ws_section o_mbt_ws_recent"
+                             aria-labelledby="mbt_ws_recent_title">
+                        <h2 id="mbt_ws_recent_title" class="h5">Recently viewed</h2>
+                        <t t-if="this.state.errors.recent" t-call="my_backend_theme.Workspace.Error"/>
+                        <p t-elif="!this.recent.length" class="text-muted small mb-0">
+                            Records you open will show up here.
+                        </p>
+                        <ul t-else="" class="list-unstyled mb-0">
+                            <t t-foreach="this.recent" t-as="entry" t-key="entry.id">
+                                <li class="o_mbt_ws_item">
+                                    <a t-att-href="this.recordUrl(entry)" class="o_mbt_ws_link d-flex align-items-center gap-2"
+                                       t-on-click="this.onLinkClick">
+                                        <i class="oi" data-icon="history" aria-hidden="true"/>
+                                        <span class="text-truncate" t-out="entry.name"/>
+                                        <small class="text-muted text-truncate ms-auto flex-shrink-0">
+                                            <t t-out="entry.model_name"/>
+                                            <t t-set="when" t-value="this.viewedWhen(entry)"/>
+                                            <t t-if="when"> · <t t-out="when"/></t>
+                                        </small>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
+                    </section>
+
+                    <section t-if="this.theme.get('enable_bookmarks')" class="o_mbt_ws_section o_mbt_ws_bookmarks"
+                             aria-labelledby="mbt_ws_bookmarks_title">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h2 id="mbt_ws_bookmarks_title" class="h5">Bookmarks</h2>
+                            <button t-if="this.bookmarks.length" type="button" class="btn btn-link btn-sm"
+                                    t-on-click="() => this.navigation.openManageBookmarks()">Manage</button>
+                        </div>
+                        <t t-if="this.state.errors.bookmarks" t-call="my_backend_theme.Workspace.Error"/>
+                        <p t-elif="!this.bookmarks.length" class="text-muted small mb-0">
+                            Use the bookmark button in the top bar to save pages you come back to.
+                        </p>
+                        <ul t-else="" class="list-unstyled mb-0">
+                            <t t-foreach="this.bookmarks" t-as="bookmark" t-key="bookmark.id">
+                                <li class="o_mbt_ws_item d-flex align-items-center">
+                                    <a t-att-href="bookmark.url" class="o_mbt_ws_link d-flex align-items-center gap-2 flex-grow-1 min-w-0"
+                                       t-on-click="this.onLinkClick">
+                                        <i class="oi" data-icon="bookmark_f" aria-hidden="true"/>
+                                        <span class="text-truncate" t-out="bookmark.name"/>
+                                    </a>
+                                    <button type="button" class="btn btn-link btn-sm o_mbt_ws_remove"
+                                            t-att-aria-label="this.removeLabel(bookmark)" title="Remove"
+                                            t-on-click="() => this.removeBookmark(bookmark)">
+                                        <i class="oi" data-icon="close" aria-hidden="true"/>
+                                    </button>
+                                </li>
+                            </t>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

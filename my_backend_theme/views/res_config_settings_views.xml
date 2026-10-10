@@ -10,7 +10,7 @@
                     <block title="Colors" name="mbt_colors_container">
                         <setting id="mbt_color_preset_setting" string="Color Preset"
                                  help="Fill the colors from a ready-made palette, then adjust them if you like.">
-                            <field name="mbt_color_preset" class="mt-2"/>
+                            <field name="mbt_color_preset" widget="mbt_color_preset" class="mt-2 w-100"/>
                         </setting>
                         <setting id="mbt_primary_color_setting" string="Primary Color"
                                  help="Buttons, links and highlights. Leave empty to keep Odoo's color.">
@@ -172,6 +172,10 @@
                                 Up to <field name="mbt_max_tabs" class="w-25"/> tabs
                             </div>
                         </setting>
+                        <setting id="mbt_enable_workspace_setting"
+                                 help="A My Workspace app with each user's quick create entries, bookmarks and recently viewed records. Users can make it their home page.">
+                            <field name="mbt_enable_workspace"/>
+                        </setting>
                         <setting id="mbt_enable_split_view_setting"
                                  help="Browse a list and edit the selected record side by side (from a list's gear menu).">
                             <field name="mbt_enable_split_view"/>
@@ -199,6 +203,10 @@
                     </block>
 
                     <block title="Accessibility" name="mbt_accessibility_container">
+                        <setting id="mbt_high_contrast_setting"
+                                 help="Darker text, stronger borders, underlined links and a clearly visible keyboard focus for every user. Each user can also turn it on just for themselves, and pick a UI scale up to 140%.">
+                            <field name="mbt_high_contrast"/>
+                        </setting>
                         <setting id="mbt_reduce_motion_setting"
                                  help="Turn off animations and transitions for every user.">
                             <field name="mbt_reduce_motion"/>
@@ -206,6 +214,15 @@
                     </block>
 
                     <block title="Advanced" name="mbt_advanced_container">
+                        <setting id="mbt_transfer_setting" string="Import and Export"
+                                 help="Save these settings with the Quick Create and Global Search entries to a file, to copy the theme to another database.">
+                            <div class="d-flex flex-wrap gap-2 mt-2">
+                                <button name="action_mbt_export_settings" type="object" string="Export Settings"
+                                        icon="download" class="btn-link"/>
+                                <button name="action_mbt_import_settings" type="object" string="Import Settings"
+                                        icon="upload" class="btn-link"/>
+                            </div>
+                        </setting>
                         <setting id="mbt_reset_setting" string="Reset Theme"
                                  help="Restore every theme setting to its default value. User preferences are kept.">
                             <button name="action_mbt_reset_defaults" type="object" string="Reset to Defaults"

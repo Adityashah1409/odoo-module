@@ -13,6 +13,7 @@ const USER_PREFERENCES = {
     mbt_ui_scale: (value) =>
         value === false || (typeof value === "string" && UI_SCALES.includes(Number(value))),
     mbt_reduce_motion: (value) => typeof value === "boolean",
+    mbt_high_contrast: (value) => typeof value === "boolean",
     mbt_theme_mode: (value) => value === false || THEME_MODES.includes(value),
     mbt_sidebar_collapsed: (value) => typeof value === "boolean",
 };
@@ -200,6 +201,14 @@ export class ThemePlugin extends Plugin {
             return Promise.resolve(true);
         }
         return this.setUserPreference("mbt_sidebar_collapsed", !this.config().sidebar_collapsed);
+    }
+
+    /**
+     * Turn the user's own high contrast on or off. When the company turned
+     * it on for everyone, users cannot turn it off.
+     */
+    toggleHighContrast() {
+        return this.setUserPreference("mbt_high_contrast", !this.userSettings().mbt_high_contrast);
     }
 
     /** Switch between light and dark, leaving "follow the device" if set. */

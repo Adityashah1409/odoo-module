@@ -1,0 +1,73 @@
+// High contrast, for users who find Odoo's light grays hard to read or need
+// to see where the keyboard focus is. Every color is mixed from the page's
+// own text and background colors, so it works in light and dark mode and
+// with any theme colors.
+
+html[data-mbt-high-contrast] {
+    --mbt-hc-text: color-mix(in srgb, var(--body-color) 90%, var(--body-bg));
+    --mbt-hc-border: color-mix(in srgb, var(--body-color) 55%, var(--body-bg));
+    --border-color: var(--mbt-hc-border);
+
+    // Secondary text: labels, help texts, placeholders, empty states.
+    .text-muted,
+    .text-secondary,
+    .o_light_label,
+    .o_form_label,
+    .form-text,
+    .o_field_widget .o_input::placeholder,
+    .o_searchview_input::placeholder,
+    .o_view_nocontent,
+    .o_list_renderer .o_list_table thead,
+    .o_kanban_record .text-muted,
+    .breadcrumb-item,
+    .o_setting_box .text-muted {
+        color: var(--mbt-hc-text) !important;
+    }
+
+    // Field outlines and table lines.
+    .o_input,
+    .form-control,
+    .form-select,
+    .form-check-input {
+        border-color: var(--mbt-hc-border);
+    }
+
+    .o_list_renderer .o_list_table {
+        > thead > tr > th,
+        > tbody > tr > td {
+            border-color: var(--mbt-hc-border);
+        }
+    }
+
+    .o_kanban_record,
+    .o_form_view .o_form_sheet,
+    .dropdown-menu,
+    .modal-content {
+        border-color: var(--mbt-hc-border);
+    }
+
+    // Links are recognisable without relying on color.
+    .o_content,
+    .o_form_view,
+    .modal-body {
+        a:not(.btn):not(.dropdown-item):not(.nav-link):not(.o_dropdown_title):not([role="button"]):not([role="menuitem"]):not(.o_kanban_record) {
+            text-decoration: underline;
+            text-underline-offset: 0.15em;
+        }
+    }
+
+    // A focus ring in the text color has the best possible contrast on the
+    // page background, light or dark.
+    :focus-visible {
+        outline: 3px solid var(--body-color) !important;
+        outline-offset: 2px !important;
+        box-shadow: 0 0 0 5px var(--body-bg) !important;
+    }
+
+    // Disabled controls stay legible.
+    .btn:disabled,
+    .btn.disabled {
+        opacity: 0.75;
+    }
+}
+
