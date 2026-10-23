@@ -1,0 +1,65 @@
+name: Odoo tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Odoo ${{ matrix.odoo }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        odoo: ["19.0", "20.0"]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find modules
+        id: mods
+        run: |
+          mods=$(find "${{ matrix.odoo }}" -mindepth 2 -maxdepth 2 -name __manifest__.py -printf '%h\n' \
+                 | xargs -r -n1 basename | sort | paste -sd, -)
+          echo "list=$mods" >> "$GITHUB_OUTPUT"
+          echo "Modules for ${{ matrix.odoo }}: ${mods:-none}"
+
+      - uses: actions/setup-python@v5
+        if: steps.mods.outputs.list != ''
+        with:
+          python-version: "3.12"
+
+      - name: Install system packages
+        if: steps.mods.outputs.list != ''
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libldap2-dev libsasl2-dev libpq-dev postgresql-client
+
+      - name: Get Odoo ${{ matrix.odoo }}
+        if: steps.mods.outputs.list != ''
+        run: git clone --depth 1 --branch "${{ matrix.odoo }}" https://github.com/odoo/odoo "$RUNNER_TEMP/odoo"
+
+      - name: Install Python packages
+        if: steps.mods.outputs.list != ''
+        run: |
+          pip install -r "$RUNNER_TEMP/odoo/requirements.txt"
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Install modules and run tests
+        if: steps.mods.outputs.list != ''
+        env:
+          DB_HOST: localhost
+          DB_USER: odoo
+          DB_PASSWORD: odoo
+        run: bash tools/run_tests.sh "${{ matrix.odoo }}" "$RUNNER_TEMP/odoo" "${{ steps.mods.outputs.list }}"

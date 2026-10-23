@@ -1,0 +1,1 @@
+# Extra Python packages needed by the modules in this repository (beyond Odoo's own requirements).
