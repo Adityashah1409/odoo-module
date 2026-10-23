@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mrp_bom_import_wizard" model="ir.ui.view">
+        <field name="name">mrp.bom.import.wizard.form</field>
+        <field name="model">mrp.bom.import.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="state" invisible="1"/>
+                <!-- Step 1: upload -->
+                <div invisible="state != 'draft'">
+                    <div class="alert alert-info" role="alert">
+                        One row per component. Rows with the same <b>Product</b> and <b>Reference</b> form one Bill of Materials.
+                        Required columns: <b>Product</b>, <b>Component</b>, <b>Component Quantity</b>.
+                        Optional: Reference, BoM Quantity, BoM UoM, BoM Type (normal / kit), Component UoM,
+                        Operation, Work Center, Duration (min).
+                    </div>
+                    <group>
+                        <group>
+                            <field name="file" filename="filename" required="state == 'draft'"/>
+                            <field name="filename" invisible="1"/>
+                            <field name="product_match" widget="radio"/>
+                            <field name="delimiter"/>
+                        </group>
+                        <group>
+                            <field name="import_mode" widget="radio"/>
+                            <field name="on_error" widget="radio"/>
+                            <field name="default_bom_type"/>
+                            <field name="create_missing_components"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </div>
+                <!-- Step 2: result -->
+                <div invisible="state != 'done'">
+                    <div class="row text-center mb-3">
+                        <div class="col"><div class="fs-2 fw-bold text-success"><field name="created_count"/></div>created</div>
+                        <div class="col"><div class="fs-2 fw-bold text-info"><field name="updated_count"/></div>updated</div>
+                        <div class="col"><div class="fs-2 fw-bold text-muted"><field name="skipped_count"/></div>skipped</div>
+                        <div class="col"><div class="fs-2 fw-bold text-danger"><field name="error_count"/></div>errors</div>
+                    </div>
+                    <field name="result_line_ids">
+                        <list decoration-danger="level == 'error'" decoration-muted="level == 'skipped'"
+                              decoration-success="level == 'created'">
+                            <field name="row"/>
+                            <field name="product"/>
+                            <field name="reference"/>
+                            <field name="level" widget="badge" decoration-danger="level == 'error'"
+                                   decoration-success="level == 'created'" decoration-info="level == 'updated'"/>
+                            <field name="message"/>
+                            <field name="bom_id"/>
+                        </list>
+                    </field>
+                </div>
+                <footer>
+                    <button name="action_import" type="object" string="Import" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_download_sample_xlsx" type="object" string="Sample (Excel)" class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_download_sample_csv" type="object" string="Sample (CSV)" class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_open_boms" type="object" string="Open imported BoMs" class="btn-primary"
+                            invisible="state != 'done'"/>
+                    <button name="action_back" type="object" string="Import another file" invisible="state != 'done'"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mrp_bom_import" model="ir.actions.act_window">
+        <field name="name">Import Bills of Materials</field>
+        <field name="res_model">mrp.bom.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
