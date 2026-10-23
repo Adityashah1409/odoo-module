@@ -19,9 +19,14 @@ cp -r "$REPO/19.0/$MODULE" "$REPO/20.0/$MODULE"
 sed -i -E "s/'version': '19\.0\./'version': '20.0./" "$REPO/20.0/$MODULE/__manifest__.py"
 
 cd "$ODOO20"
-python odoo-bin upgrade_code --from 19.0 --to 20.0 \
-  --addons-path="$ODOO20/addons,$ODOO20/odoo/addons,$REPO/20.0" \
-  --glob "$MODULE/**/*" || true   # exits 1 when files were rewritten
+# Two passes: when the ir.access script deletes a security.xml that only held rules,
+# later scripts crash on the deleted file if everything runs in one pass.
+for range in "19.0 19.4" "19.5 20.0"; do
+  set -- $range
+  python odoo-bin upgrade_code --from "$1" --to "$2" \
+    --addons-path="$ODOO20/addons,$ODOO20/odoo/addons,$REPO/20.0" \
+    --glob "$MODULE/**/*" || true   # exits 1 when files were rewritten
+done
 
 # Fixes not (yet) covered by upgrade_code
 python "$SCRIPT_DIR/post_port_20.py" "$REPO/20.0/$MODULE"
