@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cloud_storage_root" name="Cloud Storage" sequence="60"
+              web_icon="cloud_storage_sync,static/description/icon.png"
+              groups="group_cloud_storage_user"/>
+
+    <menuitem id="menu_cloud_storage_files" name="Files" parent="menu_cloud_storage_root"
+              action="action_cloud_storage_files" sequence="10"/>
+    <menuitem id="menu_cloud_storage_folders" name="Folders" parent="menu_cloud_storage_root"
+              action="action_cloud_storage_folder" sequence="20"/>
+
+    <menuitem id="menu_cloud_storage_config" name="Configuration" parent="menu_cloud_storage_root"
+              sequence="90" groups="group_cloud_storage_manager"/>
+    <menuitem id="menu_cloud_storage_clients" name="Cloud Clients" parent="menu_cloud_storage_config"
+              action="action_cloud_storage_client" sequence="10"/>
+    <menuitem id="menu_cloud_storage_rules" name="Folder Rules" parent="menu_cloud_storage_config"
+              action="action_cloud_storage_rule" sequence="20"/>
+    <menuitem id="menu_cloud_storage_queue" name="Sync Queue" parent="menu_cloud_storage_config"
+              action="action_cloud_storage_queue" sequence="30"/>
+    <menuitem id="menu_cloud_storage_logs" name="Sync Logs" parent="menu_cloud_storage_config"
+              action="action_cloud_storage_log" sequence="40"/>
+</odoo>

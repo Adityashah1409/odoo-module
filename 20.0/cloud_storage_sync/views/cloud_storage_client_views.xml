@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cloud_storage_client_list" model="ir.ui.view">
+        <field name="name">cloud.storage.client.list</field>
+        <field name="model">cloud.storage.client</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="provider"/>
+                <field name="root_folder"/>
+                <field name="last_sync"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge" decoration-success="state == 'confirmed'"
+                       decoration-warning="state == 'paused'" decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cloud_storage_client_form" model="ir.ui.view">
+        <field name="name">cloud.storage.client.form</field>
+        <field name="model">cloud.storage.client</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test &amp; Connect" class="btn-primary"/>
+                    <button name="action_sync_now" type="object" string="Sync now" invisible="state != 'confirmed'"/>
+                    <button name="action_pause" type="object" string="Pause" invisible="state != 'confirmed'"/>
+                    <button name="action_resume" type="object" string="Resume" invisible="state != 'paused'"/>
+                    <button name="action_pull_back" type="object" string="Pull files back"
+                            confirm="Every file that only lives in the cloud will be copied back into Odoo. Continue?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_folders" type="object" class="oe_stat_button" icon="folder" icon_class="oi-filled">
+                            <field name="folder_count" widget="statinfo" string="Folders"/>
+                        </button>
+                        <button name="action_view_queue" type="object" class="oe_stat_button" icon="checklist">
+                            <field name="queue_count" widget="statinfo" string="Pending tasks"/>
+                        </button>
+                        <button name="action_view_logs" type="object" class="oe_stat_button" icon="format_list_bulleted">
+                            <field name="log_count" widget="statinfo" string="Logs"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Company Nextcloud"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="provider"/>
+                            <field name="root_folder"/>
+                            <field name="browser_base_url" placeholder="https://cloud.example.com/remote.php/dav/files/odoo"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="last_sync"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Connection" name="connection">
+                            <group invisible="provider != 'webdav'">
+                                <field name="webdav_url" placeholder="https://cloud.example.com/remote.php/dav/files/odoo"
+                                       required="provider == 'webdav'"/>
+                                <field name="webdav_user"/>
+                                <field name="webdav_password" password="True"/>
+                                <field name="verify_ssl"/>
+                            </group>
+                            <group invisible="provider != 'local'">
+                                <field name="local_path" placeholder="/mnt/nas/odoo" required="provider == 'local'"/>
+                            </group>
+                        </page>
+                        <page string="Sync options" name="options">
+                            <group>
+                                <field name="backward_sync"/>
+                                <field name="remove_local_binary"/>
+                                <field name="delete_remote_on_unlink"/>
+                            </group>
+                        </page>
+                        <page string="Last error" name="error" invisible="not last_error">
+                            <field name="last_error"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cloud_storage_client" model="ir.actions.act_window">
+        <field name="name">Cloud Clients</field>
+        <field name="res_model">cloud.storage.client</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Connect your first storage</p>
+            <p>Add a WebDAV server (Nextcloud, ownCloud, Synology, QNAP, TrueNAS) or a folder on the server.</p>
+        </field>
+    </record>
+</odoo>

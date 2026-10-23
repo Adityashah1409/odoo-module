@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_client_user,cloud.storage.client user,model_cloud_storage_client,group_cloud_storage_user,1,0,0,0
+access_client_manager,cloud.storage.client manager,model_cloud_storage_client,group_cloud_storage_manager,1,1,1,1
+access_rule_user,cloud.storage.rule user,model_cloud_storage_rule,group_cloud_storage_user,1,0,0,0
+access_rule_manager,cloud.storage.rule manager,model_cloud_storage_rule,group_cloud_storage_manager,1,1,1,1
+access_folder_user,cloud.storage.folder user,model_cloud_storage_folder,group_cloud_storage_user,1,1,1,1
+access_folder_internal,cloud.storage.folder internal,model_cloud_storage_folder,base.group_user,1,0,0,0
+access_queue_manager,cloud.storage.queue manager,model_cloud_storage_queue,group_cloud_storage_manager,1,1,1,1
+access_log_manager,cloud.storage.log manager,model_cloud_storage_log,group_cloud_storage_manager,1,1,1,1

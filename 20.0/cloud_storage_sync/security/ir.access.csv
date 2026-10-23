@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_client_user,cloud.storage.client user,cloud.storage.client,cloud_storage_sync.group_cloud_storage_user,r,
+access_client_manager,cloud.storage.client manager,cloud.storage.client,cloud_storage_sync.group_cloud_storage_manager,crud,
+rule_client_company,Cloud clients: multi-company,cloud.storage.client,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_rule_user,cloud.storage.rule user,cloud.storage.rule,cloud_storage_sync.group_cloud_storage_user,r,
+access_rule_manager,cloud.storage.rule manager,cloud.storage.rule,cloud_storage_sync.group_cloud_storage_manager,crud,
+rule_folder_restricted,Cloud folders: user and group restrictions,cloud.storage.folder,cloud_storage_sync.group_cloud_storage_user,crud,"['|', '&', ('user_ids', '=', False), ('group_ids', '=', False), '|', ('user_ids', 'in', [user.id]), ('group_ids', 'in', user.all_group_ids.ids)]"
+rule_folder_manager,Cloud folders: administrators see everything,cloud.storage.folder,cloud_storage_sync.group_cloud_storage_manager,crud,
+rule_folder_restricted_1,Cloud folders: user and group restrictions,cloud.storage.folder,base.group_user,r,"['|', '&', ('user_ids', '=', False), ('group_ids', '=', False), '|', ('user_ids', 'in', [user.id]), ('group_ids', 'in', user.all_group_ids.ids)]"
+access_queue_manager,cloud.storage.queue manager,cloud.storage.queue,cloud_storage_sync.group_cloud_storage_manager,crud,
+access_log_manager,cloud.storage.log manager,cloud.storage.log,cloud_storage_sync.group_cloud_storage_manager,crud,
