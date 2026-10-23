@@ -59,7 +59,7 @@
                             <field name="attachment_ids" mode="list" context="{'default_cloud_folder_id': id}">
                                 <list editable="bottom">
                                     <field name="name"/>
-                                    <field name="datas" filename="name" widget="binary"/>
+                                    <field name="datas" string="File" filename="name" widget="binary"/>
                                     <field name="file_size" widget="integer"/>
                                     <field name="cloud_state" widget="badge" decoration-success="cloud_state == 'synced'"
                                            decoration-danger="cloud_state in ('error', 'missing')"/>

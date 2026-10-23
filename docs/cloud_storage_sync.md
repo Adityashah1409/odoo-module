@@ -41,6 +41,14 @@ storage's own apps (Nextcloud desktop/mobile, NAS shares, Finder/Explorer mounts
 5. A contact leaving the filter: its folder is archived, cloud-only files are pulled back first.
 6. A storage outage never blocks users: tasks are retried, then marked failed and logged.
 
+### 1.5 What it looks like (Odoo 19; Odoo 20 screenshots are in `20.0/cloud_storage_sync/README.md`)
+
+| File manager | Folder |
+| --- | --- |
+| ![Files](../19.0/cloud_storage_sync/static/description/screenshots/files.png) | ![Folder](../19.0/cloud_storage_sync/static/description/screenshots/folder.png) |
+| **Cloud client** | **Folder rule** |
+| ![Client](../19.0/cloud_storage_sync/static/description/screenshots/client.png) | ![Rule](../19.0/cloud_storage_sync/static/description/screenshots/rule.png) |
+
 ---
 
 ## 2. Architecture
