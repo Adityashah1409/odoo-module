@@ -10,6 +10,7 @@ set -euo pipefail
 MODULE="${1:?module name}"
 ODOO20="${2:?path to the Odoo 20 source}"
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 rm -rf "$REPO/20.0/$MODULE"
 cp -r "$REPO/19.0/$MODULE" "$REPO/20.0/$MODULE"
@@ -21,5 +22,8 @@ cd "$ODOO20"
 python odoo-bin upgrade_code --from 19.0 --to 20.0 \
   --addons-path="$ODOO20/addons,$ODOO20/odoo/addons,$REPO/20.0" \
   --glob "$MODULE/**/*" || true   # exits 1 when files were rewritten
+
+# Fixes not (yet) covered by upgrade_code
+python "$SCRIPT_DIR/post_port_20.py" "$REPO/20.0/$MODULE"
 
 echo "Ported $MODULE to $REPO/20.0/$MODULE"
