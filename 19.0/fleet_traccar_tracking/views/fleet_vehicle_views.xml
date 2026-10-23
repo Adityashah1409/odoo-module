@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fleet_vehicle_view_form_traccar" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.traccar</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_trips" type="object" class="oe_stat_button" icon="fa-road"
+                        invisible="not traccar_device_id">
+                    <field name="trip_count" widget="statinfo" string="Trips"/>
+                </button>
+            </div>
+            <xpath expr="//notebook" position="inside">
+                <page string="GPS Tracking" name="gps_tracking">
+                    <div class="d-flex gap-2 mb-3">
+                        <button name="action_live_map" type="object" string="Live map" class="btn-primary"
+                                invisible="not gps_fix_time"/>
+                        <button name="action_open_gps_map" type="object" string="Open in OpenStreetMap"
+                                class="btn-secondary" invisible="not gps_fix_time"/>
+                        <button name="action_import_trips" type="object" string="Import trips" class="btn-secondary"
+                                invisible="not traccar_device_id"/>
+                    </div>
+                    <group>
+                        <group string="Device">
+                            <field name="traccar_device_id" options="{'no_create': True}"/>
+                            <field name="gps_motion_state" widget="badge" decoration-success="gps_motion_state == 'moving'"
+                                   decoration-info="gps_motion_state == 'stopped'" decoration-muted="gps_motion_state == 'offline'"/>
+                            <field name="gps_fix_time"/>
+                            <field name="gps_battery_level"/>
+                        </group>
+                        <group string="Position">
+                            <field name="gps_address"/>
+                            <field name="gps_speed"/>
+                            <field name="gps_latitude"/>
+                            <field name="gps_longitude"/>
+                            <field name="gps_accuracy"/>
+                        </group>
+                    </group>
+                    <field name="gps_map_html" nolabel="1" readonly="1" invisible="not gps_fix_time"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_tree_traccar" model="ir.ui.view">
+        <field name="name">fleet.vehicle.list.traccar</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="driver_id" position="after">
+                <field name="gps_motion_state" optional="show" widget="badge"
+                       decoration-success="gps_motion_state == 'moving'" decoration-info="gps_motion_state == 'stopped'"/>
+                <field name="gps_speed" optional="hide"/>
+                <field name="gps_address" optional="show"/>
+                <field name="gps_fix_time" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="fleet_vehicle_view_search_traccar" model="ir.ui.view">
+        <field name="name">fleet.vehicle.search.traccar</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="gps_tracked" string="GPS tracked" domain="[('traccar_device_ids', '!=', False)]"/>
+                <filter name="gps_moving" string="Moving" domain="[('gps_motion_state', '=', 'moving')]"/>
+                <filter name="gps_offline" string="GPS offline" domain="[('gps_motion_state', '=', 'offline')]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_fleet_live_map" model="ir.actions.server">
+        <field name="name">Live Map</field>
+        <field name="model_id" ref="fleet.model_fleet_vehicle"/>
+        <field name="state">code</field>
+        <field name="code">action = env['fleet.vehicle'].browse().action_live_map()</field>
+    </record>
+
+    <record id="action_fleet_gps_vehicles" model="ir.actions.act_window">
+        <field name="name">Tracked Vehicles</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('traccar_device_ids', '!=', False)]</field>
+    </record>
+</odoo>

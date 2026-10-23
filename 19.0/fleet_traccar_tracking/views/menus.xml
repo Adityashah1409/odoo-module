@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_gps_tracking" name="GPS Tracking" parent="fleet.menu_root" sequence="50"
+              groups="fleet.fleet_group_user"/>
+    <menuitem id="menu_gps_live_map" name="Live Map" parent="menu_gps_tracking"
+              action="action_fleet_live_map" sequence="10"/>
+    <menuitem id="menu_gps_vehicles" name="Tracked Vehicles" parent="menu_gps_tracking"
+              action="action_fleet_gps_vehicles" sequence="20"/>
+    <menuitem id="menu_gps_trips" name="Trips" parent="menu_gps_tracking"
+              action="action_traccar_trip" sequence="30"/>
+    <menuitem id="menu_gps_import_trips" name="Import Trips" parent="menu_gps_tracking"
+              action="action_traccar_trip_import_wizard" sequence="35"/>
+    <menuitem id="menu_gps_positions" name="Position History" parent="menu_gps_tracking"
+              action="action_traccar_position" sequence="40"/>
+    <menuitem id="menu_gps_devices" name="GPS Devices" parent="menu_gps_tracking"
+              action="action_traccar_device" sequence="50"/>
+    <menuitem id="menu_traccar_servers" name="Traccar Servers" parent="fleet.fleet_configuration"
+              action="action_traccar_server" sequence="90" groups="fleet.fleet_group_manager"/>
+</odoo>

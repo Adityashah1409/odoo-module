@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_traccar_trip_import_wizard" model="ir.ui.view">
+        <field name="name">traccar.trip.import.wizard.form</field>
+        <field name="model">traccar.trip.import.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="vehicle_ids" widget="many2many_tags" placeholder="All tracked vehicles"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_import" type="object" string="Import trips" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_traccar_trip_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Trips</field>
+        <field name="res_model">traccar.trip.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

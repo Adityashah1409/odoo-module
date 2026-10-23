@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_server_user,traccar.server user,model_traccar_server,fleet.fleet_group_user,1,0,0,0
+access_server_manager,traccar.server manager,model_traccar_server,fleet.fleet_group_manager,1,1,1,1
+access_device_user,traccar.device user,model_traccar_device,fleet.fleet_group_user,1,0,0,0
+access_device_manager,traccar.device manager,model_traccar_device,fleet.fleet_group_manager,1,1,1,1
+access_position_user,traccar.position user,model_traccar_position,fleet.fleet_group_user,1,0,0,0
+access_position_manager,traccar.position manager,model_traccar_position,fleet.fleet_group_manager,1,1,1,1
+access_trip_user,traccar.trip user,model_traccar_trip,fleet.fleet_group_user,1,0,0,0
+access_trip_manager,traccar.trip manager,model_traccar_trip,fleet.fleet_group_manager,1,1,1,1
+access_trip_wizard_user,traccar.trip.import.wizard,model_traccar_trip_import_wizard,fleet.fleet_group_user,1,1,1,1

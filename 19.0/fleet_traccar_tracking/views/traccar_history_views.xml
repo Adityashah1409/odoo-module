@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_traccar_trip_list" model="ir.ui.view">
+        <field name="name">traccar.trip.list</field>
+        <field name="model">traccar.trip</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="vehicle_id"/>
+                <field name="driver_name" optional="show"/>
+                <field name="start_time"/>
+                <field name="end_time" optional="show"/>
+                <field name="start_address"/>
+                <field name="end_address"/>
+                <field name="duration" widget="float_time" sum="Total"/>
+                <field name="distance_km" sum="Total"/>
+                <field name="average_speed" optional="hide"/>
+                <field name="max_speed" optional="show"/>
+                <button name="action_open_route" type="object" icon="fa-map" title="Route on the map"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_traccar_trip_search" model="ir.ui.view">
+        <field name="name">traccar.trip.search</field>
+        <field name="model">traccar.trip</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="driver_name"/>
+                <field name="start_address"/>
+                <field name="end_address"/>
+                <filter name="start_time" string="Date" date="start_time"/>
+                <group>
+                    <filter name="group_vehicle" string="Vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <filter name="group_day" string="Day" context="{'group_by': 'start_time:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_traccar_trip_pivot" model="ir.ui.view">
+        <field name="name">traccar.trip.pivot</field>
+        <field name="model">traccar.trip</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="vehicle_id" type="row"/>
+                <field name="start_time" interval="week" type="col"/>
+                <field name="distance_km" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_traccar_trip_graph" model="ir.ui.view">
+        <field name="name">traccar.trip.graph</field>
+        <field name="model">traccar.trip</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="vehicle_id"/>
+                <field name="distance_km" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_traccar_trip" model="ir.actions.act_window">
+        <field name="name">Trips</field>
+        <field name="res_model">traccar.trip</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No trips yet</p>
+            <p>Trips are imported every day, or on demand from a vehicle (GPS Tracking › Import trips).</p>
+        </field>
+    </record>
+
+    <record id="view_traccar_position_list" model="ir.ui.view">
+        <field name="name">traccar.position.list</field>
+        <field name="model">traccar.position</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false">
+                <field name="fix_time"/>
+                <field name="vehicle_id"/>
+                <field name="latitude"/>
+                <field name="longitude"/>
+                <field name="speed"/>
+                <field name="moving" optional="show"/>
+                <field name="battery_level" optional="show"/>
+                <field name="accuracy" optional="hide"/>
+                <field name="address" optional="show"/>
+                <field name="map_url" widget="url" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_traccar_position_search" model="ir.ui.view">
+        <field name="name">traccar.position.search</field>
+        <field name="model">traccar.position</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="vehicle_id"/>
+                <field name="device_id"/>
+                <filter name="fix_time" string="Date" date="fix_time"/>
+                <filter name="moving" string="Moving" domain="[('moving', '=', True)]"/>
+                <group>
+                    <filter name="group_vehicle" string="Vehicle" context="{'group_by': 'vehicle_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_traccar_position" model="ir.actions.act_window">
+        <field name="name">Position History</field>
+        <field name="res_model">traccar.position</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>
