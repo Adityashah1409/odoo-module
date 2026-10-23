@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_shopify_product_map_list" model="ir.ui.view">
+        <field name="name">shopify.product.map.list</field>
+        <field name="model">shopify.product.map</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="false">
+                <field name="instance_id"/>
+                <field name="title"/>
+                <field name="sku"/>
+                <field name="product_id"/>
+                <field name="shopify_variant_id" optional="hide"/>
+                <field name="inventory_item_id" optional="hide"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_shopify_product_map_search" model="ir.ui.view">
+        <field name="name">shopify.product.map.search</field>
+        <field name="model">shopify.product.map</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="title"/>
+                <field name="sku"/>
+                <field name="product_id"/>
+                <field name="instance_id"/>
+                <group>
+                    <filter name="group_template" string="Product" context="{'group_by': 'product_tmpl_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_shopify_product_map" model="ir.actions.act_window">
+        <field name="name">Shopify Products</field>
+        <field name="res_model">shopify.product.map</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="view_shopify_customer_map_list" model="ir.ui.view">
+        <field name="name">shopify.customer.map.list</field>
+        <field name="model">shopify.customer.map</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="instance_id"/>
+                <field name="partner_id"/>
+                <field name="email"/>
+                <field name="shopify_customer_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_shopify_customer_map" model="ir.actions.act_window">
+        <field name="name">Shopify Customers</field>
+        <field name="res_model">shopify.customer.map</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- Export products wizard, also bound to the product list -->
+    <record id="view_shopify_export_product_wizard" model="ir.ui.view">
+        <field name="name">shopify.export.product.wizard.form</field>
+        <field name="model">shopify.export.product.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="instance_id" options="{'no_create': True}"/>
+                    <field name="product_tmpl_ids" widget="many2many_tags"/>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Export" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shopify_export_product" model="ir.actions.act_window">
+        <field name="name">Export to Shopify</field>
+        <field name="res_model">shopify.export.product.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="group_ids" eval="[Command.link(ref('group_shopify_manager'))]"/>
+    </record>
+</odoo>

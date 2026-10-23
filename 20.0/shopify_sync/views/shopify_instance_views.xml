@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard -->
+    <record id="view_shopify_instance_kanban" model="ir.ui.view">
+        <field name="name">shopify.instance.kanban</field>
+        <field name="model">shopify.instance</field>
+        <field name="arch" type="xml">
+            <kanban create="false" class="o_kanban_dashboard">
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <field name="name" class="fs-4 fw-bold"/>
+                                <div class="text-muted"><field name="shop_url"/></div>
+                            </div>
+                            <field name="state" widget="badge" decoration-success="state == 'connected'"
+                                   decoration-danger="state == 'error'"/>
+                        </div>
+                        <div class="row g-2 text-center my-2">
+                            <div class="col-3">
+                                <a name="action_view_orders" type="object" class="d-block p-2 bg-light rounded">
+                                    <div class="fs-3 fw-bold"><field name="order_count"/></div><div class="small">Orders</div>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a name="action_view_orders" type="object" class="d-block p-2 bg-light rounded">
+                                    <div class="fs-3 fw-bold"><field name="orders_to_ship_count"/></div><div class="small">To ship</div>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a name="action_view_products" type="object" class="d-block p-2 bg-light rounded">
+                                    <div class="fs-3 fw-bold"><field name="product_count"/></div><div class="small">Variants</div>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a name="action_view_queue" type="object" class="d-block p-2 bg-light rounded">
+                                    <div class="fs-3 fw-bold text-danger"><field name="failed_queue_count"/></div><div class="small">Failed</div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-2" groups="shopify_sync.group_shopify_manager">
+                            <button name="action_import_orders" type="object" class="btn btn-primary btn-sm">Import orders</button>
+                            <button name="action_import_products" type="object" class="btn btn-secondary btn-sm">Import products</button>
+                            <button name="action_export_stock" type="object" class="btn btn-secondary btn-sm">Export stock</button>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_shopify_instance_list" model="ir.ui.view">
+        <field name="name">shopify.instance.list</field>
+        <field name="model">shopify.instance</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="shop_url"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="warehouse_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'" decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_shopify_instance_form" model="ir.ui.view">
+        <field name="name">shopify.instance.form</field>
+        <field name="model">shopify.instance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test &amp; Connect" class="btn-primary"/>
+                    <button name="action_import_products" type="object" string="Import products" invisible="state != 'connected'"/>
+                    <button name="action_import_customers" type="object" string="Import customers" invisible="state != 'connected'"/>
+                    <button name="action_import_orders" type="object" string="Import orders" invisible="state != 'connected'"/>
+                    <button name="action_export_stock" type="object" string="Export stock" invisible="state != 'connected'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_orders" type="object" class="oe_stat_button" icon="shopping_cart">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                        <button name="action_view_products" type="object" class="oe_stat_button" icon="inventory_2">
+                            <field name="product_count" widget="statinfo" string="Variants"/>
+                        </button>
+                        <button name="action_view_customers" type="object" class="oe_stat_button" icon="group" icon_class="oi-filled">
+                            <field name="customer_count" widget="statinfo" string="Customers"/>
+                        </button>
+                        <button name="action_view_queue" type="object" class="oe_stat_button" icon="warning">
+                            <field name="failed_queue_count" widget="statinfo" string="Failed"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. EU Store"/></h1>
+                    </div>
+                    <group>
+                        <group string="Connection">
+                            <field name="shop_url" placeholder="my-store.myshopify.com"/>
+                            <field name="access_token" password="True"/>
+                            <field name="api_version"/>
+                            <field name="webhook_secret" password="True"/>
+                            <field name="webhook_url" widget="CopyClipboardChar"/>
+                            <field name="shop_currency"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Odoo">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="warehouse_id"/>
+                            <field name="pricelist_id"/>
+                            <field name="team_id"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Orders" name="orders">
+                            <group>
+                                <group>
+                                    <field name="import_financial_statuses"/>
+                                    <field name="auto_confirm_order"/>
+                                    <field name="auto_create_invoice" invisible="not auto_confirm_order"/>
+                                    <field name="create_missing_products"/>
+                                </group>
+                                <group>
+                                    <field name="shipping_product_id"/>
+                                    <field name="discount_product_id"/>
+                                    <field name="order_import_from"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Products &amp; stock" name="stock">
+                            <group>
+                                <group>
+                                    <field name="stock_field"/>
+                                    <field name="auto_export_stock"/>
+                                    <field name="auto_import_orders"/>
+                                </group>
+                                <group>
+                                    <field name="product_import_from"/>
+                                    <field name="customer_import_from"/>
+                                </group>
+                            </group>
+                            <button name="action_import_locations" type="object" string="Refresh locations" class="btn-link"
+                                    invisible="state != 'connected'"/>
+                            <field name="location_ids">
+                                <list editable="bottom" create="false">
+                                    <field name="name"/>
+                                    <field name="warehouse_id"/>
+                                    <field name="export_stock"/>
+                                    <field name="shopify_id" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shopify_dashboard" model="ir.actions.act_window">
+        <field name="name">Shopify Stores</field>
+        <field name="res_model">shopify.instance</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Connect your Shopify store</p>
+            <p>Create a custom app in Shopify (Settings › Apps › Develop apps), then paste its Admin API token here.</p>
+        </field>
+    </record>
+
+    <record id="action_shopify_instance" model="ir.actions.act_window">
+        <field name="name">Stores</field>
+        <field name="res_model">shopify.instance</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
