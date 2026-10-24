@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_powerbi_dataset_list" model="ir.ui.view">
+        <field name="name">powerbi.dataset.list</field>
+        <field name="model">powerbi.dataset</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="mode"/>
+                <field name="connection_id"/>
+                <field name="auto_push" optional="show"/>
+                <field name="last_push"/>
+                <field name="state" widget="badge" decoration-success="state == 'published'" decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_powerbi_dataset_form" model="ir.ui.view">
+        <field name="name">powerbi.dataset.form</field>
+        <field name="model">powerbi.dataset</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_publish" type="object" string="Publish to Power BI" class="btn-primary"
+                            invisible="mode != 'push' or powerbi_dataset_id"/>
+                    <button name="action_push" type="object" string="Push all data" class="btn-primary"
+                            invisible="mode != 'push' or not powerbi_dataset_id"/>
+                    <button name="action_push_incremental" type="object" string="Push new records"
+                            invisible="mode != 'push' or not powerbi_dataset_id"/>
+                    <button name="action_publish" type="object" string="Update schema"
+                            invisible="mode != 'push' or not powerbi_dataset_id"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object" class="oe_stat_button" icon="fa-history" string="Logs"/>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Sales analysis"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="mode" widget="radio"/>
+                            <field name="connection_id" invisible="mode != 'push'" required="mode == 'push'"/>
+                            <field name="user_id"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group invisible="mode != 'push'">
+                            <field name="powerbi_dataset_id"/>
+                            <field name="auto_push"/>
+                            <field name="push_interval" invisible="not auto_push"/>
+                            <field name="next_push" invisible="not auto_push"/>
+                            <field name="last_push"/>
+                        </group>
+                        <group invisible="mode != 'feed'">
+                            <field name="feed_url" widget="CopyClipboardChar"/>
+                            <field name="access_key" widget="CopyClipboardChar"/>
+                            <button name="action_regenerate_key" type="object" string="Regenerate key" class="btn-link"
+                                    colspan="2" confirm="Reports using the current key will stop refreshing. Continue?"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert" invisible="mode != 'feed'">
+                        In Power BI Desktop: <b>Get data › Web › Advanced</b>, URL = feed URL + <code>/&lt;table&gt;</code>,
+                        header <code>X-API-Key</code> = access key. The same source refreshes in the Power BI Service.
+                    </div>
+                    <notebook>
+                        <page string="Tables" name="tables">
+                            <field name="table_ids" context="{'default_dataset_id': id}">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="model_id"/>
+                                    <field name="domain"/>
+                                    <field name="record_count"/>
+                                    <field name="last_sync_date"/>
+                                </list>
+                                <form>
+                                    <header>
+                                        <button name="action_preview" type="object" string="Preview rows" invisible="not id"/>
+                                    </header>
+                                    <group>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="model_id" options="{'no_create': True}"/>
+                                            <field name="model_name" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="row_limit"/>
+                                            <field name="last_sync_date"/>
+                                        </group>
+                                    </group>
+                                    <field name="domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                                    <field name="column_ids">
+                                        <list editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="model_id" column_invisible="1"/>
+                                            <field name="field_id" options="{'no_create': True}"/>
+                                            <field name="name"/>
+                                            <field name="data_type"/>
+                                        </list>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Relationships" name="relationships">
+                            <field name="relationship_info" nolabel="1"
+                                   placeholder="Many2one columns pointing to another table of the dataset become Power BI relationships."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_powerbi_dataset" model="ir.actions.act_window">
+        <field name="name">Datasets</field>
+        <field name="res_model">powerbi.dataset</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a dataset</p>
+            <p>Choose the Odoo models and fields to send to Power BI, then push them or share the JSON feed.</p>
+        </field>
+    </record>
+</odoo>

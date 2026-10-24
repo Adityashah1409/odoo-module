@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+access_connection_manager,powerbi.connection manager,powerbi.connection,powerbi_connector.group_powerbi_manager,crud,
+access_dataset_manager,powerbi.dataset manager,powerbi.dataset,powerbi_connector.group_powerbi_manager,crud,
+access_table_manager,powerbi.table manager,powerbi.table,powerbi_connector.group_powerbi_manager,crud,
+access_column_manager,powerbi.column manager,powerbi.column,powerbi_connector.group_powerbi_manager,crud,
+access_log_manager,powerbi.log manager,powerbi.log,powerbi_connector.group_powerbi_manager,crud,
+rule_report_groups,Power BI reports: visible to their groups,powerbi.report,powerbi_connector.group_powerbi_user,r,"['|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]"
+rule_report_manager,Power BI reports: administrators see all,powerbi.report,powerbi_connector.group_powerbi_manager,crud,
