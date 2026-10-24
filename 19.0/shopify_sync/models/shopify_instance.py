@@ -135,9 +135,19 @@ class ShopifyInstance(models.Model):
             raise ShopifyError("Shopify rate limit reached, will retry.")
         if response.status_code >= 400:
             raise ShopifyError(f"HTTP {response.status_code}: {response.text[:300]}")
-        payload = response.json()
-        if payload.get('errors'):
-            raise ShopifyError('; '.join(e.get('message', str(e)) for e in payload['errors']))
+        try:
+            payload = response.json()
+        except ValueError:
+            raise ShopifyError(f"Invalid response from Shopify (HTTP {response.status_code}): "
+                               f"{response.text[:200]}") from None
+        if not isinstance(payload, dict):
+            raise ShopifyError("Invalid response from Shopify.")
+        errors = payload.get('errors')
+        if errors:
+            if isinstance(errors, str):
+                raise ShopifyError(errors)
+            raise ShopifyError('; '.join(e.get('message', str(e)) if isinstance(e, dict) else str(e)
+                                         for e in errors))
         return payload.get('data') or {}
 
     def _paginate(self, query, root, search=None, limit_pages=40):

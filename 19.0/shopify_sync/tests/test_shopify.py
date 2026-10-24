@@ -2,10 +2,12 @@ import base64
 import hashlib
 import hmac
 import json
+from unittest.mock import MagicMock, patch
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, TransactionCase, tagged
 
 from ..models import queries
+from ..models.shopify_instance import ShopifyError
 from .common import MUG, ShopifyCase, make_order
 
 
@@ -194,3 +196,33 @@ class TestShopifyWebhook(HttpCase, ShopifyCase):
         mapping = self.instance.product_map_ids
         self.assertEqual(mapping.shopify_variant_id, MUG['variants']['nodes'][0]['id'])
         self.assertEqual(mapping.product_id.default_code, 'MUG-01')
+
+
+@tagged('post_install', '-at_install')
+class TestShopifyApiErrors(TransactionCase):
+    """The real _graphql() with a mocked HTTP layer: every bad answer becomes a ShopifyError."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.instance = cls.env['shopify.instance'].create({
+            'name': 'Error Store', 'shop_url': 'errors.myshopify.com', 'access_token': 'shpat_x'})
+
+    def call(self, status, body=None, text=''):
+        response = MagicMock(status_code=status, text=text or str(body))
+        response.json.side_effect = (lambda: body) if body is not None else ValueError('no json')
+        with patch('odoo.addons.shopify_sync.models.shopify_instance.requests.post', return_value=response):
+            return self.instance._graphql('{ shop { name } }')
+
+    def test_graphql_errors(self):
+        self.assertEqual(self.call(200, {'data': {'shop': {'name': 'X'}}}), {'shop': {'name': 'X'}})
+        for status, body, text, message in [
+            (200, None, '<html>proxy error</html>', 'Invalid response'),
+            (200, {'errors': 'Not Found'}, '', 'Not Found'),
+            (200, {'errors': [{'message': 'Throttled'}]}, '', 'Throttled'),
+            (200, ['unexpected'], '', 'Invalid response'),
+            (429, {}, '', 'rate limit'),
+            (500, None, 'boom', 'HTTP 500'),
+        ]:
+            with self.subTest(status=status, message=message), self.assertRaisesRegex(ShopifyError, message):
+                self.call(status, body, text)
