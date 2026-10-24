@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_support_ticket" model="ir.actions.report">
+        <field name="name">Ticket</field>
+        <field name="model">support.ticket</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">helpdesk_ticket_management.report_support_ticket</field>
+        <field name="print_report_name">'Ticket %s' % object.number</field>
+        <field name="binding_model_id" ref="model_support_ticket"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_support_ticket_document">
+        <t t-call="web.external_layout">
+            <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang or o.env.lang)"/>
+            <div class="page">
+                <h2><span t-field="o.number"/> - <span t-field="o.name"/></h2>
+                <table class="table table-sm table-borderless mt-3">
+                    <tr>
+                        <td><strong>Customer</strong></td><td><span t-out="o.partner_name or o.partner_id.name"/></td>
+                        <td><strong>Status</strong></td><td><span t-field="o.stage_id"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Team</strong></td><td><span t-field="o.team_id"/></td>
+                        <td><strong>Priority</strong></td><td><span t-field="o.priority"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Assigned to</strong></td><td><span t-field="o.user_id"/></td>
+                        <td><strong>Type</strong></td><td><span t-field="o.type_id"/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Created on</strong></td><td><span t-field="o.create_date"/></td>
+                        <td><strong>Closed on</strong></td><td><span t-field="o.date_closed"/></td>
+                    </tr>
+                </table>
+                <h5 class="mt-4">Description</h5>
+                <div t-field="o.description"/>
+                <t t-if="o.resolution">
+                    <h5 class="mt-4">Resolution</h5>
+                    <div t-field="o.resolution"/>
+                </t>
+                <t t-if="o.checklist_ids">
+                    <h5 class="mt-4">Checklist</h5>
+                    <ul class="list-unstyled">
+                        <li t-foreach="o.checklist_ids" t-as="item">
+                            <span t-out="'☑' if item.done else '☐'"/> <span t-field="item.name"/>
+                        </li>
+                    </ul>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_support_ticket">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="helpdesk_ticket_management.report_support_ticket_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

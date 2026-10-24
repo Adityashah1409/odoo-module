@@ -1,0 +1,40 @@
+{
+    'name': 'Helpdesk Ticket Management',
+    'summary': 'Helpdesk for Odoo Community: teams, stages, SLA policies, e-mail gateway, customer portal, '
+               'ratings, assignment rules, checklists, timers, merge and mass update, auto-close, dashboard',
+    'version': '19.0.1.0.0',
+    'category': 'Services/Helpdesk',
+    'author': 'Aditya Shah',
+    'website': 'https://github.com/Adityashah1409/odoo-module',
+    'license': 'LGPL-3',
+    'depends': ['mail', 'portal', 'rating', 'resource', 'base_setup'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
+        'data/mail_template_data.xml',
+        'data/support_data.xml',
+        'data/ir_cron_data.xml',
+        'report/support_ticket_report.xml',
+        'wizard/support_wizard_views.xml',
+        'views/support_ticket_views.xml',
+        'views/support_team_views.xml',
+        'views/support_config_views.xml',
+        'views/support_sla_views.xml',
+        'views/res_partner_views.xml',
+        'views/res_config_settings_views.xml',
+        'views/portal_templates.xml',
+        'views/menus.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'helpdesk_ticket_management/static/src/dashboard/**/*',
+        ],
+        'web.assets_tests': [
+            'helpdesk_ticket_management/static/tests/tours/**/*',
+        ],
+    },
+    'post_init_hook': '_post_init_hook',
+    'installable': True,
+    'application': True,
+}

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="support_team_view_kanban" model="ir.ui.view">
+        <field name="name">support.team.kanban</field>
+        <field name="model">support.team</field>
+        <field name="arch" type="xml">
+            <kanban class="o_support_team_kanban" create="false" sample="1">
+                <templates>
+                    <t t-name="card" class="p-0">
+                        <div class="p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <field name="name" class="fs-4 fw-bold"/>
+                                <field name="member_ids" widget="many2many_avatar_user"/>
+                            </div>
+                            <field name="alias_email" class="text-muted small" invisible="not alias_email"/>
+                            <div class="row g-2 mt-2 text-center">
+                                <div class="col-6"><a name="action_view_open_tickets" type="object" class="d-block">
+                                    <field name="open_ticket_count" class="fs-3 d-block"/><span class="small text-muted">Open</span></a></div>
+                                <div class="col-6"><a name="action_view_unassigned_tickets" type="object" class="d-block">
+                                    <field name="unassigned_ticket_count" class="fs-3 d-block"/><span class="small text-muted">Unassigned</span></a></div>
+                                <div class="col-6"><a name="action_view_urgent_tickets" type="object" class="d-block">
+                                    <field name="urgent_ticket_count" class="fs-3 d-block text-warning"/><span class="small text-muted">Urgent</span></a></div>
+                                <div class="col-6"><a name="action_view_failed_tickets" type="object" class="d-block">
+                                    <field name="sla_failed_ticket_count" class="fs-3 d-block text-danger"/><span class="small text-muted">SLA failed</span></a></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="support_team_view_list" model="ir.ui.view">
+        <field name="name">support.team.list</field>
+        <field name="model">support.team</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="leader_id" widget="many2one_avatar_user"/>
+                <field name="member_ids" widget="many2many_avatar_user"/>
+                <field name="assignment_method"/>
+                <field name="alias_email"/>
+                <field name="is_default"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="support_team_view_form" model="ir.ui.view">
+        <field name="name">support.team.form</field>
+        <field name="model">support.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_open_tickets" type="object" class="oe_stat_button" icon="support">
+                            <field name="open_ticket_count" widget="statinfo" string="Open tickets"/>
+                        </button>
+                        <button name="action_view_slas" type="object" class="oe_stat_button" icon="schedule"
+                                invisible="not use_sla">
+                            <field name="sla_count" widget="statinfo" string="SLA policies"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="e.g. Customer Support"/></h1></div>
+                    <group>
+                        <group string="People">
+                            <field name="leader_id" widget="many2one_avatar_user"/>
+                            <field name="member_ids" widget="many2many_avatar_user"/>
+                            <field name="assignment_method"/>
+                        </group>
+                        <group string="Channels">
+                            <field name="alias_id" invisible="1"/>
+                            <label for="alias_name" string="E-mail alias"/>
+                            <div class="o_row">
+                                <field name="alias_name" placeholder="support"/>
+                                <span invisible="not alias_domain">@</span>
+                                <field name="alias_domain_id" placeholder="domain" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                            <field name="is_default"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Service level">
+                            <field name="use_sla"/>
+                            <field name="resource_calendar_id" invisible="not use_sla"/>
+                            <field name="auto_close_days"/>
+                        </group>
+                        <group string="Customer satisfaction">
+                            <field name="use_rating"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Shown to agents: scope of the team, escalation rules..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_support_team_overview" model="ir.actions.act_window">
+        <field name="name">Teams Overview</field>
+        <field name="res_model">support.team</field>
+        <field name="view_mode">kanban,form</field>
+    </record>
+    <record id="action_support_team" model="ir.actions.act_window">
+        <field name="name">Teams</field>
+        <field name="res_model">support.team</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

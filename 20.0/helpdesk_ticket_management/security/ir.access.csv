@@ -1,0 +1,37 @@
+id,name,model_id,group_id/id,operation,domain
+rule_ticket_user,"Ticket: own teams, own tickets, no team",support.ticket,helpdesk_ticket_management.group_support_user,cru,"['|', '|', '|', '|', ('team_id', '=', False), ('team_id.member_ids', 'in', [user.id]),
+            ('user_id', '=', user.id), ('assignee_ids', 'in', [user.id]), ('message_partner_ids', 'in', [user.partner_id.id])]"
+rule_ticket_leader,Ticket: teams led,support.ticket,helpdesk_ticket_management.group_support_leader,cru,"[('team_id.leader_id', '=', user.id)]"
+rule_ticket_manager,Ticket: all,support.ticket,helpdesk_ticket_management.group_support_manager,crud,
+rule_ticket_portal,Ticket: portal users see their company's tickets,support.ticket,base.group_portal,r,"['|', ('partner_id', 'child_of', [user.commercial_partner_id.id]),
+            ('message_partner_ids', 'in', [user.partner_id.id])]"
+rule_ticket_company,Ticket: multi-company,support.ticket,,crud,"[('company_id', 'in', company_ids)]"
+access_team_internal,support.team internal,support.team,base.group_user,r,
+access_team_manager,support.team manager,support.team,helpdesk_ticket_management.group_support_manager,crud,
+access_team_portal,support.team portal,support.team,base.group_portal,r,
+rule_team_company,Team: multi-company,support.team,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_stage_internal,support.stage internal,support.stage,base.group_user,r,
+access_stage_manager,support.stage manager,support.stage,helpdesk_ticket_management.group_support_manager,crud,
+access_stage_portal,support.stage portal,support.stage,base.group_portal,r,
+access_type_internal,support.ticket.type internal,support.ticket.type,base.group_user,r,
+access_type_manager,support.ticket.type manager,support.ticket.type,helpdesk_ticket_management.group_support_manager,crud,
+access_type_portal,support.ticket.type portal,support.ticket.type,base.group_portal,r,
+access_category_internal,support.category internal,support.category,base.group_user,r,
+access_category_manager,support.category manager,support.category,helpdesk_ticket_management.group_support_manager,crud,
+access_category_portal,support.category portal,support.category,base.group_portal,r,
+access_tag_internal,support.tag internal,support.tag,base.group_user,r,
+access_tag_user,support.tag user,support.tag,helpdesk_ticket_management.group_support_user,cru,
+access_tag_manager,support.tag manager,support.tag,helpdesk_ticket_management.group_support_manager,crud,
+access_sla_user,support.sla user,support.sla,helpdesk_ticket_management.group_support_user,r,
+access_sla_manager,support.sla manager,support.sla,helpdesk_ticket_management.group_support_manager,crud,
+rule_sla_company,SLA: multi-company,support.sla,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_ticket_sla_user,support.ticket.sla user,support.ticket.sla,helpdesk_ticket_management.group_support_user,crud,
+access_checklist_template_user,support.checklist.template user,support.checklist.template,helpdesk_ticket_management.group_support_user,r,
+access_checklist_template_manager,support.checklist.template manager,support.checklist.template,helpdesk_ticket_management.group_support_manager,crud,
+access_checklist_template_line_user,support.checklist.template.line user,support.checklist.template.line,helpdesk_ticket_management.group_support_user,r,
+access_checklist_template_line_manager,support.checklist.template.line manager,support.checklist.template.line,helpdesk_ticket_management.group_support_manager,crud,
+access_ticket_checklist_user,support.ticket.checklist user,support.ticket.checklist,helpdesk_ticket_management.group_support_user,crud,
+access_time_entry_user,support.time.entry user,support.time.entry,helpdesk_ticket_management.group_support_user,crud,
+access_merge_user,support.ticket.merge user,support.ticket.merge,helpdesk_ticket_management.group_support_user,cru,
+access_mass_update_user,support.ticket.mass.update user,support.ticket.mass.update,helpdesk_ticket_management.group_support_user,cru,
+access_whatsapp_user,support.whatsapp.wizard user,support.whatsapp.wizard,helpdesk_ticket_management.group_support_user,cru,

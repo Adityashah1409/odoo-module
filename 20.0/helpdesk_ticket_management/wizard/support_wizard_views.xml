@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="support_ticket_merge_view_form" model="ir.ui.view">
+        <field name="name">support.ticket.merge.form</field>
+        <field name="model">support.ticket.merge</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert" invisible="not warning">
+                    <field name="warning"/>
+                </div>
+                <p class="text-muted">The conversation, attachments, followers, checklist and time of the other tickets move to
+                    the ticket you keep; the other tickets are closed and archived.</p>
+                <group>
+                    <field name="target_id" options="{'no_create': True}"/>
+                </group>
+                <field name="ticket_ids">
+                    <list>
+                        <field name="number"/>
+                        <field name="name"/>
+                        <field name="partner_name"/>
+                        <field name="user_id"/>
+                        <field name="create_date"/>
+                        <field name="stage_id"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_merge" type="object" string="Merge" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_support_ticket_merge" model="ir.actions.act_window">
+        <field name="name">Merge tickets</field>
+        <field name="res_model">support.ticket.merge</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_support_ticket"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <record id="support_ticket_mass_update_view_form" model="ir.ui.view">
+        <field name="name">support.ticket.mass.update.form</field>
+        <field name="model">support.ticket.mass.update</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="ticket_ids" invisible="1"/>
+                <div class="alert alert-info" role="status">
+                    Only the fields you fill in are changed on the <field name="ticket_count" class="oe_inline"/> selected tickets.
+                </div>
+                <group>
+                    <group>
+                        <field name="team_id"/>
+                        <field name="user_id" widget="many2one_avatar_user" invisible="unassign"/>
+                        <field name="unassign"/>
+                        <field name="stage_id"/>
+                    </group>
+                    <group>
+                        <field name="priority" widget="priority"/>
+                        <field name="type_id"/>
+                        <field name="add_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="remove_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="follower_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_apply" type="object" string="Update" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_support_ticket_mass_update" model="ir.actions.act_window">
+        <field name="name">Update tickets</field>
+        <field name="res_model">support.ticket.mass.update</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_support_ticket"/>
+        <field name="binding_view_types">list,kanban</field>
+    </record>
+
+    <record id="support_whatsapp_wizard_view_form" model="ir.ui.view">
+        <field name="name">support.whatsapp.wizard.form</field>
+        <field name="model">support.whatsapp.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="ticket_id" invisible="1"/>
+                <group>
+                    <field name="phone" widget="phone"/>
+                    <field name="message"/>
+                </group>
+                <p class="text-muted small">Opens WhatsApp with this message; a copy is logged on the ticket.</p>
+                <footer>
+                    <button name="action_send" type="object" string="Open WhatsApp" class="btn-primary" icon="oi_whatsapp"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

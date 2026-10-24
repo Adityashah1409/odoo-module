@@ -1,0 +1,51 @@
+.o_support_dashboard {
+    background-color: $o-webclient-background-color;
+
+    .o_sd_kpis {
+        grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+    }
+    .o_sd_kpi {
+        border-left-width: 4px;
+        .o_sd_value {
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .o_sd_icon {
+            opacity: .55;
+            font-size: 1.2rem;
+        }
+    }
+    button.o_sd_kpi:hover {
+        box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .08);
+    }
+    .o_sd_primary { border-left-color: $primary; }
+    .o_sd_warning { border-left-color: $warning; }
+    .o_sd_danger { border-left-color: $danger; .o_sd_value { color: $danger; } }
+    .o_sd_success { border-left-color: $success; }
+    .o_sd_rating { border-left-color: $info; }
+    .o_sd_stagebar {
+        height: 14px;
+        .o_sd_segment {
+            min-width: 4px;
+        }
+    }
+    .o_sd_dot {
+        display: inline-block;
+        width: .7rem;
+        height: .7rem;
+        border-radius: 50%;
+        margin-right: .25rem;
+    }
+    .o_sd_days {
+        height: 120px;
+        .o_sd_daybar {
+            background-color: $primary;
+            opacity: .8;
+        }
+    }
+    .o_sd_prio_0 { background-color: $gray-400; }
+    .o_sd_prio_1 { background-color: $info; }
+    .o_sd_prio_2 { background-color: $warning; }
+    .o_sd_prio_3 { background-color: $danger; }
+}

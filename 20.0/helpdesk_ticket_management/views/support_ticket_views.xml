@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- time -->
+    <record id="support_time_entry_view_list" model="ir.ui.view">
+        <field name="name">support.time.entry.list</field>
+        <field name="model">support.time.entry</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-success="running">
+                <field name="date"/>
+                <field name="ticket_id"/>
+                <field name="team_id" optional="hide"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="description"/>
+                <field name="hours" widget="float_time" sum="Total"/>
+                <field name="running" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="support_time_entry_view_search" model="ir.ui.view">
+        <field name="name">support.time.entry.search</field>
+        <field name="model">support.time.entry</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="ticket_id"/>
+                <field name="user_id"/>
+                <field name="team_id"/>
+                <filter name="mine" string="Mine" domain="[('user_id', '=', uid)]"/>
+                <filter name="running" string="Running" domain="[('running', '=', True)]"/>
+                <filter name="date" string="Date" date="date"/>
+                <group>
+                    <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_ticket" string="Ticket" context="{'group_by': 'ticket_id'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by': 'date:week'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="support_time_entry_view_pivot" model="ir.ui.view">
+        <field name="name">support.time.entry.pivot</field>
+        <field name="model">support.time.entry</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="user_id" type="row"/>
+                <field name="date" interval="week" type="col"/>
+                <field name="hours" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="action_support_time_entry" model="ir.actions.act_window">
+        <field name="name">Time Spent</field>
+        <field name="res_model">support.time.entry</field>
+        <field name="view_mode">list,pivot</field>
+    </record>
+    <record id="support_ticket_view_list" model="ir.ui.view">
+        <field name="name">support.ticket.list</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <list multi_edit="1" sample="1" decoration-muted="is_closed" decoration-danger="sla_fail and not is_closed">
+                <header>
+                    <button name="%(action_support_ticket_mass_update)d" type="action" string="Update"/>
+                    <button name="action_open_merge" type="object" string="Merge"/>
+                </header>
+                <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                <field name="number"/>
+                <field name="name"/>
+                <field name="partner_name" string="Customer"/>
+                <field name="team_id" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="type_id" optional="hide"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="sla_deadline" optional="show" invisible="is_closed"/>
+                <field name="last_reply_by" optional="hide" widget="badge" decoration-warning="last_reply_by == 'customer'"
+                       decoration-info="last_reply_by == 'staff'"/>
+                <field name="spent_hours" widget="float_time" optional="hide" sum="Total"/>
+                <field name="create_date" string="Created" optional="hide"/>
+                <field name="stage_id" widget="badge"/>
+                <field name="is_closed" column_invisible="1"/>
+                <field name="sla_fail" column_invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_kanban" model="ir.ui.view">
+        <field name="name">support.ticket.kanban</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id" sample="1" quick_create_view="helpdesk_ticket_management.support_ticket_view_form_quick"
+                    highlight_color="color">
+                <field name="sla_fail"/>
+                <field name="timer_running"/>
+                <field name="checklist_ids"/>
+                <progressbar field="priority" colors='{"3": "danger", "2": "warning", "1": "info", "0": "muted"}'/>
+                <templates>
+                    <t t-name="menu">
+                        <a t-if="widget.editable" role="menuitem" type="open" class="dropdown-item">Edit</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <field name="number" class="text-muted small"/>
+                            <span t-if="record.sla_fail.raw_value" class="badge text-bg-danger">SLA failed</span>
+                        </div>
+                        <field name="name" class="fw-bold"/>
+                        <field name="partner_name" class="text-muted"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <div t-if="record.checklist_ids.raw_value.length" class="d-flex align-items-center gap-1 small">
+                            <i class="oi text-muted" data-icon="check_box" title="Checklist"/>
+                            <field name="checklist_progress" widget="progressbar" class="flex-grow-1"/>
+                        </div>
+                        <footer class="pt-1">
+                            <div class="d-flex align-items-center gap-1">
+                                <field name="priority" widget="priority"/>
+                                <field name="activity_ids" widget="kanban_activity"/>
+                                <i t-if="record.timer_running.raw_value" class="oi text-success" data-icon="schedule" title="Your timer is running"/>
+                                <field name="sla_deadline" invisible="not sla_deadline" class="small"/>
+                            </div>
+                            <field name="user_id" widget="many2one_avatar_user" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_form_quick" model="ir.ui.view">
+        <field name="name">support.ticket.form.quick</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" placeholder="Subject"/>
+                    <field name="partner_id" widget="res_partner_many2one"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="priority" widget="priority"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_form" model="ir.ui.view">
+        <field name="name">support.ticket.form</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_assign_to_me" type="object" string="Assign to me" class="oe_highlight"
+                            invisible="user_id or is_closed"/>
+                    <button name="action_timer_start" type="object" string="Start timer" icon="play_arrow"
+                            invisible="timer_running or is_closed"/>
+                    <button name="action_timer_stop" type="object" string="Stop timer" icon="stop"
+                            class="btn-warning" invisible="not timer_running"/>
+                    <button name="action_close" type="object" string="Close" invisible="is_closed"/>
+                    <button name="action_open_whatsapp" type="object" string="WhatsApp" icon="oi_whatsapp"
+                            invisible="not partner_phone"/>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sla" type="object" class="oe_stat_button" icon="schedule"
+                                invisible="not sla_status_ids">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text" invisible="sla_fail">SLA</span>
+                                <span class="o_stat_text text-danger" invisible="not sla_fail">SLA failed</span>
+                            </div>
+                        </button>
+                        <button name="%(action_support_time_entry)d" type="action" class="oe_stat_button" icon="hourglass_bottom"
+                                context="{'search_default_ticket_id': id, 'default_ticket_id': id}">
+                            <field name="spent_hours" widget="statinfo" string="Hours"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Merged" bg_color="text-bg-secondary" invisible="not merged_into_id"/>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-success" invisible="not is_closed or merged_into_id"/>
+                    <div class="oe_title">
+                        <field name="number" readonly="1" class="text-muted"/>
+                        <h1><field name="name" placeholder="e.g. The invoice PDF does not open"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"/>
+                            <field name="partner_name" invisible="partner_id"/>
+                            <field name="partner_email" widget="email"/>
+                            <field name="partner_phone" widget="phone"/>
+                            <field name="channel"/>
+                        </group>
+                        <group>
+                            <field name="team_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="assignee_ids" widget="many2many_avatar_user"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="type_id"/>
+                            <field name="category_id"/>
+                            <field name="sub_category_id" invisible="not category_id"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="sla_deadline" invisible="not sla_deadline or is_closed"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="What happened, steps to reproduce, expected result..."/>
+                        </page>
+                        <page string="Checklist" name="checklist">
+                            <group>
+                                <field name="checklist_template_id" options="{'no_create': True}"/>
+                                <field name="checklist_progress" widget="progressbar" invisible="not checklist_ids"/>
+                            </group>
+                            <field name="checklist_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="done" widget="boolean_toggle" nolabel="1"/>
+                                    <field name="name"/>
+                                    <field name="done_by_id" optional="show"/>
+                                    <field name="date_done" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Time" name="time">
+                            <field name="timer_user_ids" widget="many2many_avatar_user" invisible="not timer_user_ids"/>
+                            <field name="time_entry_ids">
+                                <list editable="bottom" decoration-success="running">
+                                    <field name="date"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                    <field name="description"/>
+                                    <field name="start" optional="hide"/>
+                                    <field name="stop" optional="hide"/>
+                                    <field name="hours" widget="float_time" sum="Total"/>
+                                    <field name="running" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="SLA" name="sla" invisible="not sla_status_ids">
+                            <field name="sla_status_ids" readonly="1">
+                                <list decoration-danger="status == 'failed'" decoration-success="status == 'reached'">
+                                    <field name="sla_id"/>
+                                    <field name="stage_id"/>
+                                    <field name="deadline"/>
+                                    <field name="reached_datetime"/>
+                                    <field name="exceeded_hours" widget="float_time"/>
+                                    <field name="status" widget="badge" decoration-danger="status == 'failed'"
+                                           decoration-success="status == 'reached'" decoration-info="status == 'ongoing'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Resolution" name="resolution">
+                            <group>
+                                <group>
+                                    <field name="date_closed"/>
+                                    <field name="closed_by_id"/>
+                                    <field name="merged_into_id" invisible="not merged_into_id"/>
+                                </group>
+                                <group>
+                                    <field name="date_assigned"/>
+                                    <field name="last_reply_by"/>
+                                    <field name="date_last_customer_reply"/>
+                                    <field name="date_last_staff_reply"/>
+                                </group>
+                            </group>
+                            <field name="resolution" placeholder="How was it solved? Sent to the customer with the solved e-mail."/>
+                        </page>
+                    </notebook>
+                    <field name="is_closed" invisible="1"/>
+                    <field name="sla_fail" invisible="1"/>
+                    <field name="timer_running" invisible="1"/>
+                </sheet>
+                <chatter reload_on_follower="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_search" model="ir.ui.view">
+        <field name="name">support.ticket.search</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Ticket" filter_domain="['|', '|', ('name', 'ilike', self), ('number', 'ilike', self), ('description', 'ilike', self)]"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="partner_email"/>
+                <field name="team_id"/>
+                <field name="user_id"/>
+                <field name="tag_ids"/>
+                <field name="type_id"/>
+                <field name="category_id"/>
+                <field name="stage_id"/>
+                <filter name="my_tickets" string="My tickets" domain="['|', ('user_id', '=', uid), ('assignee_ids', 'in', [uid])]"/>
+                <filter name="unassigned" string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <filter name="followed" string="Followed" domain="[('message_is_follower', '=', True)]"/>
+                <separator/>
+                <filter name="open" string="Open" domain="[('is_closed', '=', False)]"/>
+                <filter name="closed" string="Closed" domain="[('is_closed', '=', True)]"/>
+                <separator/>
+                <filter name="urgent" string="Urgent" domain="[('priority', '=', '3')]"/>
+                <filter name="high" string="High or urgent" domain="[('priority', 'in', ('2', '3'))]"/>
+                <separator/>
+                <filter name="sla_failed" string="SLA failed" domain="[('sla_fail', '=', True)]"/>
+                <filter name="sla_ongoing" string="SLA in progress" domain="[('sla_deadline', '!=', False)]"/>
+                <separator/>
+                <filter name="customer_replied" string="Customer answered" domain="[('last_reply_by', '=', 'customer'), ('is_closed', '=', False)]"/>
+                <filter name="waiting" string="Waiting on customer" domain="[('last_reply_by', '=', 'staff'), ('is_closed', '=', False)]"/>
+                <filter name="running_timer" string="Running timers" domain="[('time_entry_ids.running', '=', True)]"/>
+                <separator/>
+                <filter name="create_date" string="Created" date="create_date"/>
+                <filter name="date_closed" string="Closed on" date="date_closed"/>
+                <separator/>
+                <filter name="archived" string="Archived / merged" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_team" string="Team" context="{'group_by': 'team_id'}"/>
+                    <filter name="group_user" string="Assigned to" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_stage" string="Stage" context="{'group_by': 'stage_id'}"/>
+                    <filter name="group_priority" string="Priority" context="{'group_by': 'priority'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by': 'type_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_customer" string="Customer" context="{'group_by': 'commercial_partner_id'}"/>
+                    <filter name="group_channel" string="Source" context="{'group_by': 'channel'}"/>
+                    <filter name="group_create" string="Created" context="{'group_by': 'create_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_calendar" model="ir.ui.view">
+        <field name="name">support.ticket.calendar</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <calendar date_start="create_date" color="team_id" mode="month" quick_create="0" event_open_popup="1">
+                <field name="partner_name"/>
+                <field name="stage_id"/>
+                <field name="user_id" filters="1" avatar_field="avatar_128"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_pivot" model="ir.ui.view">
+        <field name="name">support.ticket.pivot</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="team_id" type="row"/>
+                <field name="stage_id" type="col"/>
+                <field name="spent_hours" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_graph" model="ir.ui.view">
+        <field name="name">support.ticket.graph</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <graph type="bar" stacked="1" sample="1">
+                <field name="create_date" interval="week"/>
+                <field name="team_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="support_ticket_view_activity" model="ir.ui.view">
+        <field name="name">support.ticket.activity</field>
+        <field name="model">support.ticket</field>
+        <field name="arch" type="xml">
+            <activity string="Tickets">
+                <templates>
+                    <div t-name="activity-box">
+                        <div class="d-flex flex-column">
+                            <field name="name" class="fw-bold"/>
+                            <field name="number" class="text-muted"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="action_support_ticket" model="ir.actions.act_window">
+        <field name="name">Tickets</field>
+        <field name="res_model">support.ticket</field>
+        <field name="path">tickets</field>
+        <field name="view_mode">kanban,list,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="support_ticket_view_search"/>
+        <field name="context">{'search_default_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No ticket yet</p>
+            <p>Tickets arrive by e-mail (team alias), from the customer portal, or are created here.</p>
+        </field>
+    </record>
+    <record id="action_support_ticket_mine" model="ir.actions.act_window">
+        <field name="name">My Tickets</field>
+        <field name="res_model">support.ticket</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
+        <field name="search_view_id" ref="support_ticket_view_search"/>
+        <field name="context">{'search_default_my_tickets': 1, 'search_default_open': 1}</field>
+    </record>
+    <record id="action_support_ticket_unassigned" model="ir.actions.act_window">
+        <field name="name">Unassigned Tickets</field>
+        <field name="res_model">support.ticket</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="support_ticket_view_search"/>
+        <field name="context">{'search_default_unassigned': 1, 'search_default_open': 1}</field>
+    </record>
+    <record id="action_support_ticket_analysis" model="ir.actions.act_window">
+        <field name="name">Ticket Analysis</field>
+        <field name="res_model">support.ticket</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="search_view_id" ref="support_ticket_view_search"/>
+        <field name="context">{'active_test': False}</field>
+    </record>
+    <record id="action_support_dashboard" model="ir.actions.client">
+        <field name="name">Helpdesk Dashboard</field>
+        <field name="tag">helpdesk_ticket_management.dashboard</field>
+        <field name="path">helpdesk-dashboard</field>
+    </record>
+    <record id="action_support_ratings" model="ir.actions.act_window">
+        <field name="name">Customer Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">list,kanban,pivot,graph,form</field>
+        <field name="domain">[('res_model', '=', 'support.ticket'), ('consumed', '=', True)]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+</odoo>

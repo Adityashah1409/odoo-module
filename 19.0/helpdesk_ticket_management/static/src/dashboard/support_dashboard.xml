@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="helpdesk_ticket_management.SupportDashboard">
+        <div class="o_support_dashboard o_action h-100 overflow-auto">
+            <div class="d-flex flex-wrap align-items-center gap-2 px-4 py-3 border-bottom">
+                <h2 class="m-0 me-3">Helpdesk</h2>
+                <button type="button" class="btn btn-primary btn-sm o_sd_new" t-on-click="newTicket">New ticket</button>
+                <div class="btn-group ms-2" role="group" t-if="state.data">
+                    <button type="button" class="btn btn-sm" t-att-class="state.scope === 'mine' ? 'btn-secondary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setScope('mine')">My tickets</button>
+                    <button type="button" class="btn btn-sm" t-att-class="state.scope === 'teams' ? 'btn-secondary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setScope('teams')">My teams</button>
+                    <button type="button" class="btn btn-sm" t-if="state.data.can_all"
+                            t-att-class="state.scope === 'all' ? 'btn-secondary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setScope('all')">All</button>
+                </div>
+                <select class="form-select form-select-sm w-auto ms-auto o_sd_team" t-if="state.data" t-on-change="onTeam">
+                    <option value="">All teams</option>
+                    <t t-foreach="state.data.teams" t-as="team" t-key="team.id">
+                        <option t-att-value="team.id" t-att-selected="state.team_id == team.id" t-esc="team.name"/>
+                    </t>
+                </select>
+            </div>
+            <div class="px-4 py-3" t-if="state.data">
+                <div class="o_sd_kpis d-grid gap-3 mb-4">
+                    <t t-foreach="kpis" t-as="kpi" t-key="kpi.key">
+                        <button type="button" t-attf-class="o_sd_kpi o_sd_{{kpi.tone}} card text-start p-3" t-att-data-kpi="kpi.key"
+                                t-on-click="() => this.openKpi(kpi)">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small text-uppercase fw-semibold" t-esc="kpi.label"/>
+                                <i t-attf-class="fa {{kpi.icon}} o_sd_icon"/>
+                            </div>
+                            <div class="o_sd_value" t-esc="state.data.counts[kpi.key]"/>
+                        </button>
+                    </t>
+                    <div class="o_sd_kpi o_sd_rating card p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small text-uppercase fw-semibold">Satisfaction (30 days)</span>
+                            <i class="fa fa-smile-o o_sd_icon"/>
+                        </div>
+                        <div class="o_sd_value"><t t-esc="state.data.rating.happy"/>%</div>
+                        <div class="small text-muted"><t t-esc="state.data.rating.count"/> ratings, average <t t-esc="state.data.rating.avg"/>/5</div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-xl-8 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Open tickets by stage</strong></div>
+                            <div class="card-body">
+                                <div class="o_sd_stagebar d-flex rounded overflow-hidden mb-3" t-if="state.data.by_stage.length">
+                                    <t t-foreach="state.data.by_stage" t-as="row" t-key="row.id">
+                                        <div class="o_sd_segment" role="button" t-att-title="row.name"
+                                             t-attf-style="flex: {{row.count}}; background-color: {{row.color}};"
+                                             t-on-click="() => this.openStage(row)"/>
+                                    </t>
+                                </div>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <t t-foreach="state.data.by_stage" t-as="row" t-key="row.id">
+                                        <a href="#" class="text-reset o_sd_stage" t-on-click.prevent="() => this.openStage(row)">
+                                            <span class="o_sd_dot" t-attf-style="background-color: {{row.color}}"/>
+                                            <t t-esc="row.name"/> <strong t-esc="row.count"/>
+                                        </a>
+                                    </t>
+                                    <span class="text-muted" t-if="!state.data.by_stage.length">No open ticket.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header d-flex align-items-center">
+                                <strong>Next SLA deadlines</strong>
+                                <span class="small text-muted ms-2">then by priority</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0">
+                                    <thead><tr><th>Ticket</th><th>Customer</th><th>Assigned to</th><th>Stage</th><th>SLA</th></tr></thead>
+                                    <tbody>
+                                        <tr t-if="!state.data.tickets.length"><td colspan="5" class="text-center text-muted py-4">All clear.</td></tr>
+                                        <t t-foreach="state.data.tickets" t-as="t" t-key="t.id">
+                                            <tr class="o_sd_row" role="button" t-on-click="() => this.openTicket(t)">
+                                                <td>
+                                                    <span class="text-muted me-1" t-esc="t.number"/>
+                                                    <t t-esc="t.name"/>
+                                                    <span t-if="t.priority === '3'" class="badge text-bg-danger ms-1">Urgent</span>
+                                                </td>
+                                                <td t-esc="t.partner"/>
+                                                <td t-esc="t.user"/>
+                                                <td t-esc="t.stage"/>
+                                                <td>
+                                                    <span t-if="t.sla_fail" class="badge text-bg-danger">Failed</span>
+                                                    <span t-elif="t.sla_deadline" class="badge text-bg-light" t-esc="formatDeadline(t.sla_deadline)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>New tickets, last 14 days</strong></div>
+                            <div class="card-body">
+                                <div class="o_sd_days d-flex align-items-end gap-1">
+                                    <t t-foreach="state.data.daily" t-as="d" t-key="d.day">
+                                        <div class="o_sd_day flex-grow-1 d-flex flex-column align-items-center justify-content-end h-100"
+                                             t-att-title="d.day + ': ' + d.count">
+                                            <span class="small text-muted" t-esc="d.count or ''"/>
+                                            <div class="o_sd_daybar w-100 rounded-top" t-att-style="dayHeight(d.count)"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>By priority</strong></div>
+                            <div class="card-body">
+                                <t t-foreach="state.data.by_priority" t-as="row" t-key="row.key">
+                                    <div class="mb-2" role="button" t-on-click="() => this.openPriority(row)">
+                                        <div class="d-flex justify-content-between small"><span t-esc="row.name"/><strong t-esc="row.count"/></div>
+                                        <div class="progress" style="height: 6px">
+                                            <div t-attf-class="progress-bar o_sd_prio_{{row.key}}" t-att-style="width(row.count, state.data.by_priority)"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>By team</strong></div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0" t-if="!state.data.by_team.length">No open ticket.</p>
+                                <t t-foreach="state.data.by_team" t-as="row" t-key="row_index">
+                                    <div class="mb-2" role="button" t-on-click="() => this.openTeam(row)">
+                                        <div class="d-flex justify-content-between small"><span t-esc="row.name"/><strong t-esc="row.count"/></div>
+                                        <div class="progress" style="height: 6px">
+                                            <div class="progress-bar" t-att-style="width(row.count, state.data.by_team)"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>By agent</strong></div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0" t-if="!state.data.by_user.length">No open ticket.</p>
+                                <t t-foreach="state.data.by_user" t-as="row" t-key="row_index">
+                                    <div class="mb-2" role="button" t-on-click="() => this.openUser(row)">
+                                        <div class="d-flex justify-content-between small"><span t-esc="row.name"/><strong t-esc="row.count"/></div>
+                                        <div class="progress" style="height: 6px">
+                                            <div class="progress-bar bg-success" t-att-style="width(row.count, state.data.by_user)"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
