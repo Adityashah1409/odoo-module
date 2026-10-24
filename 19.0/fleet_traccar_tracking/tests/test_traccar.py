@@ -148,6 +148,12 @@ class TestTraccarHttp(HttpCase, TraccarCase):
         self.assertEqual(response.status_code, 200)
         self.assertAlmostEqual(self.van.gps_latitude, 50.9)
         self.assertTrue(any('overspeed' in m.body for m in self.van.message_ids))
+        # malformed payloads are refused instead of crashing
+        headers = {'Content-Type': 'application/json'}
+        self.assertEqual(self.url_open(url, data=b'[1, 2]', headers=headers).status_code, 400)
+        self.assertEqual(self.url_open(url, data=b'{oops', headers=headers).status_code, 400)
+        bad = json.dumps({'device': 'Van 1', 'position': 'n/a'}).encode()
+        self.assertEqual(self.url_open(url, data=bad, headers=headers).text, 'ignored')
 
     def test_live_map(self):
         self.connect()

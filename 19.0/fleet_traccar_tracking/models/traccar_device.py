@@ -104,12 +104,15 @@ class TraccarDevice(models.Model):
         """Traccar event/position forwarding: {'position': {...}, 'device': {...}, 'event': {...}} or a bare position."""
         position = payload.get('position') or (payload if 'latitude' in payload else None)
         event = payload.get('event')
-        device_id = (payload.get('device') or {}).get('id') or (position or {}).get('deviceId') or (event or {}).get('deviceId')
+        device_info = payload.get('device') if isinstance(payload.get('device'), dict) else {}
+        if not isinstance(position, (dict, type(None))) or not isinstance(event, (dict, type(None))):
+            return False
+        device_id = device_info.get('id') or (position or {}).get('deviceId') or (event or {}).get('deviceId')
         device = self.search([('server_id', '=', server.id), ('traccar_id', '=', device_id)], limit=1)
         if not device or not device.tracking_enabled:
             return False
-        if payload.get('device', {}).get('status'):
-            device.status = payload['device']['status']
+        if device_info.get('status'):
+            device.status = device_info['status']
         if position:
             device._apply_position(position)
         if event and device.vehicle_id:

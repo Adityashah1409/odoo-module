@@ -112,6 +112,8 @@ class TraccarController(http.Controller):
             payload = json.loads(request.httprequest.get_data() or b'{}')
         except ValueError:
             return request.make_response('invalid JSON', status=400)
+        if not isinstance(payload, dict):
+            return request.make_response('invalid payload', status=400)
         handled = env['traccar.device']._handle_webhook(server, payload)
         return request.make_response('ok' if handled else 'ignored', status=200)
 
