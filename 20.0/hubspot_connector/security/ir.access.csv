@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_hubspot_account_manager,hubspot.account manager,hubspot.account,hubspot_connector.group_hubspot_manager,crud,
+rule_hubspot_account_company,HubSpot account: multi-company,hubspot.account,,crud,"[('company_id', 'in', company_ids)]"
+access_hubspot_object_manager,hubspot.object manager,hubspot.object,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_owner_manager,hubspot.owner manager,hubspot.owner,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_stage_manager,hubspot.stage manager,hubspot.stage,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_field_mapping_manager,hubspot.field.mapping manager,hubspot.field.mapping,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_log_manager,hubspot.log manager,hubspot.log,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_queue_manager,hubspot.queue manager,hubspot.queue,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_record_manager,hubspot.record manager,hubspot.record,hubspot_connector.group_hubspot_manager,crud,
+access_hubspot_export_wizard_manager,hubspot.export.wizard manager,hubspot.export.wizard,hubspot_connector.group_hubspot_manager,cru,

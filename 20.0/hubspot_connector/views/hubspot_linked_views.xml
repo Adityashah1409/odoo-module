@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- "HubSpot" smart button on synchronized records -->
+    <record id="view_partner_form_hubspot" model="ir.ui.view">
+        <field name="name">res.partner.form.hubspot</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_hubspot" type="object" class="oe_stat_button" icon="open_in_new"
+                        groups="hubspot_connector.group_hubspot_manager" invisible="not hubspot_url">
+                    <div class="o_stat_info"><span class="o_stat_text">HubSpot</span>
+                        <span class="o_stat_value"><field name="hubspot_id"/></span></div>
+                </button>
+                <field name="hubspot_url" invisible="1"/>
+            </div>
+        </field>
+    </record>
+    <record id="crm_lead_view_form_hubspot" model="ir.ui.view">
+        <field name="name">crm.lead.form.hubspot</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_hubspot" type="object" class="oe_stat_button" icon="open_in_new"
+                        groups="hubspot_connector.group_hubspot_manager" invisible="not hubspot_url">
+                    <div class="o_stat_info"><span class="o_stat_text">HubSpot</span>
+                        <span class="o_stat_value"><field name="hubspot_id"/></span></div>
+                </button>
+                <field name="hubspot_url" invisible="1"/>
+            </div>
+        </field>
+    </record>
+    <record id="product_template_form_hubspot" model="ir.ui.view">
+        <field name="name">product.template.form.hubspot</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_hubspot" type="object" class="oe_stat_button" icon="open_in_new"
+                        groups="hubspot_connector.group_hubspot_manager" invisible="not hubspot_url">
+                    <div class="o_stat_info"><span class="o_stat_text">HubSpot</span>
+                        <span class="o_stat_value"><field name="hubspot_id"/></span></div>
+                </button>
+                <field name="hubspot_url" invisible="1"/>
+            </div>
+        </field>
+    </record>
+    <record id="sale_order_form_hubspot" model="ir.ui.view">
+        <field name="name">sale.order.form.hubspot</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_hubspot" type="object" class="oe_stat_button" icon="open_in_new"
+                        groups="hubspot_connector.group_hubspot_manager" invisible="not hubspot_url">
+                    <div class="o_stat_info"><span class="o_stat_text">HubSpot</span>
+                        <span class="o_stat_value"><field name="hubspot_id"/></span></div>
+                </button>
+                <field name="hubspot_url" invisible="1"/>
+            </div>
+        </field>
+    </record>
+    <record id="account_move_form_hubspot" model="ir.ui.view">
+        <field name="name">account.move.form.hubspot</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_open_hubspot" type="object" class="oe_stat_button" icon="open_in_new"
+                        groups="hubspot_connector.group_hubspot_manager" invisible="not hubspot_url">
+                    <div class="o_stat_info"><span class="o_stat_text">HubSpot</span>
+                        <span class="o_stat_value"><field name="hubspot_id"/></span></div>
+                </button>
+                <field name="hubspot_url" invisible="1"/>
+            </div>
+        </field>
+    </record>
+</odoo>

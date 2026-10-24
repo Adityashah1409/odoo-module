@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hubspot_queue_view_list" model="ir.ui.view">
+        <field name="name">hubspot.queue.list</field>
+        <field name="model">hubspot.queue</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-danger="state == 'failed'" decoration-muted="state == 'skipped'"
+                  decoration-info="state == 'pending'">
+                <header>
+                    <button name="action_retry" type="object" string="Retry"/>
+                </header>
+                <field name="id" string="#"/>
+                <field name="create_date" string="Queued"/>
+                <field name="account_id" optional="hide"/>
+                <field name="direction"/>
+                <field name="object_type"/>
+                <field name="hubspot_id"/>
+                <field name="record_name" string="Odoo record"/>
+                <field name="attempts" optional="show"/>
+                <field name="result" optional="show"/>
+                <field name="error" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-danger="state == 'failed'"
+                       decoration-info="state == 'pending'"/>
+            </list>
+        </field>
+    </record>
+    <record id="hubspot_queue_view_form" model="ir.ui.view">
+        <field name="name">hubspot.queue.form</field>
+        <field name="model">hubspot.queue</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_retry" type="object" string="Retry" class="oe_highlight"
+                            invisible="state not in ('failed', 'skipped')"/>
+                    <button name="action_retry" type="object" string="Process now" invisible="state != 'pending'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_record" type="object" class="oe_stat_button" icon="fa-external-link"
+                                invisible="not res_id">
+                            <div class="o_stat_info"><span class="o_stat_text">Odoo record</span></div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="direction"/>
+                            <field name="object_type"/>
+                            <field name="hubspot_id"/>
+                            <field name="record_name"/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="Queued"/>
+                            <field name="date_done"/>
+                            <field name="attempts"/>
+                            <field name="result"/>
+                            <field name="log_id"/>
+                        </group>
+                    </group>
+                    <group string="Error" invisible="not error">
+                        <field name="error" nolabel="1" colspan="2"/>
+                    </group>
+                    <group string="Payload" invisible="not payload">
+                        <field name="payload" nolabel="1" colspan="2" widget="ace" options="{'mode': 'json'}" readonly="1"/>
+                    </group>
+                    <field name="res_model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hubspot_queue_view_search" model="ir.ui.view">
+        <field name="name">hubspot.queue.search</field>
+        <field name="model">hubspot.queue</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="hubspot_id"/>
+                <field name="account_id"/>
+                <field name="error"/>
+                <filter name="pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <filter name="failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
+                <filter name="skipped" string="Skipped" domain="[('state', '=', 'skipped')]"/>
+                <separator/>
+                <filter name="import" string="Imports" domain="[('direction', 'in', ('import', 'delete'))]"/>
+                <filter name="export" string="Exports" domain="[('direction', '=', 'export')]"/>
+                <filter name="create_date" string="Queued" date="create_date"/>
+                <group>
+                    <filter name="group_object" string="Object" context="{'group_by': 'object_type'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_direction" string="Direction" context="{'group_by': 'direction'}"/>
+                    <filter name="group_day" string="Day" context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_hubspot_queue" model="ir.actions.act_window">
+        <field name="name">Queue</field>
+        <field name="res_model">hubspot.queue</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_failed': 1, 'search_default_pending': 1}</field>
+    </record>
+
+    <record id="hubspot_log_view_list" model="ir.ui.view">
+        <field name="name">hubspot.log.list</field>
+        <field name="model">hubspot.log</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-danger="failed">
+                <field name="date_start"/>
+                <field name="account_id" optional="hide"/>
+                <field name="direction"/>
+                <field name="object_type"/>
+                <field name="queued"/>
+                <field name="created"/>
+                <field name="updated"/>
+                <field name="skipped"/>
+                <field name="failed"/>
+                <field name="pending"/>
+            </list>
+        </field>
+    </record>
+    <record id="hubspot_log_view_form" model="ir.ui.view">
+        <field name="name">hubspot.log.form</field>
+        <field name="model">hubspot.log</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="direction"/>
+                            <field name="object_type"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="queued"/>
+                            <field name="created"/>
+                            <field name="updated"/>
+                            <field name="skipped"/>
+                            <field name="failed"/>
+                            <field name="pending"/>
+                        </group>
+                    </group>
+                    <field name="job_ids" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hubspot_log_view_search" model="ir.ui.view">
+        <field name="name">hubspot.log.search</field>
+        <field name="model">hubspot.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="account_id"/>
+                <field name="object_type"/>
+                <filter name="import" string="Imports" domain="[('direction', '=', 'import')]"/>
+                <filter name="export" string="Exports" domain="[('direction', '=', 'export')]"/>
+                <filter name="webhook" string="Webhooks" domain="[('direction', '=', 'webhook')]"/>
+                <filter name="date_start" string="Date" date="date_start"/>
+                <group>
+                    <filter name="group_object" string="Object" context="{'group_by': 'object_type'}"/>
+                    <filter name="group_day" string="Day" context="{'group_by': 'date_start:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_hubspot_log" model="ir.actions.act_window">
+        <field name="name">Log History</field>
+        <field name="res_model">hubspot.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hubspot_record_view_list" model="ir.ui.view">
+        <field name="name">hubspot.record.list</field>
+        <field name="model">hubspot.record</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="account_id" optional="hide"/>
+                <field name="object_type"/>
+                <field name="hubspot_id"/>
+                <field name="record_name" string="Odoo record"/>
+                <field name="res_model" optional="hide"/>
+                <field name="last_sync"/>
+                <button name="action_open_record" type="object" icon="fa-external-link" title="Open in Odoo"/>
+                <button name="action_open_hubspot" type="object" icon="fa-globe" title="Open in HubSpot"
+                        invisible="not hubspot_url"/>
+                <field name="hubspot_url" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="hubspot_record_view_search" model="ir.ui.view">
+        <field name="name">hubspot.record.search</field>
+        <field name="model">hubspot.record</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="hubspot_id"/>
+                <field name="account_id"/>
+                <field name="res_model"/>
+                <group>
+                    <filter name="group_object" string="Object" context="{'group_by': 'object_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_hubspot_record" model="ir.actions.act_window">
+        <field name="name">Linked Records</field>
+        <field name="res_model">hubspot.record</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_group_object': 1}</field>
+    </record>
+</odoo>

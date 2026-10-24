@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hubspot_connector.Dashboard">
+        <div class="o_hubspot_dashboard o_action h-100 overflow-auto">
+            <div class="d-flex flex-wrap align-items-center gap-2 px-4 py-3 border-bottom">
+                <h2 class="m-0 me-3">HubSpot</h2>
+                <select class="form-select form-select-sm w-auto ms-auto o_hs_account" t-if="this.state.data and this.state.data.all_accounts.length > 1"
+                        t-on-change="this.onAccount">
+                    <option value="">All accounts</option>
+                    <t t-foreach="this.state.data.all_accounts" t-as="a" t-key="a.id">
+                        <option t-att-value="a.id" t-att-selected="this.state.account_id == a.id" t-out="a.name"/>
+                    </t>
+                </select>
+            </div>
+            <div class="px-4 py-3" t-if="this.state.data">
+                <div class="alert alert-info" t-if="!this.state.data.accounts.length">
+                    No HubSpot account yet. Create one in HubSpot › Accounts with a private app token.
+                </div>
+                <div class="o_hs_kpis d-grid gap-3 mb-4">
+                    <div class="card p-3 o_hs_kpi o_hs_linked">
+                        <span class="small text-uppercase fw-semibold">Linked records</span>
+                        <span class="o_hs_value" t-out="this.state.data.linked_total"/>
+                    </div>
+                    <button type="button" class="card p-3 text-start o_hs_kpi o_hs_done" t-on-click="() => this.openQueue('done')">
+                        <span class="small text-uppercase fw-semibold">Synced (30 days)</span>
+                        <span class="o_hs_value" t-out="this.state.data.queue.done_30"/>
+                    </button>
+                    <button type="button" class="card p-3 text-start o_hs_kpi o_hs_pending" data-kpi="pending"
+                            t-on-click="() => this.openQueue('pending')">
+                        <span class="small text-uppercase fw-semibold">Pending</span>
+                        <span class="o_hs_value" t-out="this.state.data.queue.pending"/>
+                    </button>
+                    <button type="button" class="card p-3 text-start o_hs_kpi o_hs_failed" data-kpi="failed"
+                            t-on-click="() => this.openQueue('failed')">
+                        <span class="small text-uppercase fw-semibold">Failed</span>
+                        <span class="o_hs_value" t-out="this.state.data.queue.failed"/>
+                    </button>
+                </div>
+                <div class="row g-4">
+                    <div class="col-xl-8 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Objects</strong></div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0 o_hs_objects">
+                                    <thead><tr><th>Object</th><th class="text-end">Linked</th><th>Import</th><th>Export</th>
+                                        <th>Last import</th><th>Last export</th></tr></thead>
+                                    <tbody>
+                                        <t t-foreach="this.state.data.objects" t-as="o" t-key="o.key">
+                                            <tr role="button" t-on-click="() => this.openLinks(o)">
+                                                <td class="fw-semibold" t-out="o.label"/>
+                                                <td class="text-end" t-out="o.linked"/>
+                                                <td><span t-attf-class="badge {{o.import ? 'text-bg-success' : 'text-bg-light'}}" t-out="o.import ? 'On' : 'Off'"/></td>
+                                                <td><span t-attf-class="badge {{o.export ? 'text-bg-success' : 'text-bg-light'}}" t-out="o.export ? 'On' : 'Off'"/></td>
+                                                <td class="small text-muted" t-out="this.formatDate(o.last_import)"/>
+                                                <td class="small text-muted" t-out="this.formatDate(o.last_export)"/>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header d-flex align-items-center gap-3">
+                                <strong>Synchronized per day</strong>
+                                <span class="small"><span class="o_hs_dot o_hs_import"/>Imported</span>
+                                <span class="small"><span class="o_hs_dot o_hs_export"/>Exported</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="o_hs_days d-flex align-items-end gap-1">
+                                    <t t-foreach="this.state.data.days" t-as="d" t-key="d.day">
+                                        <div class="flex-grow-1 d-flex flex-column justify-content-end h-100"
+                                             t-att-title="d.day + ': ' + d.import + ' imported, ' + d.export + ' exported'">
+                                            <div class="o_hs_export w-100" t-att-style="this.barHeight(d.export)"/>
+                                            <div class="o_hs_import w-100" t-att-style="this.barHeight(d.import)"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 d-flex flex-column gap-4">
+                        <div class="card" t-foreach="this.state.data.accounts" t-as="a" t-key="a.id">
+                            <div class="card-header d-flex align-items-center">
+                                <a href="#" class="fw-bold text-reset" t-on-click.prevent="() => this.openAccount(a)" t-out="a.name"/>
+                                <span t-attf-class="badge ms-2 {{a.state === 'connected' ? 'text-bg-success' : a.state === 'error' ? 'text-bg-danger' : 'text-bg-secondary'}}"
+                                      t-out="a.state === 'connected' ? 'Connected' : a.state === 'error' ? 'Error' : 'Not tested'"/>
+                                <button type="button" class="btn btn-sm btn-primary ms-auto o_hs_sync" t-att-disabled="this.state.busy or a.state !== 'connected'"
+                                        t-on-click="() => this.syncNow(a)">
+                                    <i t-attf-class="oi {{this.state.busy ? 'oi-spin' : ''}} me-1" t-attf-data-icon="{{this.state.busy ? 'progress_activity' : 'refresh'}}"/>Sync now
+                                </button>
+                            </div>
+                            <div class="card-body small">
+                                <div t-if="a.portal_id">HubSpot account <strong t-out="a.portal_id"/></div>
+                                <div><t t-out="a.pending"/> pending, <span t-att-class="a.failed ? 'text-danger fw-bold' : ''"><t t-out="a.failed"/> failed</span></div>
+                                <div class="text-danger mt-1" t-if="a.error" t-out="a.error"/>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Recent runs</strong></div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-muted small" t-if="!this.state.data.logs.length">No run yet.</li>
+                                <t t-foreach="this.state.data.logs" t-as="log" t-key="log.id">
+                                    <li class="list-group-item small d-flex justify-content-between" role="button" t-on-click="() => this.openLog(log)">
+                                        <span>
+                                            <i class="oi me-1 text-muted" t-att-data-icon="log.direction === 'export' ? 'upload' : log.direction === 'webhook' ? 'bolt' : 'download'"/>
+                                            <t t-out="log.object or 'Webhook'"/>
+                                            <span class="text-muted ms-1" t-out="this.formatDate(log.date)"/>
+                                        </span>
+                                        <span>
+                                            <span class="text-success" t-out="'+' + log.created"/>
+                                            <span class="ms-1" t-out="'~' + log.updated"/>
+                                            <span class="ms-1 text-danger" t-if="log.failed" t-out="'!' + log.failed"/>
+                                        </span>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
