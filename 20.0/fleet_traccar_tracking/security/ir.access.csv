@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_server_user,traccar.server user,traccar.server,fleet.fleet_group_user,r,
+access_server_manager,traccar.server manager,traccar.server,fleet.fleet_group_manager,crud,
+rule_traccar_server_company,Traccar servers: multi-company,traccar.server,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_device_user,traccar.device user,traccar.device,fleet.fleet_group_user,r,
+access_device_manager,traccar.device manager,traccar.device,fleet.fleet_group_manager,crud,
+access_position_user,traccar.position user,traccar.position,fleet.fleet_group_user,r,
+access_position_manager,traccar.position manager,traccar.position,fleet.fleet_group_manager,crud,
+access_trip_user,traccar.trip user,traccar.trip,fleet.fleet_group_user,r,
+access_trip_manager,traccar.trip manager,traccar.trip,fleet.fleet_group_manager,crud,
+access_trip_wizard_user,traccar.trip.import.wizard,traccar.trip.import.wizard,fleet.fleet_group_user,crud,

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_traccar_server_list" model="ir.ui.view">
+        <field name="name">traccar.server.list</field>
+        <field name="model">traccar.server</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="url"/>
+                <field name="device_count" string="Devices"/>
+                <field name="last_sync"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'" decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_traccar_server_form" model="ir.ui.view">
+        <field name="name">traccar.server.form</field>
+        <field name="model">traccar.server</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test &amp; Connect" class="btn-primary"/>
+                    <button name="action_import_devices" type="object" string="Import devices" invisible="state != 'connected'"/>
+                    <button name="action_refresh_positions" type="object" string="Refresh positions" invisible="state != 'connected'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_devices" type="object" class="oe_stat_button" icon="smartphone">
+                            <field name="device_count" widget="statinfo" string="Devices"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Company Traccar"/></h1>
+                    </div>
+                    <group>
+                        <group string="Connection">
+                            <field name="url" placeholder="https://gps.example.com"/>
+                            <field name="auth_type" widget="radio"/>
+                            <field name="username" invisible="auth_type != 'basic'"/>
+                            <field name="password" password="True" invisible="auth_type != 'basic'"/>
+                            <field name="token" password="True" invisible="auth_type != 'token'"/>
+                            <field name="server_version"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Synchronization">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="auto_link_vehicles"/>
+                            <field name="update_odometer"/>
+                            <field name="keep_history_days"/>
+                            <field name="last_sync"/>
+                        </group>
+                    </group>
+                    <group string="Real-time forwarding (optional)">
+                        <field name="webhook_url" widget="CopyClipboardChar"/>
+                        <button name="action_regenerate_token" type="object" string="Regenerate URL" class="btn-link"
+                                confirm="The current URL will stop working. Continue?"/>
+                    </group>
+                    <div class="text-muted">
+                        In Traccar's <code>traccar.xml</code>, set <code>event.forward.url</code> (and optionally
+                        <code>forward.url</code> with <code>forward.json=true</code>) to this URL to receive events and positions instantly.
+                    </div>
+                    <group string="Last error" invisible="not last_error">
+                        <field name="last_error" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_traccar_server" model="ir.actions.act_window">
+        <field name="name">Traccar Servers</field>
+        <field name="res_model">traccar.server</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Connect your Traccar server</p>
+            <p>Use your own Traccar server or traccar.org; drivers install the free Traccar Client app on their phone.</p>
+        </field>
+    </record>
+</odoo>
