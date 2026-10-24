@@ -40,7 +40,12 @@ class ShopifyWebhook(http.Controller):
         data_type = TOPICS.get(topic)
         if not data_type:
             return request.make_response('ignored', status=200)
-        payload = json.loads(body or b'{}')
+        try:
+            payload = json.loads(body or b'{}')
+        except ValueError:
+            return request.make_response('invalid JSON', status=400)
+        if not isinstance(payload, dict):
+            return request.make_response('invalid payload', status=400)
         kind = {'order': 'Order', 'product': 'Product', 'customer': 'Customer'}[data_type]
         node = {'id': f"gid://shopify/{kind}/{payload.get('id')}", 'name': payload.get('name') or payload.get('title')}
         if data_type == 'customer':

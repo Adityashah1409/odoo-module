@@ -175,6 +175,16 @@ class TestShopifyWebhook(HttpCase, ShopifyCase):
         self.assertEqual(line.state, 'done')
         self.assertEqual(self.instance.order_ids.shopify_order_name, '#1001')
 
+    def test_webhook_bad_payload(self):
+        # signed but not JSON / not an object: rejected with 400, nothing queued
+        raw = b'not json'
+        signature = base64.b64encode(hmac.new(b'whsec_test', raw, hashlib.sha256).digest()).decode()
+        response = self.url_open(f'/shopify_sync/webhook/{self.instance.id}', data=raw, headers={
+            'X-Shopify-Hmac-Sha256': signature, 'X-Shopify-Topic': 'orders/create'})
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(self.post([1, 2]).status_code, 400)
+        self.assertFalse(self.env['shopify.queue'].search([('instance_id', '=', self.instance.id)]))
+
     def test_webhook_product(self):
         payload = {'id': 20, 'title': 'Coffee Mug', 'options': [{'name': 'Title', 'values': ['Default Title']}],
                    'variants': [{'id': 201, 'title': 'Default Title', 'sku': 'MUG-01', 'price': '12.00',
