@@ -1,0 +1,61 @@
+// chatter controls hidden by a rule (the form carries an invisible marker)
+.o_form_view:has(.o_am_hide_send) .o-mail-Chatter-sendMessage,
+.o_form_view:has(.o_am_hide_log) .o-mail-Chatter-logNote,
+.o_form_view:has(.o_am_hide_activities) .o-mail-Chatter-activity,
+.o_form_view:has(.o_am_hide_activities) .o-mail-ActivityList,
+.o_form_view:has(.o_am_hide_followers) .o-mail-Followers,
+.o_form_view:has(.o_am_hide_attachments) .o-mail-Chatter-attachFiles,
+.o_form_view:has(.o_am_hide_attachments) .o-mail-AttachmentBox {
+    display: none !important;
+}
+
+.o_access_dashboard {
+    background-color: $o-webclient-background-color;
+    .o_amd_kpis {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    .o_amd_kpi {
+        position: relative;
+        padding: 1rem 1rem .9rem;
+        border: 1px solid $border-color;
+        background: $o-view-background-color;
+        transition: box-shadow .15s;
+        &:hover { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .08); }
+        .o_amd_icon {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.4rem;
+            color: $primary;
+            opacity: .35;
+        }
+        .o_amd_label { display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; color: $text-muted; }
+        .o_amd_value { display: block; font-size: 1.9rem; font-weight: 600; line-height: 1.2; }
+        .o_amd_sub { display: block; font-size: .8rem; color: $text-muted; }
+    }
+    .o_amd_progress { height: 6px; }
+    .o_amd_days { height: 150px; }
+    .o_amd_column { background: linear-gradient(180deg, $primary, rgba($primary, .55)); }
+    .o_amd_rules tbody tr { cursor: pointer; }
+}
+
+.o_am_pin {
+    background-color: $o-webclient-background-color;
+    .o_am_pin_card {
+        width: 420px;
+        max-width: 92vw;
+    }
+    .o_am_pin_icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: rgba($primary, .12);
+        color: $primary;
+        font-size: 1.8rem;
+    }
+    input.o_am_pin_input {
+        letter-spacing: .5em;
+        text-align: center;
+        font-size: 1.4rem;
+    }
+}

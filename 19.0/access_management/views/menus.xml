@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_access_dashboard" model="ir.actions.client">
+        <field name="name">Access Dashboard</field>
+        <field name="tag">access_management.dashboard</field>
+        <field name="path">access-dashboard</field>
+    </record>
+
+    <menuitem id="menu_access_root" name="Access Management" sequence="95"
+              web_icon="access_management,static/description/icon.png"
+              groups="group_access_manager"/>
+    <menuitem id="menu_access_dashboard" name="Dashboard" parent="menu_access_root" action="action_access_dashboard" sequence="1"/>
+    <menuitem id="menu_access_rules" name="Access Rules" parent="menu_access_root" action="action_access_rule" sequence="10"/>
+    <menuitem id="menu_access_locks" name="PIN-protected Menus" parent="menu_access_root" action="action_access_menu_lock" sequence="20"/>
+    <menuitem id="menu_access_map" name="Access Map" parent="menu_access_root" action="action_access_map" sequence="30"/>
+    <menuitem id="menu_access_logs" name="Logs" parent="menu_access_root" sequence="40"/>
+    <menuitem id="menu_access_export_log" name="Exports" parent="menu_access_logs" action="action_access_export_log" sequence="1"/>
+    <menuitem id="menu_access_lock_attempts" name="PIN Attempts" parent="menu_access_logs" action="action_access_lock_attempt" sequence="2"/>
+    <menuitem id="menu_access_config" name="Configuration" parent="menu_access_root" sequence="90"/>
+    <menuitem id="menu_access_settings" name="Settings" parent="menu_access_config" action="action_access_settings" sequence="1"/>
+    <menuitem id="menu_access_transfer" name="Export / Import Rules" parent="menu_access_config" action="action_access_rule_transfer" sequence="2"/>
+</odoo>

@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_access_rule_manager,access.rule manager,access.rule,access_management.group_access_manager,crud,
+access_access_rule_model_manager,access.rule.model manager,access.rule.model,access_management.group_access_manager,crud,
+access_access_rule_field_manager,access.rule.field manager,access.rule.field,access_management.group_access_manager,crud,
+access_access_rule_element_manager,access.rule.element manager,access.rule.element,access_management.group_access_manager,crud,
+access_access_export_log_manager,access.export.log manager,access.export.log,access_management.group_access_manager,rd,
+access_access_menu_lock_manager,access.menu.lock manager,access.menu.lock,access_management.group_access_manager,crud,
+access_access_lock_attempt_manager,access.lock.attempt manager,access.lock.attempt,access_management.group_access_manager,rd,
+access_access_map_manager,access.map manager,access.map,access_management.group_access_manager,crud,
+access_access_map_line_manager,access.map.line manager,access.map.line,access_management.group_access_manager,crud,
+access_access_rule_transfer_manager,access.rule.transfer manager,access.rule.transfer,access_management.group_access_manager,crud,

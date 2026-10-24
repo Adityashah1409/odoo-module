@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_groups_privilege_access_management" model="res.groups.privilege">
+        <field name="name">Access Management</field>
+        <field name="sequence">90</field>
+        <field name="category_id" ref="base.module_category_administration"/>
+    </record>
+
+    <record id="group_access_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="privilege_id" ref="res_groups_privilege_access_management"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Create access rules, PIN-protected menus, read the export log and the access map.</field>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_access_manager'))]"/>
+    </record>
+</odoo>
