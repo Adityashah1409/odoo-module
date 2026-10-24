@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_seat_waitlist" model="mail.template">
+        <field name="name">Event: seats available again (waitlist)</field>
+        <field name="model_id" ref="model_event_seat_waitlist"/>
+        <field name="subject">Seats are available for {{ object.event_id.name }}</field>
+        <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="description">Sent to the people on the waitlist when seats are released</field>
+        <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-size: 14px;">
+    <p>Hello <t t-out="object.name or ''">Jane</t>,</p>
+    <p>Good news: seats are available again for <strong t-out="object.event_id.name or ''">the event</strong>.
+        They go to whoever books first.</p>
+    <p style="margin: 16px 0;">
+        <a t-attf-href="{{ object.event_id.get_base_url() }}/event/{{ object.event_id.id }}/seats"
+           style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">Choose my seats</a>
+    </p>
+    <p>See you soon,<br/><t t-out="object.event_id.company_id.name or ''">My Company</t></p>
+</div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

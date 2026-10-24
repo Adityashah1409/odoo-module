@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="event_seat_booking.Dashboard">
+        <div class="o_seat_dashboard o_action h-100 overflow-auto">
+            <div class="px-4 py-3 border-bottom"><h2 class="m-0">Seating dashboard</h2></div>
+            <div class="px-4 py-3" t-if="state.data">
+                <div class="o_sdb_kpis d-grid gap-3 mb-4">
+                    <div class="card p-3 o_sdb_kpi"><span class="small text-uppercase fw-semibold">Gross revenue</span>
+                        <span class="o_sdb_value" t-esc="money(state.data.kpis.revenue)"/></div>
+                    <button type="button" class="card p-3 text-start o_sdb_kpi" data-kpi="sold" t-on-click="() => this.openSeats('booked')">
+                        <span class="small text-uppercase fw-semibold">Seats sold</span>
+                        <span class="o_sdb_value" t-esc="state.data.kpis.sold"/></button>
+                    <div class="card p-3 o_sdb_kpi"><span class="small text-uppercase fw-semibold">Average seat yield</span>
+                        <span class="o_sdb_value" t-esc="money(state.data.kpis.yield)"/></div>
+                    <div class="card p-3 o_sdb_kpi"><span class="small text-uppercase fw-semibold">Occupancy</span>
+                        <span class="o_sdb_value"><t t-esc="state.data.kpis.occupancy"/>%</span></div>
+                    <div class="card p-3 o_sdb_kpi"><span class="small text-uppercase fw-semibold">Active events</span>
+                        <span class="o_sdb_value" t-esc="state.data.kpis.active_events"/></div>
+                    <div class="card p-3 o_sdb_kpi"><span class="small text-uppercase fw-semibold">Unique guests</span>
+                        <span class="o_sdb_value" t-esc="state.data.kpis.guests"/></div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-xl-8 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Seat status</strong></div>
+                            <div class="card-body">
+                                <div class="d-flex o_sdb_statusbar rounded overflow-hidden mb-2">
+                                    <t t-foreach="state.data.status" t-as="s" t-key="s.key">
+                                        <div t-attf-class="o_sdb_status_{{s.key}}" t-att-style="statusShare(s.count)" role="button"
+                                             t-att-title="statusLabels[s.key] + ': ' + s.count" t-on-click="() => this.openSeats(s.key)"/>
+                                    </t>
+                                </div>
+                                <div class="d-flex flex-wrap gap-3 small">
+                                    <t t-foreach="state.data.status" t-as="s" t-key="s.key">
+                                        <span><span t-attf-class="o_sdb_dot o_sdb_status_{{s.key}}"/><t t-esc="statusLabels[s.key]"/> <strong t-esc="s.count"/></span>
+                                    </t>
+                                    <span class="ms-auto text-muted"><t t-esc="state.data.kpis.waiting"/> on the waitlist</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Events</strong></div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0 o_sdb_events">
+                                    <thead><tr><th>Event</th><th>Date</th><th class="text-end">Booked</th><th class="text-end">Free</th>
+                                        <th style="width: 22%">Occupancy</th><th class="text-end">Revenue</th></tr></thead>
+                                    <tbody>
+                                        <tr t-if="!state.data.events.length"><td colspan="6" class="text-muted text-center py-4">No event with seat booking yet.</td></tr>
+                                        <t t-foreach="state.data.events" t-as="e" t-key="e.id">
+                                            <tr role="button" t-on-click="() => this.openEvent(e)">
+                                                <td class="fw-semibold" t-esc="e.name"/>
+                                                <td class="small text-muted" t-esc="formatDate(e.date)"/>
+                                                <td class="text-end" t-esc="e.booked + ' / ' + e.total"/>
+                                                <td class="text-end" t-esc="e.free"/>
+                                                <td>
+                                                    <div class="progress" style="height: 8px"><div class="progress-bar" t-attf-style="width: {{e.occupancy}}%"/></div>
+                                                    <span class="small" t-esc="e.occupancy + '%'"/>
+                                                </td>
+                                                <td class="text-end" t-esc="money(e.revenue)"/>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Revenue, last 5 days</strong></div>
+                            <div class="card-body">
+                                <div class="o_sdb_days d-flex align-items-end gap-3">
+                                    <t t-foreach="state.data.days" t-as="d" t-key="d.day">
+                                        <div class="flex-grow-1 d-flex flex-column align-items-center justify-content-end h-100">
+                                            <span class="small text-muted" t-esc="money(d.amount)"/>
+                                            <div class="o_sdb_daybar w-100 rounded-top" t-att-style="height(d.amount)"/>
+                                            <span class="small" t-esc="d.day.slice(5)"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Seats sold per section</strong></div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0" t-if="!state.data.tiers.length">No seat sold yet.</p>
+                                <t t-foreach="state.data.tiers" t-as="t" t-key="t.name">
+                                    <div class="mb-2">
+                                        <div class="d-flex justify-content-between small"><span t-esc="t.name"/><strong t-esc="t.count"/></div>
+                                        <div class="progress" style="height: 6px"><div class="progress-bar bg-success" t-att-style="width(t.count, state.data.tiers)"/></div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Latest reservations</strong></div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-muted small" t-if="!state.data.recent.length">No reservation yet.</li>
+                                <t t-foreach="state.data.recent" t-as="r" t-key="r.id">
+                                    <li class="list-group-item small d-flex justify-content-between" role="button" t-on-click="() => this.openRegistration(r)">
+                                        <span><strong t-esc="r.name"/> · <t t-esc="r.event"/></span>
+                                        <span t-attf-class="badge {{r.state === 'draft' ? 'text-bg-warning' : 'text-bg-primary'}}" t-esc="r.section + ' ' + r.seat"/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

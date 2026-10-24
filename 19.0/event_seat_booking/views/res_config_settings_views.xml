@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_seat" model="ir.ui.view">
+        <field name="name">res.config.settings.form.event.seat</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="event.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='event']" position="inside">
+                <block title="Seat booking" name="seat_booking">
+                    <setting string="Seat hold" help="Minutes the seats chosen on the website stay reserved before payment.">
+                        <field name="seat_hold_minutes"/>
+                    </setting>
+                    <setting help='"Find the best seats" button on the seat map.'>
+                        <field name="seat_auto_allocate"/>
+                    </setting>
+                    <setting help="Attendees change their seat from My Account; a more expensive seat creates a quotation.">
+                        <field name="seat_portal_exchange"/>
+                    </setting>
+                    <setting string="Surcharge product" help="Product used for premium seats and seat upgrades in orders.">
+                        <field name="seat_surcharge_product_id" options="{'no_create': True}"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

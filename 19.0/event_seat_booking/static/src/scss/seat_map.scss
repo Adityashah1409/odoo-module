@@ -1,0 +1,97 @@
+.o_seat_map, .o_seat_legend, .o_event_seat_ticket {
+    --o-seat-size: 1.9rem;
+}
+.o_seat_scroller {
+    overflow-x: auto;
+    padding-bottom: .5rem;
+}
+.o_seat_stage {
+    width: 60%;
+    margin: 0 auto 1rem;
+    padding: .25rem;
+    text-align: center;
+    font-size: .8rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #6c757d;
+    border-bottom: 4px solid #adb5bd;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+.o_seat_grid {
+    display: grid;
+    gap: .3rem;
+    justify-content: center;
+    align-items: center;
+}
+.o_seat_row_label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-align: center;
+}
+.o_seat_gap {
+    height: var(--o-seat-size);
+}
+.o_seat {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--o-seat-size);
+    height: var(--o-seat-size);
+    padding: 0;
+    font-size: .7rem;
+    line-height: 1;
+    border: 1px solid #8fbf9f;
+    border-radius: .45rem .45rem .2rem .2rem;
+    background: #e8f6ec;
+    color: #24563a;
+    cursor: pointer;
+    transition: transform .1s ease-in-out;
+    &:hover:not([disabled]) {
+        transform: translateY(-2px);
+    }
+    &[disabled] {
+        cursor: not-allowed;
+    }
+}
+.o_seat_premium {
+    background: #fff4d6;
+    border-color: #e0b84c;
+    color: #7a5a00;
+}
+.o_seat_selected, .o_seat_mine {
+    background: #714b67;
+    border-color: #714b67;
+    color: #fff;
+}
+.o_seat_current {
+    background: #fff;
+    border: 2px solid #714b67;
+    color: #714b67;
+    font-weight: bold;
+}
+.o_seat_held {
+    background: #fde2c8;
+    border-color: #f0a868;
+    color: #8a4b12;
+}
+.o_seat_booked {
+    background: #dee2e6;
+    border-color: #ced4da;
+    color: #868e96;
+}
+.o_seat_blocked {
+    background: repeating-linear-gradient(45deg, #f1f3f5, #f1f3f5 4px, #dee2e6 4px, #dee2e6 8px);
+    border-color: #dee2e6;
+    color: transparent;
+}
+.o_seat_sample {
+    width: 1rem;
+    height: 1rem;
+    vertical-align: middle;
+    margin-right: .25rem;
+    cursor: default;
+}
+.o_event_seat_ticket {
+    font-size: 1.1rem;
+}

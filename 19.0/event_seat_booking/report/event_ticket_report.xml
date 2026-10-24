@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="event_report_template_full_page_ticket_seat" inherit_id="event.event_report_template_full_page_ticket"
+              name="Ticket: seat number">
+        <xpath expr="//h4[hasclass('o_event_full_page_ticket_type')]" position="after">
+            <h4 t-if="attendee and attendee.seat_id" class="fw-bold o_event_seat_ticket">
+                Seat <span t-out="attendee.seat_id.name"/>
+            </h4>
+        </xpath>
+    </template>
+    <template id="event_report_template_foldable_badge_seat" inherit_id="event.event_report_template_foldable_badge"
+              name="Badge: seat number">
+        <xpath expr="//h2[@t-field='attendee.name']" position="after">
+            <div t-if="attendee and attendee.seat_id" class="o_event_seat_ticket">Seat <span t-out="attendee.seat_id.name"/></div>
+        </xpath>
+    </template>
+</odoo>

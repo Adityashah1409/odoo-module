@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_seat_waitlist_view_list" model="ir.ui.view">
+        <field name="name">event.seat.waitlist.list</field>
+        <field name="model">event.seat.waitlist</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-muted="state in ('cancel', 'registered')">
+                <header>
+                    <button name="action_notify" type="object" string="Notify now"/>
+                </header>
+                <field name="create_date" string="Joined" readonly="1"/>
+                <field name="event_id"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone" optional="show"/>
+                <field name="seats_wanted"/>
+                <field name="notified_on" readonly="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'waiting'" decoration-success="state == 'notified'"/>
+                <button name="action_cancel" type="object" icon="close" title="Remove" invisible="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_event_seat_waitlist" model="ir.actions.act_window">
+        <field name="name">Waitlist</field>
+        <field name="res_model">event.seat.waitlist</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

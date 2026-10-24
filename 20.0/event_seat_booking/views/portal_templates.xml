@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_breadcrumbs_seats" inherit_id="portal.portal_breadcrumbs" priority="60" name="Portal: seats breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'event_seats'" class="breadcrumb-item active">Event seats</li>
+            <li t-if="page_name == 'event_seats_change'" class="breadcrumb-item"><a href="/my/seats">Event seats</a></li>
+            <li t-if="page_name == 'event_seats_change'" class="breadcrumb-item active">Change seat</li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_seats" name="My event seats">
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
+            <t t-call="portal.portal_searchbar" title.translate="Event seats"/>
+            <div t-if="changed" class="alert alert-success mt-3" role="status">Your seat was changed.</div>
+            <p t-if="not registrations" class="alert alert-info mt-3">You have no seat booked.</p>
+            <t t-if="registrations" t-call="portal.portal_table">
+                <thead>
+                    <tr><th>Event</th><th>Date</th><th>Attendee</th><th>Section</th><th>Seat</th><th/></tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="registrations" t-as="registration">
+                        <td t-out="registration.event_id.name"/>
+                        <td><span t-field="registration.event_id.date_begin" t-options="{'widget': 'date'}"/></td>
+                        <td t-out="registration.name"/>
+                        <td t-out="registration.seat_id.ticket_id.name"/>
+                        <td><span class="badge text-bg-primary" t-out="registration.seat_id.name"/></td>
+                        <td class="text-end">
+                            <a t-if="exchange and registration.state in ('open', 'draft') and registration.event_id.date_begin &gt; datetime.datetime.now()"
+                               class="btn btn-sm btn-secondary o_seat_change_link" t-att-href="'/my/seats/%s/change' % registration.id">Change seat</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_change_seat" name="Change my seat">
+        <t t-call="portal.portal_layout">
+            <h3 class="mt-3">Change seat · <t t-out="event.name"/></h3>
+            <p>Your seat: <strong t-out="registration.seat_id.name"/> (<t t-out="currency.format(registration.seat_id.price)"/>).
+                Choose a new seat in <strong t-out="registration.event_ticket_id.name"/>; a more expensive seat creates an order for
+                the difference.</p>
+            <div t-if="error" class="alert alert-danger" role="alert" t-out="error"/>
+            <form method="post" class="o_seat_map" data-mode="single" t-att-data-event-id="event.id"
+                  t-att-data-currency-symbol="currency.symbol" t-att-data-currency-position="currency.position">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="seat_id" value=""/>
+                <t t-call="event_seat_booking.seat_map_legend"/>
+                <t t-call="event_seat_booking.seat_map_grid" interactive="True"/>
+                <div class="d-flex align-items-center gap-3">
+                    <span>New seat price: <strong class="o_seat_total"/></span>
+                    <button type="submit" class="btn btn-primary o_seat_continue" disabled="disabled">Change my seat</button>
+                    <a href="/my/seats">Cancel</a>
+                </div>
+            </form>
+        </t>
+    </template>
+</odoo>

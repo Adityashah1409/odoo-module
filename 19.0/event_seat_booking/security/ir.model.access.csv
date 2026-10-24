@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_event_seat_plan_user,event.seat.plan user,model_event_seat_plan,event.group_event_registration_desk,1,0,0,0
+access_event_seat_plan_manager,event.seat.plan manager,model_event_seat_plan,event.group_event_manager,1,1,1,1
+access_event_seat_surcharge_user,event.seat.surcharge user,model_event_seat_surcharge,event.group_event_registration_desk,1,0,0,0
+access_event_seat_surcharge_event_user,event.seat.surcharge event user,model_event_seat_surcharge,event.group_event_user,1,1,1,1
+access_event_seat_desk,event.seat desk,model_event_seat,event.group_event_registration_desk,1,0,0,0
+access_event_seat_user,event.seat user,model_event_seat,event.group_event_user,1,1,1,1
+access_event_seat_waitlist_user,event.seat.waitlist user,model_event_seat_waitlist,event.group_event_user,1,1,1,1
+access_event_seat_switch_user,event.seat.switch user,model_event_seat_switch,event.group_event_registration_desk,1,1,1,0

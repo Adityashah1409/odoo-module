@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_event_ticket_view_form_seating" model="ir.ui.view">
+        <field name="name">event.event.ticket.form.seating</field>
+        <field name="model">event.event.ticket</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <form string="Seat arrangement">
+                <header>
+                    <button name="action_prepare_seats" type="object" string="Prepare seat arrangement" class="oe_highlight"
+                            invisible="seat_ids"/>
+                    <button name="action_prepare_seats" type="object" string="Rebuild seats" invisible="not seat_ids"
+                            confirm="Rebuild the seats from this layout? Only possible while no seat is on hold or booked."/>
+                    <button name="action_clear_seats" type="object" string="Clear seat arrangement" invisible="not seat_ids"
+                            confirm="Remove every seat of this section?"/>
+                    <button name="action_view_seats" type="object" string="Seat list" invisible="not seat_ids"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Section (ticket type)"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                        <field name="event_id" readonly="1"/>
+                    </div>
+                    <group>
+                        <group string="Layout">
+                            <label for="seat_plan_id"/>
+                            <div class="o_row">
+                                <field name="seat_plan_id" options="{'no_create': True}"/>
+                                <button name="action_apply_plan" type="object" string="Apply" class="btn-link" invisible="not seat_plan_id"/>
+                            </div>
+                            <field name="seat_rows"/>
+                            <field name="seat_columns"/>
+                            <field name="seat_row_label" widget="radio" options="{'horizontal': true}"/>
+                            <field name="seat_aisle_rows" placeholder="e.g. 5"/>
+                            <field name="seat_aisle_columns" placeholder="e.g. 4, 12"/>
+                            <field name="seat_blocked" placeholder="e.g. A1, A16, M"/>
+                            <field name="seat_stage_label"/>
+                        </group>
+                        <group string="Seats">
+                            <field name="price" string="Ticket price"/>
+                            <field name="seat_count"/>
+                            <field name="seat_available_count"/>
+                            <field name="seat_held_count"/>
+                            <field name="seat_booked_count"/>
+                            <field name="seats_max" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Seat map" name="map" invisible="not seat_ids">
+                            <field name="seat_map_preview" nolabel="1" readonly="1"/>
+                        </page>
+                        <page string="Premium rows" name="surcharges">
+                            <field name="seat_surcharge_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="rows" placeholder="e.g. A-C"/>
+                                    <field name="amount"/>
+                                </list>
+                            </field>
+                            <div class="text-muted small">Applied when the seats are prepared; edit single seats in the seat list.</div>
+                        </page>
+                    </notebook>
+                    <field name="seat_ids" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_tree_from_event_seat" model="ir.ui.view">
+        <field name="name">event.event.ticket.list.from.event.seat</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event.event_event_ticket_view_tree_from_event"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <button name="action_open_seating" type="object" icon="grid_view" title="Seat arrangement"
+                        string="Seats" class="btn-link"/>
+                <field name="seat_count" string="Seats" optional="show"/>
+                <field name="seat_booked_count" string="Booked" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

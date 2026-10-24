@@ -1,0 +1,37 @@
+.o_seat_dashboard {
+    background-color: $o-webclient-background-color;
+    .o_sdb_kpis {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+    .o_sdb_kpi {
+        border-left: 4px solid $primary;
+        .o_sdb_value {
+            display: block;
+            font-size: 1.7rem;
+            font-weight: 600;
+        }
+    }
+    .o_sdb_statusbar {
+        height: 16px;
+        > div { min-width: 2px; }
+    }
+    .o_sdb_status_booked { background-color: #714b67; }
+    .o_sdb_status_held { background-color: #f0a868; }
+    .o_sdb_status_available { background-color: #8fbf9f; }
+    .o_sdb_status_blocked { background-color: #ced4da; }
+    .o_sdb_dot {
+        display: inline-block;
+        width: .7rem;
+        height: .7rem;
+        border-radius: 50%;
+        margin-right: .3rem;
+        vertical-align: middle;
+    }
+    .o_sdb_days {
+        height: 150px;
+    }
+    .o_sdb_daybar {
+        background-color: $primary;
+        opacity: .8;
+    }
+}
