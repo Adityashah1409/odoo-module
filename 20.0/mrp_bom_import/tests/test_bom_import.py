@@ -138,6 +138,25 @@ class TestBomImport(TransactionCase):
         self.wizard('Product,Reference,Component,Component Quantity\nTABLE,V1,LEG,1\n', import_mode='create').action_import()
         self.assertEqual(len(self.boms(self.table)), 2)
 
+    def test_csv_from_excel_windows_1252(self):
+        # French Excel saves CSV in Windows-1252: accents must survive (they were replaced by U+FFFD)
+        chair = self.env['product.product'].create({'name': 'Chaise pliée'})
+        foot = self.env['product.product'].create({'name': 'Pièce métal', 'is_storable': True})
+        content = 'Product;Component;Component Quantity\nChaise pliée;Pièce métal;4\n'.encode('cp1252')
+        wizard = self.wizard(content, product_match='name')
+        wizard.action_import()
+        self.assertEqual((wizard.created_count, wizard.error_count), (1, 0))
+        self.assertEqual(self.boms(chair).bom_line_ids.product_id, foot)
+        # UTF-8 with BOM still works
+        wizard = self.wizard('\ufeffProduct,Component,Component Quantity\nDining Table,Table Leg,4\n'.encode(),
+                             product_match='name')
+        wizard.action_import()
+        self.assertEqual(wizard.created_count, 1)
+
+    def test_damaged_xlsx(self):
+        with self.assertRaisesRegex(UserError, 'cannot be read as an Excel'):
+            self.wizard(b'this is not a zip file', filename='boms.xlsx').action_import()
+
     def test_bad_header(self):
         with self.assertRaises(UserError):
             self.wizard('Item,Qty\nTABLE,1\n').action_import()

@@ -107,8 +107,18 @@ class MrpBomImportWizard(models.TransientModel):
             return base64.b64decode(value)
         return bytes(value)  # BinaryValue (Odoo 20)
 
+    @staticmethod
+    def _decode(data):
+        """UTF-8 (with or without BOM) first; else Windows-1252 / Latin-1 as saved by Excel in Europe."""
+        for encoding in ('utf-8-sig', 'cp1252'):
+            try:
+                return data.decode(encoding)
+            except UnicodeDecodeError:
+                continue
+        return data.decode('latin-1')
+
     def _read_csv(self, data):
-        text = data.decode('utf-8-sig', errors='replace')
+        text = self._decode(data)
         delimiter = self.delimiter
         if delimiter == 'auto':
             try:
@@ -122,7 +132,11 @@ class MrpBomImportWizard(models.TransientModel):
             import openpyxl  # noqa: PLC0415 - shipped with Odoo
         except ImportError as e:
             raise UserError(_("The Python library openpyxl is required to read .xlsx files.")) from e
-        workbook = openpyxl.load_workbook(io.BytesIO(data), read_only=True, data_only=True)
+        try:
+            workbook = openpyxl.load_workbook(io.BytesIO(data), read_only=True, data_only=True)
+        except Exception as e:  # noqa: BLE001 - zip, XML or format errors of a damaged/renamed file
+            raise UserError(_("This file cannot be read as an Excel .xlsx workbook (%s). "
+                              "Save it again as .xlsx or export it as .csv.", e)) from e
         sheet = workbook.worksheets[0]
         table = []
         for values in sheet.iter_rows(values_only=True):

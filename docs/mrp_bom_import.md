@@ -16,7 +16,7 @@ import with one-line-per-BoM and `bom_line_ids/...` column names.
 
 | In scope | Out of scope (roadmap) |
 | --- | --- |
-| CSV (auto separator) and XLSX | XLS (old Excel), Google Sheets URL |
+| CSV (auto separator; UTF-8 or Windows-1252 as saved by Excel) and XLSX | XLS (old Excel), Google Sheets URL |
 | Grouping rows into BoMs by product + reference | Multi-level BoM detection from indentation |
 | Product matching by internal reference, barcode, name | Matching by product attribute values |
 | BoM quantity, unit, type (normal / kit), reference | Subcontracting BoMs, by-products |
