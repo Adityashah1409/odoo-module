@@ -1,0 +1,35 @@
+.o_activity_dashboard {
+    background-color: $o-webclient-background-color;
+
+    .o_am_kpis {
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+    .o_am_kpi {
+        border-left-width: 4px;
+        transition: box-shadow .15s ease-in-out;
+        &:hover {
+            box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .08);
+        }
+        .o_am_kpi_value {
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .o_am_kpi_icon {
+            font-size: 1.25rem;
+            opacity: .6;
+        }
+    }
+    .o_am_kpi_danger { border-left-color: $danger; .o_am_kpi_value { color: $danger; } }
+    .o_am_kpi_warning { border-left-color: $warning; }
+    .o_am_kpi_success { border-left-color: $success; }
+    .o_am_kpi_info { border-left-color: $info; }
+    .o_am_kpi_muted { border-left-color: $gray-400; .o_am_kpi_value { color: $text-muted; } }
+    .o_am_filters .form-select {
+        width: auto;
+        min-width: 130px;
+    }
+    .o_am_bar:hover span {
+        text-decoration: underline;
+    }
+}

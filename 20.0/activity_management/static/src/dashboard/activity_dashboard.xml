@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="activity_management.ActivityDashboard">
+        <div class="o_activity_dashboard o_action h-100 overflow-auto">
+            <div class="o_am_header d-flex flex-wrap align-items-center gap-2 px-4 py-3 border-bottom">
+                <h2 class="m-0 me-3">Activities</h2>
+                <div class="btn-group" role="group" t-if="this.state.data">
+                    <button type="button" class="btn btn-sm" t-att-class="this.state.scope === 'mine' ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setScope('mine')">Mine</button>
+                    <button type="button" class="btn btn-sm" t-if="this.state.data.filters.can_team"
+                            t-att-class="this.state.scope === 'team' ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setScope('team')">My team</button>
+                    <button type="button" class="btn btn-sm" t-if="this.state.data.filters.can_all"
+                            t-att-class="this.state.scope === 'all' ? 'btn-primary' : 'btn-outline-secondary'"
+                            t-on-click="() => this.setScope('all')">Everyone</button>
+                </div>
+                <div class="o_am_filters d-flex flex-wrap gap-2 ms-auto" t-if="this.state.data">
+                    <select class="form-select form-select-sm o_am_period" t-att-value="this.state.period"
+                            t-on-change="(ev) => this.onFilter('period', ev)">
+                        <t t-foreach="this.periods" t-as="p" t-key="p[0]">
+                            <option t-att-value="p[0]" t-att-selected="this.state.period === p[0]" t-out="p[1]"/>
+                        </t>
+                    </select>
+                    <select class="form-select form-select-sm o_am_type" t-on-change="(ev) => this.onFilter('activity_type_id', ev)">
+                        <option value="">All types</option>
+                        <t t-foreach="this.state.data.filters.types" t-as="t" t-key="t.id">
+                            <option t-att-value="t.id" t-att-selected="this.state.activity_type_id == t.id" t-out="t.name"/>
+                        </t>
+                    </select>
+                    <select class="form-select form-select-sm o_am_user" t-if="this.state.scope !== 'mine'"
+                            t-on-change="(ev) => this.onFilter('user_id', ev)">
+                        <option value="">All users</option>
+                        <t t-foreach="this.state.data.filters.users" t-as="u" t-key="u.id">
+                            <option t-att-value="u.id" t-att-selected="this.state.user_id == u.id" t-out="u.name"/>
+                        </t>
+                    </select>
+                    <select class="form-select form-select-sm o_am_model" t-on-change="(ev) => this.onFilter('res_model', ev)">
+                        <option value="">All documents</option>
+                        <t t-foreach="this.state.data.filters.models" t-as="m" t-key="m[0]">
+                            <option t-att-value="m[0]" t-att-selected="this.state.res_model === m[0]" t-out="m[1]"/>
+                        </t>
+                    </select>
+                    <select class="form-select form-select-sm o_am_tag" t-if="this.state.data.filters.tags.length"
+                            t-on-change="(ev) => this.onFilter('tag_id', ev)">
+                        <option value="">All tags</option>
+                        <t t-foreach="this.state.data.filters.tags" t-as="t" t-key="t.id">
+                            <option t-att-value="t.id" t-att-selected="this.state.tag_id == t.id" t-out="t.name"/>
+                        </t>
+                    </select>
+                    <button type="button" class="btn btn-sm btn-light" title="Reset filters" t-on-click="this.resetFilters">
+                        <i class="oi" data-icon="undo"/>
+                    </button>
+                </div>
+            </div>
+            <div class="px-4 py-3" t-if="this.state.data">
+                <div class="o_am_kpis d-grid gap-3 mb-4">
+                    <t t-foreach="this.kpis" t-as="kpi" t-key="kpi.key">
+                        <button type="button" t-attf-class="o_am_kpi o_am_kpi_{{kpi.tone}} card text-start p-3"
+                                t-att-data-kpi="kpi.key" t-on-click="() => this.openKpi(kpi)">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <span class="text-uppercase small fw-semibold o_am_kpi_label" t-out="kpi.label"/>
+                                <i class="oi o_am_kpi_icon" t-att-data-icon="kpi.icon"/>
+                            </div>
+                            <div class="o_am_kpi_value" t-out="this.state.data.counts[kpi.key]"/>
+                        </button>
+                    </t>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header d-flex align-items-center">
+                                <strong>Open activities</strong>
+                                <span class="text-muted small ms-2">sorted by due date</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-hover align-middle mb-0 o_am_table">
+                                    <thead>
+                                        <tr>
+                                            <th>Due</th><th>Activity</th><th>Document</th><th>Assigned to</th><th/>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-if="!this.state.data.activities.length">
+                                            <td colspan="5" class="text-center text-muted py-4">Nothing to do. Enjoy!</td>
+                                        </tr>
+                                        <t t-foreach="this.state.data.activities" t-as="a" t-key="a.id">
+                                            <tr class="o_am_row">
+                                                <td class="text-nowrap">
+                                                    <span t-attf-class="badge {{a.overdue ? 'text-bg-danger' : (a.due_today ? 'text-bg-warning' : 'text-bg-light')}}"
+                                                          t-out="a.deadline"/>
+                                                </td>
+                                                <td>
+                                                    <a href="#" t-on-click.prevent="() => this.openActivity(a)">
+                                                        <i class="oi me-1 text-muted" t-att-data-icon="a.icon"/>
+                                                        <t t-out="a.summary"/>
+                                                    </a>
+                                                    <i class="oi oi-filled text-warning ms-1" data-icon="star" t-if="a.priority !== '0'" title="Priority"/>
+                                                    <t t-foreach="a.tags" t-as="tag" t-key="tag_index">
+                                                        <span t-attf-class="o_tag o_badge badge rounded-pill o_tag_color_{{tag.color}} ms-1" t-out="tag.name"/>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <a href="#" t-if="a.res_model" t-on-click.prevent="() => this.openDocument(a)" t-out="a.document"/>
+                                                </td>
+                                                <td t-out="a.user"/>
+                                                <td class="text-end text-nowrap">
+                                                    <button type="button" class="btn btn-sm btn-link o_am_done" title="Mark as done"
+                                                            t-on-click="() => this.markDone(a)">
+                                                        <i class="oi" data-icon="check"/>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Open by type</strong></div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0" t-if="!this.state.data.by_type.length">No open activity.</p>
+                                <t t-foreach="this.state.data.by_type" t-as="row" t-key="row.id">
+                                    <div class="o_am_bar mb-2" role="button" t-on-click="() => this.filterOnType(row)">
+                                        <div class="d-flex justify-content-between small">
+                                            <span t-out="row.name"/><strong t-out="row.count"/>
+                                        </div>
+                                        <div class="progress" style="height: 6px">
+                                            <div class="progress-bar" t-att-style="this.barWidth(row.count, this.state.data.by_type)"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="card" t-if="this.state.scope !== 'mine'">
+                            <div class="card-header"><strong>Open by user</strong></div>
+                            <div class="card-body">
+                                <p class="text-muted mb-0" t-if="!this.state.data.by_user.length">No open activity.</p>
+                                <t t-foreach="this.state.data.by_user" t-as="row" t-key="row.id">
+                                    <div class="o_am_bar mb-2" role="button" t-on-click="() => this.filterOnUser(row)">
+                                        <div class="d-flex justify-content-between small">
+                                            <span t-out="row.name"/><strong t-out="row.count"/>
+                                        </div>
+                                        <div class="progress" style="height: 6px">
+                                            <div class="progress-bar bg-success" t-att-style="this.barWidth(row.count, this.state.data.by_user)"/>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

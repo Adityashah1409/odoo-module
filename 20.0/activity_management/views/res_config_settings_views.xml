@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_activity" model="ir.ui.view">
+        <field name="name">res.config.settings.form.activity.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Activities" name="activity_management" groups="activity_management.group_activity_manager">
+                    <block title="Reminders" name="activity_reminders">
+                        <setting help="Send each user a daily digest of the activities due soon.">
+                            <field name="activity_reminder_enabled"/>
+                            <div class="content-group" invisible="not activity_reminder_enabled">
+                                <div class="row mt-3">
+                                    <label for="activity_reminder_days" string="Days before the due date" class="col-lg-6 o_light_label"/>
+                                    <field name="activity_reminder_days" class="col-lg-2"/>
+                                </div>
+                                <div class="mt-2">
+                                    <field name="activity_overdue_digest" class="oe_inline"/>
+                                    <label for="activity_overdue_digest" string="Include overdue activities" class="o_light_label"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting help="Supervisors are notified when an activity of their team is cancelled.">
+                            <field name="activity_notify_supervisor"/>
+                        </setting>
+                    </block>
+                    <block title="Mass scheduling" name="activity_mass">
+                        <setting string="Schedule activities" help="Adds &quot;Schedule activities&quot; to the Action menu of these models (several records x several users).">
+                            <field name="activity_mass_model_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

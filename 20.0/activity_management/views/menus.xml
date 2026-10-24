@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_activity_root" name="Activities" sequence="12" groups="base.group_user"
+              web_icon="activity_management,static/description/icon.png"/>
+    <menuitem id="menu_activity_dashboard" name="Dashboard" parent="menu_activity_root" action="action_activity_dashboard" sequence="1"/>
+    <menuitem id="menu_activity_mine" name="My Activities" parent="menu_activity_root" action="action_activity_mine" sequence="10"/>
+    <menuitem id="menu_activity_team" name="My Team" parent="menu_activity_root" action="action_activity_team" sequence="20"
+              groups="group_activity_supervisor"/>
+    <menuitem id="menu_activity_all" name="All Activities" parent="menu_activity_root" action="action_activity_all" sequence="30"
+              groups="group_activity_manager"/>
+    <menuitem id="menu_activity_history" name="History" parent="menu_activity_root" action="action_activity_history" sequence="40"/>
+    <menuitem id="menu_activity_config" name="Configuration" parent="menu_activity_root" sequence="90" groups="group_activity_manager"/>
+    <menuitem id="menu_activity_config_settings" name="Settings" parent="menu_activity_config" action="action_activity_settings" sequence="1"/>
+    <menuitem id="menu_activity_config_types" name="Activity Types" parent="menu_activity_config" action="mail.mail_activity_type_action" sequence="10"/>
+    <menuitem id="menu_activity_config_tags" name="Tags" parent="menu_activity_config" action="action_mail_activity_tag" sequence="20"/>
+</odoo>
