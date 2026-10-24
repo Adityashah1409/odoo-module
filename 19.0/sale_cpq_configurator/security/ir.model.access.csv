@@ -1,0 +1,19 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_configurator_user,cpq.configurator user,model_cpq_configurator,sales_team.group_sale_salesman,1,0,0,0
+access_configurator_manager,cpq.configurator manager,model_cpq_configurator,sales_team.group_sale_manager,1,1,1,1
+access_section_user,cpq.section user,model_cpq_section,sales_team.group_sale_salesman,1,0,0,0
+access_section_manager,cpq.section manager,model_cpq_section,sales_team.group_sale_manager,1,1,1,1
+access_option_user,cpq.option user,model_cpq_option,sales_team.group_sale_salesman,1,0,0,0
+access_option_manager,cpq.option manager,model_cpq_option,sales_team.group_sale_manager,1,1,1,1
+access_price_rule_user,cpq.price.rule user,model_cpq_price_rule,sales_team.group_sale_salesman,1,0,0,0
+access_price_rule_manager,cpq.price.rule manager,model_cpq_price_rule,sales_team.group_sale_manager,1,1,1,1
+access_operation_user,cpq.operation user,model_cpq_operation,sales_team.group_sale_salesman,1,0,0,0
+access_operation_manager,cpq.operation manager,model_cpq_operation,sales_team.group_sale_manager,1,1,1,1
+access_configuration_user,cpq.configuration user,model_cpq_configuration,sales_team.group_sale_salesman,1,1,1,0
+access_configuration_manager,cpq.configuration manager,model_cpq_configuration,sales_team.group_sale_manager,1,1,1,1
+access_configuration_line_user,cpq.configuration.line user,model_cpq_configuration_line,sales_team.group_sale_salesman,1,1,1,0
+access_configuration_line_manager,cpq.configuration.line manager,model_cpq_configuration_line,sales_team.group_sale_manager,1,1,1,1
+access_configuration_mrp,cpq.configuration mrp,model_cpq_configuration,mrp.group_mrp_user,1,0,0,0
+access_configuration_line_mrp,cpq.configuration.line mrp,model_cpq_configuration_line,mrp.group_mrp_user,1,0,0,0
+access_configure_wizard,cpq.configure.wizard,model_cpq_configure_wizard,sales_team.group_sale_salesman,1,1,1,1
+access_configure_wizard_line,cpq.configure.wizard.line,model_cpq_configure_wizard_line,sales_team.group_sale_salesman,1,1,1,1

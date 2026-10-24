@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_cpq_configurator_list" model="ir.ui.view">
+        <field name="name">cpq.configurator.list</field>
+        <field name="model">cpq.configurator</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="product_tmpl_id"/>
+                <field name="base_price" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="bom_type"/>
+                <field name="configuration_count" string="Configurations"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cpq_configurator_form" model="ir.ui.view">
+        <field name="name">cpq.configurator.form</field>
+        <field name="model">cpq.configurator</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_configurations" type="object" class="oe_stat_button" icon="fa-sliders">
+                            <field name="configuration_count" widget="statinfo" string="Configurations"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Custom office desk"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_tmpl_id"/>
+                            <field name="base_price" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="bom_type" widget="radio"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Steps &amp; options" name="options">
+                            <field name="section_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="selection"/>
+                                    <field name="required"/>
+                                </list>
+                            </field>
+                            <field name="option_ids" context="{'default_configurator_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="configurator_id" column_invisible="1"/>
+                                    <field name="section_id" options="{'no_create': True}"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="unit_price"/>
+                                    <field name="default_selected"/>
+                                    <field name="default_qty" optional="hide"/>
+                                    <field name="min_qty" optional="show"/>
+                                    <field name="max_qty" optional="show"/>
+                                    <field name="excluded_option_ids" widget="many2many_tags" optional="show"/>
+                                    <field name="required_option_ids" widget="many2many_tags" optional="hide"/>
+                                    <field name="visible_if_option_ids" widget="many2many_tags" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Price rules" name="price_rules">
+                            <field name="price_rule_ids" context="{'default_configurator_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="configurator_id" column_invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="rule_type"/>
+                                    <field name="amount"/>
+                                    <field name="condition_option_ids" widget="many2many_tags"/>
+                                    <field name="min_quantity"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Manufacturing" name="manufacturing" invisible="bom_type != 'normal'">
+                            <field name="operation_ids" context="{'default_configurator_id': id}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="configurator_id" column_invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="workcenter_id"/>
+                                    <field name="duration"/>
+                                    <field name="option_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" placeholder="Shown in the configuration wizard"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cpq_configurator" model="ir.actions.act_window">
+        <field name="name">Configurators</field>
+        <field name="res_model">cpq.configurator</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first configurator</p>
+            <p>A configurator lists the steps and options of a custom product, their compatibility rules and pricing.</p>
+        </field>
+    </record>
+</odoo>

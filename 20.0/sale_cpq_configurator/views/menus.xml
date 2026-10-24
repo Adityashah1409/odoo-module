@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cpq_configurations" name="Configured Products" parent="sale.sale_order_menu"
+              action="action_cpq_configuration" sequence="40"/>
+    <menuitem id="menu_cpq_configurators" name="Product Configurators" parent="sale.menu_sale_config"
+              action="action_cpq_configurator" sequence="25" groups="sales_team.group_sale_manager"/>
+</odoo>

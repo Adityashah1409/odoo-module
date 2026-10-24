@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_cpq_configuration" model="ir.sequence">
+            <field name="name">CPQ configuration</field>
+            <field name="code">cpq.configuration</field>
+            <field name="prefix">CPQ</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
