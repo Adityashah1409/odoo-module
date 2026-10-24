@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_cpq" model="ir.ui.view">
+        <field name="name">sale.order.form.cpq</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_cpq_configure" type="object" string="Configure product"
+                        class="btn-secondary" invisible="state not in ('draft', 'sent')"/>
+            </xpath>
+            <div name="button_box" position="inside">
+                <button name="action_view_cpq_configurations" type="object" class="oe_stat_button" icon="tune"
+                        invisible="not cpq_configuration_count">
+                    <field name="cpq_configuration_count" widget="statinfo" string="Configurations"/>
+                </button>
+                <button name="action_view_cpq_productions" type="object" class="oe_stat_button" icon="build"
+                        invisible="not cpq_production_count" groups="mrp.group_mrp_user">
+                    <field name="cpq_production_count" widget="statinfo" string="Manufacturing"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
