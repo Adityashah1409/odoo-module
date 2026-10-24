@@ -149,3 +149,6 @@ relationship, schedule the push, add the report in Odoo and open it as a viewer.
 ## 7. Known limitations
 - Power BI push datasets cannot update rows: use full refresh for data that changes.
 - Secure embed needs viewers to have Power BI access (Pro or Premium/Fabric capacity) to the report.
+- Incremental pushes select records by `create_date`, which is the start time of the transaction that created
+  them. A record created by a transaction that started before a push and was committed after it is not sent
+  by later incremental pushes. Schedule a full push from time to time (for example nightly) to catch such rows.

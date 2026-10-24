@@ -254,7 +254,9 @@ class PowerBITable(models.Model):
         connection = dataset.connection_id
         path = f"datasets/{dataset.powerbi_dataset_id}/tables/{self.name}/rows"
         started = time.monotonic()
-        sync_started = fields.Datetime.now()
+        # same clock as create_date (transaction start): records created by transactions that start
+        # after this push are picked up by the next incremental push
+        sync_started = self.env.cr.now()
         try:
             records = self._records(incremental=incremental)
             if not incremental or not self.last_sync_date:

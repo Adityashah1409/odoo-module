@@ -129,9 +129,11 @@ class TestPowerBI(PowerBICase):
 
     def test_incremental_push(self):
         self.dataset.action_push()
-        self.customers.last_sync_date = fields.Datetime.now() - timedelta(seconds=1)
+        self.assertEqual(self.customers.last_sync_date, self.env.cr.now(), "sync point = push transaction start")
+        # simulate: the existing partners were created long ago, the last push happened 1 second ago
+        self.customers.last_sync_date = self.env.cr.now() - timedelta(seconds=1)
         self.env.cr.execute("UPDATE res_partner SET create_date = %s WHERE id IN %s",
-                            [fields.Datetime.now() - timedelta(days=1), tuple(self.partners.ids)])
+                            [self.env.cr.now() - timedelta(days=1), tuple(self.partners.ids)])
         self.env['res.partner'].invalidate_model(['create_date'])
         new = self.env['res.partner'].create({'name': 'PBI new', 'ref': 'PBI'})
         self.api.calls.clear()
