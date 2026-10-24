@@ -70,6 +70,12 @@ class TestShopifySync(ShopifyCase):
         product_line = order.order_line.filtered(lambda l: l.product_id.default_code == 'TSHIRT-S')
         self.assertEqual((product_line.product_uom_qty, product_line.price_unit), (2, 25))
         self.assertEqual(sorted(order.order_line.mapped('price_unit')), [-5.0, 7.5, 25.0])
+        # shipping/discount products are saved on the store and are not module data (safe uninstall)
+        shipping, discount = self.instance.shipping_product_id, self.instance.discount_product_id
+        self.assertEqual((shipping.default_code, discount.default_code), ('SHOPIFY-SHIPPING', 'SHOPIFY-DISCOUNT'))
+        self.assertIn(shipping, order.order_line.product_id)
+        self.assertFalse(self.env['ir.model.data'].search_count(
+            [('model', '=', 'product.product'), ('res_id', 'in', (shipping | discount).ids)]))
         self.assertEqual(order.shopify_financial_status, 'PAID')
         self.assertEqual(order.invoice_ids.state, 'posted')
         self.assertTrue(order.picking_ids)

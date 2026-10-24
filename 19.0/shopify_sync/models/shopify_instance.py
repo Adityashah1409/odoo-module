@@ -464,12 +464,12 @@ class ShopifyInstance(models.Model):
         for shipping in data.get('shippingLines', {}).get('nodes', []):
             amount = float(shipping['originalPriceSet']['shopMoney']['amount'])
             if amount:
-                product = self.shipping_product_id or self._service_product('shopify_shipping', _("Shopify shipping"))
+                product = self._service_product('shipping_product_id', 'SHOPIFY-SHIPPING', _("Shopify shipping"))
                 lines.append((0, 0, {'product_id': product.id, 'name': shipping.get('title') or product.name,
                                      'product_uom_qty': 1, 'price_unit': amount}))
         discount = float((data.get('totalDiscountsSet') or {}).get('shopMoney', {}).get('amount') or 0)
         if discount:
-            product = self.discount_product_id or self._service_product('shopify_discount', _("Shopify discount"))
+            product = self._service_product('discount_product_id', 'SHOPIFY-DISCOUNT', _("Shopify discount"))
             lines.append((0, 0, {'product_id': product.id, 'name': _("Discount"),
                                  'product_uom_qty': 1, 'price_unit': -discount}))
         values = {
@@ -508,13 +508,19 @@ class ShopifyInstance(models.Model):
                   res_model='sale.order', res_id=order.id)
         return order
 
-    def _service_product(self, xml_name, name):
-        imd = self.env['ir.model.data']
-        product = self.env.ref(f'shopify_sync.{xml_name}', raise_if_not_found=False)
+    def _service_product(self, field, code, name):
+        """Product of the store setting `field`; when empty, a shared service product found by its
+        internal reference (created once) is saved on the store. These are ordinary records (no XML ID), so
+        uninstalling the module keeps them for the imported orders that use them."""
+        product = self[field]
         if not product:
-            product = self.env['product.product'].create({'name': name, 'type': 'service', 'invoice_policy': 'order'})
-            imd.create({'module': 'shopify_sync', 'name': xml_name, 'model': 'product.product',
-                        'res_id': product.id, 'noupdate': True})
+            product = self.env['product.product'].search(
+                [('default_code', '=', code), ('type', '=', 'service'),
+                 ('company_id', 'in', [False, self.company_id.id])], limit=1)
+            if not product:
+                product = self.env['product.product'].create({
+                    'name': name, 'default_code': code, 'type': 'service', 'invoice_policy': 'order'})
+            self[field] = product
         return product
 
     # ------------------------------------------------------------------
