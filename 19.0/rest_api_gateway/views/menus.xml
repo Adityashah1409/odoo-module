@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_rest_api_docs" model="ir.actions.act_url">
+        <field name="name">API Documentation</field>
+        <field name="url">/api/docs</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_rest_api_root" name="REST API" sequence="95" groups="base.group_system"
+              web_icon="rest_api_gateway,static/description/icon.png"/>
+    <menuitem id="menu_rest_api_clients" name="API Clients" parent="menu_rest_api_root" action="action_rest_api_client" sequence="10"/>
+    <menuitem id="menu_rest_api_endpoints" name="Custom Endpoints" parent="menu_rest_api_root" action="action_rest_api_endpoint" sequence="20"/>
+    <menuitem id="menu_rest_api_logs" name="Request Logs" parent="menu_rest_api_root" action="action_rest_api_log" sequence="30"/>
+    <menuitem id="menu_rest_api_docs" name="Documentation" parent="menu_rest_api_root" action="action_rest_api_docs" sequence="40"/>
+    <menuitem id="menu_rest_api_settings" name="Settings" parent="menu_rest_api_root" action="action_rest_api_settings" sequence="50"/>
+</odoo>

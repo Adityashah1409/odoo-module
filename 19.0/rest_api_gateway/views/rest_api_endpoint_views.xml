@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rest_api_endpoint_view_list" model="ir.ui.view">
+        <field name="name">rest.api.endpoint.list</field>
+        <field name="model">rest.api.endpoint</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="method" widget="badge" decoration-success="method == 'GET'" decoration-info="method == 'POST'"
+                       decoration-warning="method in ('PUT', 'PATCH')" decoration-danger="method == 'DELETE'"/>
+                <field name="url"/>
+                <field name="name"/>
+                <field name="mode"/>
+                <field name="auth_required" string="Auth"/>
+                <field name="run_as"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rest_api_endpoint_view_form" model="ir.ui.view">
+        <field name="name">rest.api.endpoint.form</field>
+        <field name="model">rest.api.endpoint</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Top customers by country"/></h1>
+                        <div class="d-flex gap-2 align-items-baseline">
+                            <field name="method" class="w-auto"/>
+                            <span class="text-muted">/api/v1/custom/</span>
+                            <field name="path" placeholder="customers/{country}"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Behaviour">
+                            <field name="mode" widget="radio"/>
+                            <field name="auth_required"/>
+                            <field name="run_as"/>
+                            <field name="log_requests"/>
+                        </group>
+                        <group string="Documentation">
+                            <field name="description" nolabel="1" colspan="2"
+                                   placeholder="What it returns, parameters, example..."/>
+                        </group>
+                    </group>
+                    <group string="Records" invisible="mode != 'domain'">
+                        <field name="model_id" required="mode == 'domain'"/>
+                        <field name="domain" widget="domain" options="{'model': 'model_name', 'in_dialog': true}"
+                               invisible="not model_id"/>
+                        <field name="model_name" invisible="1"/>
+                        <field name="field_ids" widget="many2many_tags" invisible="not model_id"/>
+                        <field name="limit"/>
+                        <field name="order" placeholder="e.g. create_date desc"/>
+                    </group>
+                    <group string="Server action" invisible="mode != 'action'">
+                        <field name="action_id" required="mode == 'action'"/>
+                        <div colspan="2" class="text-muted small">Pass record ids as ?ids=1,2 or {"ids": [1, 2]}; they
+                            become active_ids.</div>
+                    </group>
+                    <group string="Python code" invisible="mode != 'code'">
+                        <field name="code" widget="code" options="{'mode': 'python'}" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rest_api_endpoint" model="ir.actions.act_window">
+        <field name="name">Custom Endpoints</field>
+        <field name="res_model">rest.api.endpoint</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a custom endpoint</p>
+            <p>Expose a search, a server action or a few lines of Python under /api/v1/custom/...</p>
+        </field>
+    </record>
+</odoo>

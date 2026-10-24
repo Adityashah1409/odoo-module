@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_rest_api_client_system,rest.api.client system,rest.api.client,base.group_system,crud,
+access_rest_api_token_system,rest.api.token system,rest.api.token,base.group_system,crud,
+access_rest_api_endpoint_system,rest.api.endpoint system,rest.api.endpoint,base.group_system,crud,
+access_rest_api_log_system,rest.api.log system,rest.api.log,base.group_system,rd,
+access_rest_api_secret_wizard_system,rest.api.secret.wizard system,rest.api.secret.wizard,base.group_system,crud,

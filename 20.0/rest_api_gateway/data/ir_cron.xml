@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_rest_api_cleanup" model="ir.cron">
+        <field name="name">REST API: delete old logs and expired tokens</field>
+        <field name="model_id" ref="model_rest_api_log"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_cleanup()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+    </record>
+</odoo>

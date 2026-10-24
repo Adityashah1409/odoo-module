@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_rest_api" model="ir.ui.view">
+        <field name="name">res.config.settings.form.rest.api</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="REST API" name="rest_api_gateway" groups="base.group_system">
+                    <block title="Requests" name="rest_api_requests">
+                        <setting string="Rate limit" help="Maximum requests per minute for one user and IP address (0 = unlimited).">
+                            <field name="rest_api_rate_limit"/>
+                        </setting>
+                        <setting string="Page size" help="Highest 'limit' accepted when searching records.">
+                            <field name="rest_api_max_limit"/>
+                        </setting>
+                        <setting string="CORS" help="Origins allowed to call the API from a browser (comma-separated, or *).">
+                            <field name="rest_api_cors_origins" placeholder="https://shop.example.com"/>
+                        </setting>
+                    </block>
+                    <block title="Logs" name="rest_api_logs">
+                        <setting help="Store request and response bodies (secrets are masked, 4,000 characters max).">
+                            <field name="rest_api_log_bodies"/>
+                        </setting>
+                        <setting string="Retention" help="Older logs are deleted every day.">
+                            <field name="rest_api_log_days"/>
+                        </setting>
+                    </block>
+                    <block title="Documentation" name="rest_api_docs">
+                        <setting help="Anyone can open /api/docs and the OpenAPI file (otherwise an Odoo login is needed).">
+                            <field name="rest_api_docs_public"/>
+                            <div class="mt-2">
+                                <a href="/api/docs" target="_blank" class="btn-link" role="button"><i class="oi oi-arrow-right me-1"/>Open the API documentation</a>
+                            </div>
+                        </setting>
+                        <setting string="Documented models" help="Models whose fields are described in the OpenAPI file.">
+                            <field name="rest_api_doc_models"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_rest_api_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'rest_api_gateway', 'bin_size': False}</field>
+    </record>
+</odoo>

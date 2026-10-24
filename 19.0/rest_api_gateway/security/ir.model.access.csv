@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rest_api_client_system,rest.api.client system,model_rest_api_client,base.group_system,1,1,1,1
+access_rest_api_token_system,rest.api.token system,model_rest_api_token,base.group_system,1,1,1,1
+access_rest_api_endpoint_system,rest.api.endpoint system,model_rest_api_endpoint,base.group_system,1,1,1,1
+access_rest_api_log_system,rest.api.log system,model_rest_api_log,base.group_system,1,0,0,1
+access_rest_api_secret_wizard_system,rest.api.secret.wizard system,model_rest_api_secret_wizard,base.group_system,1,1,1,1

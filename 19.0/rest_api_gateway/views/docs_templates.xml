@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="api_docs" name="REST API documentation">
+        <html lang="en">
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <title>REST API documentation</title>
+                <link rel="stylesheet" href="/rest_api_gateway/static/src/docs/api_docs.css"/>
+            </head>
+            <body>
+                <div id="api-docs" t-att-data-spec-url="spec_url" t-att-data-db="db">
+                    <header class="top">
+                        <div>
+                            <h1 id="title">REST API</h1>
+                            <p id="description" class="muted"/>
+                        </div>
+                        <div class="auth">
+                            <label for="auth-header">Authorization header</label>
+                            <input id="auth-header" type="text" placeholder="Bearer &lt;API key or access token&gt;"/>
+                            <small class="muted">Used by "Try it". Basic auth: Basic base64(login:API key).
+                                Database: <code t-esc="db"/> (header X-Odoo-Database)</small>
+                        </div>
+                    </header>
+                    <div class="toolbar">
+                        <input id="filter" type="search" placeholder="Filter endpoints (path, summary, tag)..."/>
+                        <a id="spec-link" target="_blank">openapi.json</a>
+                    </div>
+                    <main id="groups"><p class="muted">Loading the specification...</p></main>
+                </div>
+                <script src="/rest_api_gateway/static/src/docs/api_docs.js"/>
+            </body>
+        </html>
+    </template>
+</odoo>
