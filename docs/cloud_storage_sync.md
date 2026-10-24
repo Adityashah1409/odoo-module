@@ -229,3 +229,5 @@ The 20.0 version is produced from 19.0 with `tools/port_19_to_20.sh` (Odoo 20's 
 - Sync is batched (cron), not real time.
 - Backward sync detects new/removed items by name; renames done directly in the storage appear as remove + add.
 - One storage per folder tree; a folder cannot be synced to two clients at once.
+- Moving a synced file to a folder of **another** storage account uploads a copy there (a move cannot cross
+  accounts); the copy in the old account is deleted only when that account has *Delete remote files* enabled.

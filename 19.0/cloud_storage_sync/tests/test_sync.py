@@ -1,4 +1,6 @@
 import os
+import shutil
+import tempfile
 
 from odoo.tests import HttpCase, tagged
 
@@ -84,6 +86,35 @@ class TestSync(CloudStorageCase):
         self.run_queue()
         self.assertTrue(os.path.exists(self.remote('Board 2026', 'minutes.txt')))
         self.assertEqual(attachment.cloud_path, 'Board 2026/minutes.txt')
+
+    def test_two_clients_same_paths_and_cross_client_move(self):
+        tmp2 = tempfile.mkdtemp(prefix='cloud_storage_test2_')
+        self.addCleanup(shutil.rmtree, tmp2, ignore_errors=True)
+        client2 = self.env['cloud.storage.client'].create({
+            'name': 'Second storage', 'provider': 'local', 'local_path': tmp2, 'root_folder': 'Odoo'})
+        client2.action_test_connection()
+        clients = self.client | client2
+        board1 = self.Folder.create({'name': 'Board', 'client_id': self.client.id})
+        board2 = self.Folder.create({'name': 'Board', 'client_id': client2.id})
+        first = self.Attachment.create({'name': 'notes.txt', 'raw': b'one', 'cloud_folder_id': board1.id})
+        second = self.Attachment.create({'name': 'notes.txt', 'raw': b'two', 'cloud_folder_id': board2.id})
+        self.Queue._process(clients=clients)
+        self.assertEqual(first.cloud_path, second.cloud_path, "same relative path in two accounts")
+        # renaming a folder in one account must not touch the other account's files
+        board1.name = 'Board 2026'
+        self.Queue._process(clients=clients)
+        self.assertEqual(first.cloud_path, 'Board 2026/notes.txt')
+        self.assertEqual(second.cloud_path, 'Board/notes.txt')
+        # moving a synced file to a folder of another account uploads it there
+        moved = self.Attachment.create({'name': 'agenda.txt', 'raw': b'agenda', 'cloud_folder_id': board1.id})
+        self.Queue._process(clients=clients)
+        moved.cloud_folder_id = board2
+        self.assertEqual(moved.cloud_state, 'queued')
+        self.Queue._process(clients=clients)
+        self.assertEqual((moved.cloud_state, moved.cloud_path), ('synced', 'Board/agenda.txt'))
+        with open(os.path.join(tmp2, 'Odoo', 'Board', 'agenda.txt'), 'rb') as f:
+            self.assertEqual(f.read(), b'agenda')
+        self.assertFalse(self.Queue.search([('state', '=', 'failed')]))
 
     def test_backward_sync(self):
         self.run_queue()

@@ -69,19 +69,27 @@ class IrAttachment(models.Model):
         old_paths = {}
         if 'cloud_folder_id' in vals:
             moved = self.filtered(lambda a: a.cloud_state == 'synced' and a.cloud_path)
-            old_paths = {a.id: a.cloud_path for a in moved}
+            old_paths = {a.id: (a.cloud_path, a.cloud_folder_id.client_id) for a in moved}
         content_changed = {'raw', 'datas'} & set(vals)
         result = super().write(vals)
         Queue = self.env['cloud.storage.queue'].sudo()
+        other_client = self.browse()
         for attachment in moved:
             folder = attachment.cloud_folder_id
             if not folder:
                 continue
+            old_path, old_client = old_paths[attachment.id]
+            if folder.client_id != old_client:
+                # another storage account: upload the file there (a move cannot cross accounts)
+                if old_client and old_client.delete_remote_on_unlink:
+                    Queue._enqueue('delete', old_client, path=old_path, priority=15)
+                other_client |= attachment
+                continue
             new_path = f"{folder.remote_path}/{attachment._cloud_file_name()}"
-            if new_path != old_paths[attachment.id]:
+            if new_path != old_path:
                 Queue._enqueue('move', folder.client_id, attachment=attachment,
-                               path=old_paths[attachment.id], new_path=new_path)
-        to_upload = self - moved if 'cloud_folder_id' in vals else self.browse()
+                               path=old_path, new_path=new_path)
+        to_upload = (self - moved) | other_client if 'cloud_folder_id' in vals else self.browse()
         if content_changed:
             to_upload |= self.filtered(lambda a: a.cloud_state in ('synced', 'error') and a.type == 'binary')
         to_upload._cloud_enqueue_upload()

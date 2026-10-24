@@ -112,7 +112,11 @@ class CloudStorageQueue(models.Model):
         # files keep their relative path below the moved item
         Attachment = self.env['ir.attachment'].sudo().with_context(cloud_storage_skip_sync=True)
         prefix = self.path + '/'
-        moved = Attachment.search(['|', ('cloud_path', '=', self.path), ('cloud_path', '=like', prefix + '%')])
+        # only this client's files: another storage account may use the same relative paths
+        moved = Attachment.search([
+            ('cloud_folder_id.client_id', '=', client.id),
+            '|', ('cloud_path', '=', self.path), ('cloud_path', '=like', prefix + '%'),
+        ])
         for attachment in moved:
             new_path = self.new_path + attachment.cloud_path[len(self.path):]
             values = {'cloud_path': new_path}
