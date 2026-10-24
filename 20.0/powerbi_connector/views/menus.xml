@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_powerbi_root" name="Power BI" sequence="75"
+              web_icon="powerbi_connector,static/description/icon.png" groups="group_powerbi_user"/>
+    <menuitem id="menu_powerbi_reports" name="Reports" parent="menu_powerbi_root"
+              action="action_powerbi_report" sequence="10"/>
+    <menuitem id="menu_powerbi_datasets" name="Datasets" parent="menu_powerbi_root"
+              action="action_powerbi_dataset" sequence="20" groups="group_powerbi_manager"/>
+    <menuitem id="menu_powerbi_logs" name="Sync Logs" parent="menu_powerbi_root"
+              action="action_powerbi_log" sequence="30" groups="group_powerbi_manager"/>
+    <menuitem id="menu_powerbi_config" name="Configuration" parent="menu_powerbi_root"
+              sequence="90" groups="group_powerbi_manager"/>
+    <menuitem id="menu_powerbi_connections" name="Connections" parent="menu_powerbi_config"
+              action="action_powerbi_connection" sequence="10"/>
+</odoo>

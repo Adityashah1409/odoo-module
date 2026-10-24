@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_powerbi_report_kanban" model="ir.ui.view">
+        <field name="name">powerbi.report.kanban</field>
+        <field name="model">powerbi.report</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <field name="group_ids" widget="many2many_tags" class="mt-1"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_powerbi_report_form" model="ir.ui.view">
+        <field name="name">powerbi.report.form</field>
+        <field name="model">powerbi.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" placeholder="e.g. Sales dashboard"/></h1></div>
+                    <group groups="powerbi_connector.group_powerbi_manager">
+                        <group>
+                            <field name="report_url" placeholder="https://app.powerbi.com/groups/.../reports/..."/>
+                            <field name="tenant_id"/>
+                        </group>
+                        <group>
+                            <field name="group_ids" widget="many2many_tags"/>
+                            <field name="height"/>
+                            <field name="embed_url" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <field name="embed_html" nolabel="1" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_powerbi_report" model="ir.actions.act_window">
+        <field name="name">Reports</field>
+        <field name="res_model">powerbi.report</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Power BI report yet</p>
+            <p>Add a report link to show it here; viewers sign in with their Power BI account.</p>
+        </field>
+    </record>
+</odoo>

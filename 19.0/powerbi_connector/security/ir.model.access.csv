@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_connection_manager,powerbi.connection manager,model_powerbi_connection,group_powerbi_manager,1,1,1,1
+access_dataset_manager,powerbi.dataset manager,model_powerbi_dataset,group_powerbi_manager,1,1,1,1
+access_table_manager,powerbi.table manager,model_powerbi_table,group_powerbi_manager,1,1,1,1
+access_column_manager,powerbi.column manager,model_powerbi_column,group_powerbi_manager,1,1,1,1
+access_log_manager,powerbi.log manager,model_powerbi_log,group_powerbi_manager,1,1,1,1
+access_report_user,powerbi.report user,model_powerbi_report,group_powerbi_user,1,0,0,0
+access_report_manager,powerbi.report manager,model_powerbi_report,group_powerbi_manager,1,1,1,1

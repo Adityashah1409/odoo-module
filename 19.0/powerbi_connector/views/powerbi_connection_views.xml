@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_powerbi_connection_list" model="ir.ui.view">
+        <field name="name">powerbi.connection.list</field>
+        <field name="model">powerbi.connection</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="workspace_id"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'" decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_powerbi_connection_form" model="ir.ui.view">
+        <field name="name">powerbi.connection.form</field>
+        <field name="model">powerbi.connection</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test connection" class="btn-primary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Finance workspace"/></h1>
+                    </div>
+                    <group>
+                        <group string="Microsoft Entra ID app">
+                            <field name="tenant_id"/>
+                            <field name="client_id"/>
+                            <field name="client_secret" password="True"/>
+                            <field name="authority_url" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Power BI">
+                            <field name="workspace_id" placeholder="Workspace (group) ID from the workspace URL"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Register an app in Microsoft Entra ID, create a client secret, allow service principals to use
+                        Power BI APIs (Power BI admin portal › Tenant settings), and add the app as a <b>Member</b> of the workspace.
+                    </div>
+                    <group string="Last error" invisible="not last_error">
+                        <field name="last_error" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_powerbi_connection" model="ir.actions.act_window">
+        <field name="name">Connections</field>
+        <field name="res_model">powerbi.connection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
