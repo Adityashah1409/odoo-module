@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- one section (ticket type) of the seat map; interactive on the website, read-only in the backend -->
+    <template id="seat_map_grid" name="Seat map grid">
+        <div class="o_seat_section mb-4" t-att-data-ticket-id="section['id']" t-att-data-ticket-name="section['name']">
+            <div class="o_seat_scroller">
+                <div class="o_seat_stage" t-if="section['stage']" t-out="section['stage']"/>
+                <div class="o_seat_grid" t-attf-style="grid-template-columns: 1.6rem repeat({{ section['width'] }}, var(--o-seat-size)) 1.6rem;">
+                    <t t-foreach="section['rows']" t-as="row">
+                        <span class="o_seat_row_label" t-out="row['label']"/>
+                        <t t-foreach="row['cells']" t-as="cell">
+                            <span t-if="not cell" class="o_seat_gap"/>
+                            <button t-else="" type="button"
+                                    t-attf-class="o_seat o_seat_#{cell['status']} #{'o_seat_premium' if cell['surcharge'] else ''}"
+                                    t-att-data-seat-id="cell['id']" t-att-data-seat-name="cell['name']"
+                                    t-att-data-price="cell['price']" t-att-data-status="cell['status']"
+                                    t-att-title="'%s - %s' % (cell['name'], (currency.format(cell['price']) if currency else cell['price']))"
+                                    t-att-disabled="not interactive or cell['status'] not in ('available', 'mine')"
+                                    t-out="cell['number']"/>
+                        </t>
+                        <span class="o_seat_row_label" t-out="row['label']"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="seat_map_legend" name="Seat map legend">
+        <div class="o_seat_legend d-flex flex-wrap gap-3 small my-3">
+            <span><span class="o_seat o_seat_available o_seat_sample"/> Available</span>
+            <span><span class="o_seat o_seat_available o_seat_premium o_seat_sample"/> Premium</span>
+            <span><span class="o_seat o_seat_selected o_seat_sample"/> Your choice</span>
+            <span><span class="o_seat o_seat_held o_seat_sample"/> On hold</span>
+            <span><span class="o_seat o_seat_booked o_seat_sample"/> Booked</span>
+            <span><span class="o_seat o_seat_blocked o_seat_sample"/> Not for sale</span>
+        </div>
+    </template>
+
+    <!-- backend preview (Html field on the ticket) -->
+    <template id="seat_map_preview" name="Seat map preview">
+        <div class="o_seat_map o_seat_map_preview">
+            <t t-call="event_seat_booking.seat_map_grid" interactive="False"/>
+            <t t-call="event_seat_booking.seat_map_legend"/>
+        </div>
+    </template>
+
+    <!-- "Choose your seats" instead of the ticket quantities -->
+    <template id="registration_template_seat" inherit_id="website_event.registration_template" name="Seat booking: register button">
+        <xpath expr="//a[1]" position="attributes">
+            <attribute name="t-if">event_page and event.event_registrations_open and not event.seat_booking</attribute>
+        </xpath>
+        <xpath expr="//button[1]" position="attributes">
+            <attribute name="t-elif">event.event_registrations_open and not event.seat_booking</attribute>
+        </xpath>
+        <xpath expr="//a[1]" position="before">
+            <a t-if="event.seat_booking and event.event_registrations_open" role="button"
+               t-attf-class="btn btn-primary o_event_choose_seats {{cta_additional_classes}}"
+               t-att-href="'/event/%s/seats' % event.id">Choose your seats</a>
+        </xpath>
+        <xpath expr="//div[@t-elif='event.event_registrations_sold_out']" position="inside">
+            <a t-if="event.seat_booking" class="d-block mt-1 o_event_seat_waitlist_link" t-att-href="'/event/%s/seats' % event.id">Join the waitlist</a>
+        </xpath>
+    </template>
+
+    <template id="event_seat_page" name="Event seat map">
+        <t t-call="website.layout">
+            <div class="container py-4 o_event_seat_page">
+                <div class="d-flex flex-wrap align-items-baseline gap-3 mb-2">
+                    <h2 class="mb-0" t-out="event.name"/>
+                    <span class="text-muted">
+                        <span t-field="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'EEE d MMM y, h:mm a'}"/>
+                        <t t-set="venue" t-value="event.sudo().address_id"/>
+                        <t t-if="venue"> · <t t-out="venue.city or venue.name"/></t>
+                    </span>
+                    <a class="ms-auto small" t-att-href="'/event/%s' % event.id">Back to the event</a>
+                </div>
+                <div t-if="error == 'expired'" class="alert alert-warning" role="alert">
+                    Your seats are no longer reserved (the time ran out or someone else took them). Please choose again.
+                </div>
+                <div t-if="waitlisted" class="alert alert-success" role="status">
+                    You are on the waitlist. We will e-mail you as soon as seats are available.
+                </div>
+                <t t-if="sold_out">
+                    <div class="alert alert-info" role="status">
+                        <strong>Sold out.</strong> Leave your details and we will tell you when seats are released.
+                    </div>
+                    <form t-att-action="'/event/%s/waitlist' % event.id" method="post" class="row g-2 o_seat_waitlist_form mb-4">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="col-md-3"><input type="text" name="name" class="form-control" placeholder="Name" required="required"/></div>
+                        <div class="col-md-3"><input type="email" name="email" class="form-control" placeholder="E-mail" required="required"/></div>
+                        <div class="col-md-2"><input type="text" name="phone" class="form-control" placeholder="Phone"/></div>
+                        <div class="col-md-2"><input type="number" name="seats_wanted" class="form-control" min="1" value="1" title="Seats"/></div>
+                        <div class="col-md-2"><button type="submit" class="btn btn-secondary w-100">Join the waitlist</button></div>
+                    </form>
+                </t>
+                <div class="o_seat_map row g-4" t-att-data-event-id="event.id" t-att-data-hold-minutes="hold_minutes"
+                     t-att-data-currency-symbol="currency.symbol" t-att-data-currency-position="currency.position">
+                    <div t-attf-class="{{'col-lg-12' if sold_out else 'col-lg-8'}}">
+                        <t t-call="event_seat_booking.seat_map_legend"/>
+                        <t t-foreach="sections" t-as="section">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <h4 class="mb-0" t-out="section['name']"/>
+                                <span class="badge text-bg-light" t-out="currency.format(section['price'])"/>
+                                <span t-if="section['premium']" class="badge text-bg-warning">Premium rows</span>
+                            </div>
+                            <t t-call="event_seat_booking.seat_map_grid" interactive="True"/>
+                        </t>
+                        <p t-if="not sections" class="text-muted">No seat is on sale for this event yet.</p>
+                    </div>
+                    <div class="col-lg-4" t-if="not sold_out">
+                        <div class="card o_seat_summary position-sticky" style="top: 1rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">Your seats</h5>
+                                <div t-if="auto_allocate and sections" class="input-group input-group-sm mb-3 o_seat_best">
+                                    <select class="form-select o_seat_best_section">
+                                        <t t-foreach="sections" t-as="section">
+                                            <option t-att-value="section['id']" t-out="section['name']"/>
+                                        </t>
+                                    </select>
+                                    <input type="number" class="form-control o_seat_best_count" min="1" max="10" value="2" title="Number of seats"/>
+                                    <button type="button" class="btn btn-outline-primary o_seat_best_button">Find the best seats</button>
+                                </div>
+                                <ul class="list-unstyled o_seat_selection mb-2"><li class="text-muted o_seat_empty">Click on free seats to choose them.</li></ul>
+                                <div class="d-flex justify-content-between fw-bold border-top pt-2">
+                                    <span>Total</span><span class="o_seat_total"/>
+                                </div>
+                                <div class="alert alert-danger small mt-2 d-none o_seat_error" role="alert"/>
+                                <button type="button" class="btn btn-primary w-100 mt-3 o_seat_continue" disabled="disabled">Continue</button>
+                                <p class="small text-muted mt-2 mb-0">Seats are kept for <t t-out="hold_minutes"/> minutes while you complete your booking.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="event_seat_attendees" name="Event seat attendees">
+        <t t-call="website.layout">
+            <div class="container py-4 o_event_seat_attendees">
+                <div class="d-flex flex-wrap align-items-baseline gap-3 mb-3">
+                    <h2 class="mb-0">Attendees</h2>
+                    <span class="text-muted" t-out="event.name"/>
+                    <span class="ms-auto badge text-bg-warning o_seat_countdown" t-att-data-until="hold_until">Seats reserved</span>
+                </div>
+                <form t-att-action="'/event/%s/registration/confirm' % event.id" method="post" class="o_seat_attendee_form">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <t t-foreach="seats" t-as="seat">
+                        <t t-set="index" t-value="seat_index + 1"/>
+                        <div class="card mb-3">
+                            <div class="card-header d-flex justify-content-between">
+                                <strong>Seat <t t-out="seat.name"/> · <t t-out="seat.ticket_id.name"/></strong>
+                                <span t-out="currency.format(seat.price)"/>
+                            </div>
+                            <div class="card-body row g-2">
+                                <input type="hidden" t-att-name="'%s-seat_id' % index" t-att-value="seat.id"/>
+                                <input type="hidden" t-att-name="'%s-event_ticket_id' % index" t-att-value="seat.ticket_id.id"/>
+                                <div class="col-md-4">
+                                    <label class="form-label" t-att-for="'name_%s' % index">Name</label>
+                                    <input type="text" class="form-control" t-att-id="'name_%s' % index" t-att-name="'%s-name' % index"
+                                           required="required" t-att-value="partner.name if partner and seat_index == 0 else ''"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" t-att-for="'email_%s' % index">E-mail</label>
+                                    <input type="email" class="form-control" t-att-id="'email_%s' % index" t-att-name="'%s-email' % index"
+                                           required="required" t-att-value="partner.email if partner and seat_index == 0 else ''"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label" t-att-for="'phone_%s' % index">Phone</label>
+                                    <input type="tel" class="form-control" t-att-id="'phone_%s' % index" t-att-name="'%s-phone' % index"
+                                           t-att-value="partner.phone if partner and seat_index == 0 else ''"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a t-att-href="'/event/%s/seats' % event.id">Change seats</a>
+                        <div>
+                            <span class="me-3 fw-bold">Total <t t-out="currency.format(total)"/></span>
+                            <button type="submit" class="btn btn-primary o_seat_confirm">Confirm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

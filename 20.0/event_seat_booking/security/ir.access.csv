@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_event_seat_plan_user,event.seat.plan user,event.seat.plan,event.group_event_registration_desk,r,
+access_event_seat_plan_manager,event.seat.plan manager,event.seat.plan,event.group_event_manager,crud,
+rule_event_seat_plan_company,Seating plan: multi-company,event.seat.plan,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_event_seat_surcharge_user,event.seat.surcharge user,event.seat.surcharge,event.group_event_registration_desk,r,
+access_event_seat_surcharge_event_user,event.seat.surcharge event user,event.seat.surcharge,event.group_event_user,crud,
+access_event_seat_desk,event.seat desk,event.seat,event.group_event_registration_desk,r,
+access_event_seat_user,event.seat user,event.seat,event.group_event_user,crud,
+rule_event_seat_company,Event seat: multi-company,event.seat,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_event_seat_waitlist_user,event.seat.waitlist user,event.seat.waitlist,event.group_event_user,crud,
+access_event_seat_switch_user,event.seat.switch user,event.seat.switch,event.group_event_registration_desk,cru,

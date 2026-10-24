@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_event_seat_dashboard" model="ir.actions.client">
+        <field name="name">Seating Dashboard</field>
+        <field name="tag">event_seat_booking.dashboard</field>
+        <field name="path">seating-dashboard</field>
+    </record>
+    <menuitem id="menu_event_seat_dashboard" name="Seating Dashboard" parent="event.menu_reporting_events"
+              action="action_event_seat_dashboard" sequence="1" groups="event.group_event_user"/>
+    <menuitem id="menu_event_seats" name="Seats" parent="event.event_main_menu" action="action_event_seat"
+              sequence="25" groups="event.group_event_user"/>
+    <menuitem id="menu_event_seat_waitlist" name="Waitlist" parent="event.event_main_menu" action="action_event_seat_waitlist"
+              sequence="26" groups="event.group_event_user"/>
+    <menuitem id="menu_event_seat_plans" name="Seating Plans" parent="event.menu_event_configuration"
+              action="action_event_seat_plan" sequence="15" groups="event.group_event_manager"/>
+</odoo>

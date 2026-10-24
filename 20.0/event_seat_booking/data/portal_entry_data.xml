@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_event_seats" model="portal.entry">
+        <field name="name">Event Seats</field>
+        <field name="description">See and change your seats at upcoming events</field>
+        <field name="url">/my/seats</field>
+        <field name="image" type="bytes" file="event_seat_booking/static/src/img/portal_seats.svg"/>
+        <field name="placeholder_count">event_seat_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="85"/>
+    </record>
+</odoo>

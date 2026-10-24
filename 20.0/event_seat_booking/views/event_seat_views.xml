@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_seat_view_list" model="ir.ui.view">
+        <field name="name">event.seat.list</field>
+        <field name="model">event.seat</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="0" decoration-muted="state == 'blocked'" decoration-success="state == 'booked'"
+                  decoration-warning="state == 'held'">
+                <header>
+                    <button name="action_block" type="object" string="Block"/>
+                    <button name="action_unblock" type="object" string="Unblock"/>
+                    <button name="action_release" type="object" string="Release holds"/>
+                </header>
+                <field name="event_id" optional="hide" readonly="1"/>
+                <field name="ticket_id" readonly="1"/>
+                <field name="row_label" readonly="1"/>
+                <field name="number" readonly="1"/>
+                <field name="name" readonly="1"/>
+                <field name="surcharge"/>
+                <field name="price"/>
+                <field name="registration_id" readonly="1"/>
+                <field name="hold_until" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'booked'" decoration-warning="state == 'held'"
+                       decoration-info="state == 'available'" readonly="1"/>
+            </list>
+        </field>
+    </record>
+    <record id="event_seat_view_search" model="ir.ui.view">
+        <field name="name">event.seat.search</field>
+        <field name="model">event.seat</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="event_id"/>
+                <field name="ticket_id"/>
+                <field name="registration_id"/>
+                <filter name="available" string="Available" domain="[('state', '=', 'available')]"/>
+                <filter name="held" string="On hold" domain="[('state', '=', 'held')]"/>
+                <filter name="booked" string="Booked" domain="[('state', '=', 'booked')]"/>
+                <filter name="blocked" string="Blocked" domain="[('state', '=', 'blocked')]"/>
+                <filter name="premium" string="Premium" domain="[('surcharge', '>', 0)]"/>
+                <group>
+                    <filter name="group_ticket" string="Section" context="{'group_by': 'ticket_id'}"/>
+                    <filter name="group_row" string="Row" context="{'group_by': 'row_label'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="event_seat_view_pivot" model="ir.ui.view">
+        <field name="name">event.seat.pivot</field>
+        <field name="model">event.seat</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="event_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="action_event_seat" model="ir.actions.act_window">
+        <field name="name">Seats</field>
+        <field name="res_model">event.seat</field>
+        <field name="view_mode">list,pivot</field>
+    </record>
+</odoo>

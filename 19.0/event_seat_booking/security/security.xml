@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_event_seat_company" model="ir.rule">
+        <field name="name">Event seat: multi-company</field>
+        <field name="model_id" ref="model_event_seat"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+    <record id="rule_event_seat_plan_company" model="ir.rule">
+        <field name="name">Seating plan: multi-company</field>
+        <field name="model_id" ref="model_event_seat_plan"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>
