@@ -1,0 +1,26 @@
+{
+    'name': 'Cloud Storage Sync',
+    'summary': 'Folders for attachments, folder rules per model, and two-way sync '
+               'with WebDAV / Nextcloud / ownCloud / NAS or a local folder',
+    'version': '19.0.1.0.0',
+    'category': 'Productivity/Documents',
+    'author': 'Aditya Shah',
+    'website': 'https://github.com/Adityashah1409/odoo-module',
+    'license': 'LGPL-3',
+    'depends': ['base', 'web'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'data/ir_config_parameter.xml',
+        'data/ir_cron.xml',
+        'views/cloud_storage_client_views.xml',
+        'views/cloud_storage_rule_views.xml',
+        'views/cloud_storage_folder_views.xml',
+        'views/ir_attachment_views.xml',
+        'views/cloud_storage_queue_views.xml',
+        'views/cloud_storage_log_views.xml',
+        'views/menus.xml',
+    ],
+    'installable': True,
+    'application': True,
+}

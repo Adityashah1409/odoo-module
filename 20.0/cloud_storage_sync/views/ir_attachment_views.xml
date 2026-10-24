@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- File manager: attachments with a folder tree on the left -->
+    <record id="view_cloud_files_kanban" model="ir.ui.view">
+        <field name="name">ir.attachment.cloud.kanban</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <kanban create="false">
+                <field name="mimetype"/>
+                <field name="type"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="o_kanban_aside_full me-2">
+                            <div t-if="record.type.raw_value == 'url'" class="oi oi-2x text-info" data-icon="cloud" title="In the cloud"/>
+                            <div t-else="" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                        </aside>
+                        <main>
+                            <field name="name" class="fw-bold text-break"/>
+                            <field name="cloud_folder_id" class="text-muted small"/>
+                            <div class="d-flex justify-content-between mt-1">
+                                <field name="file_size" widget="integer" class="small"/>
+                                <field name="cloud_state" widget="badge"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_cloud_files_list" model="ir.ui.view">
+        <field name="name">ir.attachment.cloud.list</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="name"/>
+                <field name="cloud_folder_id"/>
+                <field name="res_model" optional="hide"/>
+                <field name="file_size" widget="integer"/>
+                <field name="create_date" optional="show"/>
+                <field name="cloud_path" optional="hide"/>
+                <field name="cloud_state" widget="badge" decoration-success="cloud_state == 'synced'"
+                       decoration-danger="cloud_state in ('error', 'missing')"/>
+                <button name="action_open_in_cloud" type="object" icon="cloud" title="Open in cloud"
+                        invisible="cloud_state != 'synced'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cloud_files_search" model="ir.ui.view">
+        <field name="name">ir.attachment.cloud.search</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="cloud_folder_id"/>
+                <filter name="in_cloud" string="In the cloud" domain="[('cloud_state', '=', 'synced')]"/>
+                <filter name="pending" string="Waiting for sync" domain="[('cloud_state', '=', 'queued')]"/>
+                <filter name="problems" string="Errors / missing" domain="[('cloud_state', 'in', ('error', 'missing'))]"/>
+                <searchpanel>
+                    <field name="cloud_folder_id" icon="folder" icon_class="oi-filled" enable_counters="1"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_cloud_storage_files" model="ir.actions.act_window">
+        <field name="name">Files</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('cloud_folder_id', '!=', False)]</field>
+        <field name="search_view_id" ref="view_cloud_files_search"/>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'kanban', 'view_id': ref('view_cloud_files_kanban')}),
+            Command.create({'view_mode': 'list', 'view_id': ref('view_cloud_files_list')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No files in folders yet</p>
+            <p>Files attached to records that have a folder appear here, and are synced to the cloud.</p>
+        </field>
+    </record>
+
+    <!-- Cloud info on the standard attachment form -->
+    <record id="view_attachment_form_cloud" model="ir.ui.view">
+        <field name="name">ir.attachment.form.cloud</field>
+        <field name="model">ir.attachment</field>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Cloud storage" name="cloud_storage">
+                    <field name="cloud_folder_id"/>
+                    <field name="cloud_state"/>
+                    <field name="cloud_path"/>
+                    <button name="action_cloud_upload_now" type="object" string="Sync now" class="btn-link"
+                            invisible="not cloud_folder_id or cloud_state == 'synced'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
