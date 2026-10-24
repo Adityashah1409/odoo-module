@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rest_api_client_view_list" model="ir.ui.view">
+        <field name="name">rest.api.client.list</field>
+        <field name="model">rest.api.client</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="user_id"/>
+                <field name="read_only"/>
+                <field name="model_ids" widget="many2many_tags" optional="show"/>
+                <field name="active_token_count" string="Active tokens"/>
+                <field name="last_used"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="rest_api_client_view_form" model="ir.ui.view">
+        <field name="name">rest.api.client.form</field>
+        <field name="model">rest.api.client</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_generate_secret" type="object" string="Generate secret" class="oe_highlight"
+                            invisible="has_secret"/>
+                    <button name="action_generate_secret" type="object" string="New secret" invisible="not has_secret"
+                            confirm="The current secret and all tokens stop working. Continue?"/>
+                    <button name="action_revoke_tokens" type="object" string="Revoke all tokens"
+                            invisible="not active_token_count"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="has_secret" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Warehouse scanner app"/></h1>
+                    </div>
+                    <group>
+                        <group string="Credentials">
+                            <field name="client_id"/>
+                            <div colspan="2" class="text-muted small" invisible="has_secret">
+                                Generate a secret, then ask for tokens at /api/v1/oauth2/token
+                                (grant_type=client_credentials).
+                            </div>
+                            <field name="token_lifetime"/>
+                            <field name="last_used"/>
+                        </group>
+                        <group string="Access">
+                            <field name="user_id"/>
+                            <field name="read_only"/>
+                            <field name="model_ids" widget="many2many_tags" placeholder="All models the user can access"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Active tokens" name="tokens">
+                            <field name="token_ids" readonly="1">
+                                <list>
+                                    <field name="create_date" string="Issued"/>
+                                    <field name="expires_at"/>
+                                    <button name="action_revoke" type="object" string="Revoke" icon="fa-ban"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="Who uses this client, contact, purpose..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="rest_api_secret_wizard_view_form" model="ir.ui.view">
+        <field name="name">rest.api.secret.wizard.form</field>
+        <field name="model">rest.api.secret.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    Copy this secret now: it is stored encrypted (hashed) and cannot be shown again.
+                </div>
+                <group>
+                    <field name="client_id"/>
+                    <field name="secret" widget="CopyClipboardChar"/>
+                </group>
+                <footer>
+                    <button string="Done" special="cancel" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rest_api_client" model="ir.actions.act_window">
+        <field name="name">API Clients</field>
+        <field name="res_model">rest.api.client</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create an OAuth2 client</p>
+            <p>A client gets short-lived access tokens with its ID and secret and acts as the chosen user.
+                Personal API keys (user preferences) work too, without a client.</p>
+        </field>
+    </record>
+</odoo>
