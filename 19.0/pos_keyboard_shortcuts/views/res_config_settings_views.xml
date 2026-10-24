@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_shortcuts" model="ir.ui.view">
+        <field name="name">res.config.settings.form.pos.shortcuts</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_interface_section']" position="inside">
+                <setting id="pos_keyboard_shortcuts" string="Keyboard shortcuts"
+                         help="Run the register from the keyboard (F1 shows every shortcut).">
+                    <field name="pos_shortcut_enabled"/>
+                    <div class="mt-2" invisible="not pos_shortcut_enabled">
+                        <button name="action_pos_shortcuts" type="object" string="Configure shortcuts"
+                                class="btn-link" icon="oi-arrow-right"/>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

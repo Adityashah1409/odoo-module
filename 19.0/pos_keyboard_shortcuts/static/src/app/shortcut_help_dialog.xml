@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pos_keyboard_shortcuts.ShortcutHelpDialog">
+        <Dialog title="'Keyboard shortcuts'" size="'lg'" footer="false">
+            <div class="o_pos_shortcut_help row g-4">
+                <div t-foreach="groups" t-as="group" t-key="group.screen" class="col-md-6">
+                    <h5 class="text-uppercase small fw-bold text-muted mb-2" t-esc="group.label"/>
+                    <table class="table table-sm align-middle mb-0">
+                        <tr t-foreach="group.shortcuts" t-as="shortcut" t-key="shortcut.id">
+                            <td class="py-2" t-esc="shortcut.label"/>
+                            <td class="py-2 text-end text-nowrap">
+                                <t t-foreach="keyParts(shortcut.key)" t-as="part" t-key="part_index">
+                                    <kbd class="o_pos_kbd" t-esc="part"/>
+                                    <span t-if="!part_last" class="mx-1 text-muted">+</span>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>
