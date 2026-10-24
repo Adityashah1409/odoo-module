@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_mrp_bom_import" model="res.groups">
+        <field name="name">Import Bills of Materials</field>
+        <field name="implied_ids" eval="[Command.link(ref('mrp.group_mrp_user'))]"/>
+    </record>
+
+    <!-- Manufacturing administrators can import BoMs -->
+    <record id="mrp.group_mrp_manager" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_mrp_bom_import'))]"/>
+    </record>
+</odoo>

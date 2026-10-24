@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_mrp_bom_import" name="Import Bills of Materials" parent="mrp.menu_mrp_bom"
+              action="action_mrp_bom_import" sequence="14" groups="group_mrp_bom_import"/>
+</odoo>
