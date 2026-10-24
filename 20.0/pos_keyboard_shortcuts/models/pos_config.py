@@ -17,7 +17,7 @@ class PosConfig(models.Model):
             values = [{'config_id': config.id, 'screen': screen, 'action': action, 'key': key}
                       for screen, action, key in DEFAULTS if (screen, key) not in existing]
             cash = config.payment_method_ids.filtered(lambda m: m.type == 'cash')[:1]
-            bank = config.payment_method_ids.filtered(lambda m: m.type != 'cash')[:1]
+            bank = config.payment_method_ids.filtered(lambda m: m.type == 'bank')[:1]
             for method, key in ((cash, 'c'), (bank, 'b')):
                 if method and ('payment', key) not in existing:
                     values.append({'config_id': config.id, 'screen': 'payment', 'action': 'payment_method',

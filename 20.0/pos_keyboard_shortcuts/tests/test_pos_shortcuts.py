@@ -32,9 +32,24 @@ class TestPosShortcuts(TestPointOfSaleHttpCommon):
         self.assertGreaterEqual(len(shortcuts), len(DEFAULTS))
         cash = shortcuts.filtered(lambda s: s.action == 'payment_method' and s.key == 'c')
         self.assertTrue(cash.payment_method_id.type == 'cash')
+        bank = shortcuts.filtered(lambda s: s.action == 'payment_method' and s.key == 'b')
+        self.assertEqual(bank.payment_method_id.type, 'bank', "b is never the customer account")
         count = len(shortcuts)
         self.config.action_load_default_shortcuts()
         self.assertEqual(len(self.config.shortcut_ids), count, "loading defaults twice adds nothing")
+
+    def test_bank_key_skips_customer_account(self):
+        # a "Customer Account" (pay later) method listed first must not get the bank key
+        account = self.env['pos.payment.method'].create({'name': 'Customer Account', 'type': 'pay_later', 'sequence': -1})
+        self.assertEqual(account.type, 'pay_later')
+        config = self.config
+        config.payment_method_ids = [(4, account.id)]
+        self.env.invalidate_all()
+        self.assertEqual(config.payment_method_ids[:1], account)
+        config.shortcut_ids.filtered(lambda s: s.key == 'b').unlink()
+        config.action_load_default_shortcuts()
+        bank = config.shortcut_ids.filtered(lambda s: s.key == 'b')
+        self.assertEqual(bank.payment_method_id.type, 'bank')
 
     def test_constraints(self):
         Shortcut = self.env['pos.shortcut']
