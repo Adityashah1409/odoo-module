@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="home_screen_layout_rule_user" model="ir.rule">
+        <field name="name">Home screen layout: own or company layout</field>
+        <field name="model_id" ref="model_home_screen_layout"/>
+        <field name="domain_force">['|', ('user_id', '=', user.id), '&amp;', ('user_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>

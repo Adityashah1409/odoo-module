@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web_home_screen_designer.HomeScreen">
+        <div class="o_home_screen h-100 position-relative overflow-hidden" t-att-class="this.rootClass" t-att-style="this.rootStyle">
+            <div class="o_hs_background"/>
+            <div class="o_hs_overlay"/>
+            <div class="o_hs_content h-100 overflow-auto">
+                <div class="o_hs_inner mx-auto px-4 py-5">
+                    <button class="o_hs_designer_toggle btn btn-light btn-sm position-absolute top-0 end-0 m-3"
+                            t-if="!this.state.designer and (this.state.data.allow_user_layout or this.state.data.is_admin)"
+                            t-on-click="this.toggleDesigner" title="Design this home screen">
+                        <i class="oi me-1" data-icon="brush"/>Design
+                    </button>
+                    <div class="o_hs_header text-center mb-4">
+                        <div t-if="this.layout.show_clock" class="o_hs_clock" t-out="this.timeString"/>
+                        <div t-if="this.layout.show_clock" class="o_hs_date" t-out="this.dateString"/>
+                        <div t-if="this.layout.show_greeting" class="o_hs_greeting mt-2" t-out="this.greetingString"/>
+                    </div>
+                    <div t-if="this.layout.show_search" class="o_hs_search mx-auto mb-4 position-relative">
+                        <i class="oi position-absolute" data-icon="search"/>
+                        <input type="text" class="form-control form-control-lg rounded-pill" placeholder="Search apps and menus..."
+                               t-att-value="this.state.search" t-on-input="(ev) => this.state.search = ev.target.value" t-on-keydown="this.onSearchKeydown"/>
+                        <div t-if="this.menuResults.length" class="o_hs_menu_results list-group position-absolute w-100 shadow">
+                            <a t-foreach="this.menuResults" t-as="item" t-key="item.id" href="#"
+                               class="list-group-item list-group-item-action o_hs_menu_result"
+                               t-on-click.prevent="() => this.openMenuItem(item)">
+                                <span class="text-muted small" t-out="item.parents"/>
+                                <span t-if="item.parents" class="text-muted small"> / </span>
+                                <span t-out="item.label"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="o_hs_grid">
+                        <div t-foreach="this.visibleApps" t-as="app" t-key="app.id" class="o_hs_app text-center"
+                             t-att-class="{'o_hs_app_hidden': this.isHidden(app)}" t-att-data-menu-xmlid="app.xmlid">
+                            <a t-att-href="app.href" class="o_hs_app_link d-inline-flex flex-column align-items-center text-decoration-none"
+                               t-on-click.prevent="() => this.openApp(app)">
+                                <img t-if="app.webIconData" class="o_hs_icon" t-att-src="app.webIconData" t-att-alt="app.label"/>
+                                <div t-else="" class="o_hs_icon d-flex align-items-center justify-content-center" t-att-style="this.iconStyle(app)">
+                                    <i t-att-class="this.iconClass(app)"/>
+                                </div>
+                                <span t-if="this.layout.show_names" class="o_hs_app_name mt-2" t-out="app.label"/>
+                            </a>
+                            <div t-if="this.state.designer" class="o_hs_app_tools btn-group btn-group-sm mt-1">
+                                <button class="btn btn-light o_hs_move_left" title="Move left" t-on-click="() => this.moveApp(app, -1)"><i class="oi" data-icon="chevron_left"/></button>
+                                <button class="btn btn-light o_hs_toggle_app" t-att-title="this.isHidden(app) ? 'Show' : 'Hide'" t-on-click="() => this.toggleApp(app)">
+                                    <i class="oi" t-att-data-icon="this.isHidden(app) ? 'visibility_off' : 'visibility'"/>
+                                </button>
+                                <button class="btn btn-light o_hs_move_right" title="Move right" t-on-click="() => this.moveApp(app, 1)"><i class="oi" data-icon="chevron_right"/></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="!this.visibleApps.length and !this.menuResults.length" class="o_hs_no_result text-center mt-4">No app or menu matches your search.</div>
+                </div>
+            </div>
+            <t t-if="this.state.designer" t-call="web_home_screen_designer.Designer"/>
+        </div>
+    </t>
+
+    <t t-name="web_home_screen_designer.Designer">
+        <aside class="o_hs_designer position-absolute top-0 end-0 h-100 bg-view shadow d-flex flex-column">
+            <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                <h4 class="m-0">Home screen designer</h4>
+                <span class="badge text-bg-secondary o_hs_scope" t-out="this.state.data.scope === 'user' ? 'Personal layout' : this.state.data.scope === 'company' ? 'Company layout' : 'Default layout'"/>
+            </div>
+            <div class="flex-grow-1 overflow-auto p-3">
+                <h6 class="text-uppercase small fw-bold text-muted">Background</h6>
+                <div class="btn-group w-100 mb-2" role="group">
+                    <t t-foreach="[['default', 'Default'], ['gradient', 'Gradient'], ['image', 'Picture']]" t-as="choice" t-key="choice[0]">
+                        <button class="btn btn-sm" t-att-class="this.layout.background_type === choice[0] ? 'btn-primary' : 'btn-outline-secondary'"
+                                t-att-data-value="choice[0]" t-on-click="() => this.setValue('background_type', choice[0])" t-out="choice[1]"/>
+                    </t>
+                </div>
+                <div t-if="this.layout.background_type === 'gradient'" class="o_hs_gradients d-flex flex-wrap gap-2 mb-2">
+                    <button t-foreach="this.state.data.gradients" t-as="g" t-key="g.key" t-att-title="g.label"
+                            t-attf-class="o_hs_swatch o_hs_gradient_{{g.key}} border-0 rounded {{this.layout.gradient === g.key ? 'o_hs_swatch_active' : ''}}"
+                            t-att-data-value="g.key" t-on-click="() => this.setValue('gradient', g.key)"/>
+                </div>
+                <div t-if="this.layout.background_type === 'image'" class="mb-2">
+                    <input type="file" accept="image/*" class="form-control form-control-sm o_hs_image_input" t-on-change="this.onImageChange"/>
+                </div>
+                <label class="form-label small mb-0">Overlay</label>
+                <select class="form-select form-select-sm mb-2 o_hs_overlay_select" t-on-change="(ev) => this.setValue('overlay', ev.target.value)">
+                    <option value="none" t-att-selected="this.layout.overlay === 'none'">None</option>
+                    <option value="light" t-att-selected="this.layout.overlay === 'light'">Light</option>
+                    <option value="dark" t-att-selected="this.layout.overlay === 'dark'">Dark</option>
+                </select>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'overlay_opacity'"
+                    label="'Overlay strength (%)'"
+                    min="0"
+                    max="90"/>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'blur'"
+                    label="'Background blur (px)'"
+                    min="0"
+                    max="20"/>
+
+                <h6 class="text-uppercase small fw-bold text-muted mt-3">Layout</h6>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'columns'"
+                    label="'Columns (0 = fit)'"
+                    min="0"
+                    max="12"/>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'gap'"
+                    label="'Spacing (px)'"
+                    min="0"
+                    max="48"/>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'icon_size'"
+                    label="'Icon size (px)'"
+                    min="32"
+                    max="128"/>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'icon_radius'"
+                    label="'Corner radius (%)'"
+                    min="0"
+                    max="50"/>
+                <t t-call="web_home_screen_designer.Range"
+                    name="'font_size'"
+                    label="'Text size (px)'"
+                    min="10"
+                    max="20"/>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <label class="form-label small mb-0">Tiles</label>
+                        <select class="form-select form-select-sm o_hs_tile_select" t-on-change="(ev) => this.setValue('tile_style', ev.target.value)">
+                            <option value="plain" t-att-selected="this.layout.tile_style === 'plain'">Plain</option>
+                            <option value="glass" t-att-selected="this.layout.tile_style === 'glass'">Glass</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label small mb-0">Hover</label>
+                        <select class="form-select form-select-sm o_hs_hover_select" t-on-change="(ev) => this.setValue('hover_effect', ev.target.value)">
+                            <t t-foreach="['none', 'lift', 'grow', 'bounce']" t-as="effect" t-key="effect">
+                                <option t-att-value="effect" t-att-selected="this.layout.hover_effect === effect" t-out="effect"/>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+
+                <h6 class="text-uppercase small fw-bold text-muted mt-3">Show</h6>
+                <t t-foreach="[['show_names', 'App names'], ['show_clock', 'Clock and date'], ['show_seconds', 'Seconds'], ['show_greeting', 'Greeting'], ['show_search', 'Search bar']]" t-as="option" t-key="option[0]">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" t-att-id="'o_hs_' + option[0]" t-att-checked="this.layout[option[0]]"
+                               t-on-change="(ev) => this.setValue(option[0], ev.target.checked)"/>
+                        <label class="form-check-label" t-att-for="'o_hs_' + option[0]" t-out="option[1]"/>
+                    </div>
+                </t>
+                <p class="small text-muted mt-3 mb-0">
+                    <i class="oi oi-filled me-1" data-icon="info"/>Use the arrows and the eye under each app to reorder or hide it.
+                    Hiding an app does not change access rights.
+                </p>
+
+                <h6 class="text-uppercase small fw-bold text-muted mt-3">Options</h6>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="o_hs_open_on_login" t-att-checked="this.state.openOnLogin"
+                           t-on-change="(ev) => this.state.openOnLogin = ev.target.checked"/>
+                    <label class="form-check-label" for="o_hs_open_on_login">Open this home screen after login</label>
+                </div>
+                <div t-if="this.state.data.is_admin" class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="o_hs_allow_user" t-att-checked="this.state.allowUserLayout"
+                           t-on-change="(ev) => this.state.allowUserLayout = ev.target.checked"/>
+                    <label class="form-check-label" for="o_hs_allow_user">Users can save their own layout (saved with the company layout)</label>
+                </div>
+            </div>
+            <div class="p-3 border-top d-flex flex-wrap gap-2">
+                <button t-if="this.state.data.allow_user_layout or this.state.data.is_admin" class="btn btn-primary o_hs_save_user"
+                        t-att-disabled="this.state.busy" t-on-click="() => this.save('user')">Save for me</button>
+                <button t-if="this.state.data.is_admin" class="btn btn-secondary o_hs_save_company"
+                        t-att-disabled="this.state.busy" t-on-click="() => this.save('company')">Save for company</button>
+                <button t-if="this.state.data.scope === 'user'" class="btn btn-link o_hs_reset" t-on-click="this.resetToCompany">Use company layout</button>
+                <button class="btn btn-link text-muted ms-auto o_hs_cancel" t-on-click="this.cancel">Cancel</button>
+            </div>
+        </aside>
+    </t>
+
+    <t t-name="web_home_screen_designer.Range">
+        <div class="mb-2">
+            <div class="d-flex justify-content-between small">
+                <label t-att-for="'o_hs_' + name" t-out="label"/>
+                <span class="fw-bold" t-out="this.layout[name]"/>
+            </div>
+            <input type="range" class="form-range" t-att-id="'o_hs_' + name" t-att-name="name" t-att-min="min" t-att-max="max"
+                   t-att-value="this.layout[name]" t-on-input="(ev) => this.setNumber(name, ev)"/>
+        </div>
+    </t>
+</templates>
