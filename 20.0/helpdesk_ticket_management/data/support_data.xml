@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="stage_new" model="support.stage">
+        <field name="name">New</field>
+        <field name="sequence">10</field>
+        <field name="color">#3b82f6</field>
+        <field name="template_id" ref="mail_template_ticket_received"/>
+    </record>
+    <record id="stage_in_progress" model="support.stage">
+        <field name="name">In Progress</field>
+        <field name="sequence">20</field>
+        <field name="color">#f59e0b</field>
+    </record>
+    <record id="stage_waiting" model="support.stage">
+        <field name="name">Waiting on Customer</field>
+        <field name="sequence">30</field>
+        <field name="color">#8b5cf6</field>
+    </record>
+    <record id="stage_solved" model="support.stage">
+        <field name="name">Solved</field>
+        <field name="sequence">40</field>
+        <field name="is_closed" eval="True"/>
+        <field name="color">#10b981</field>
+        <field name="template_id" ref="mail_template_ticket_solved"/>
+    </record>
+    <record id="stage_cancelled" model="support.stage">
+        <field name="name">Cancelled</field>
+        <field name="sequence">50</field>
+        <field name="is_closed" eval="True"/>
+        <field name="fold" eval="True"/>
+        <field name="color">#94a3b8</field>
+    </record>
+
+    <record id="type_question" model="support.ticket.type"><field name="name">Question</field><field name="sequence">10</field></record>
+    <record id="type_incident" model="support.ticket.type"><field name="name">Incident</field><field name="sequence">20</field></record>
+    <record id="type_problem" model="support.ticket.type"><field name="name">Problem</field><field name="sequence">30</field></record>
+    <record id="type_feature" model="support.ticket.type"><field name="name">Feature request</field><field name="sequence">40</field></record>
+
+    <record id="team_support" model="support.team">
+        <field name="name">Customer Support</field>
+        <field name="is_default" eval="True"/>
+        <field name="alias_name">support</field>
+        <field name="member_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="leader_id" ref="base.user_admin"/>
+        <field name="color">4</field>
+    </record>
+</odoo>

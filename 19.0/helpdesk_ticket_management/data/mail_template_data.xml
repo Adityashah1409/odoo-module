@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="mail_template_ticket_received" model="mail.template">
+        <field name="name">Helpdesk: ticket received</field>
+        <field name="model_id" ref="model_support_ticket"/>
+        <field name="subject">[{{ object.number }}] {{ object.name }}: we received your request</field>
+        <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+        <field name="partner_to" eval="False"/>
+        <field name="use_default_to" eval="True"/>
+        <field name="description">Sent when a ticket is created (set on the first stage)</field>
+        <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-size: 14px;">
+    <p>Hello <t t-out="object.partner_name or object.partner_id.name or ''">Customer</t>,</p>
+    <p>We received your request <strong t-out="object.name or ''">Subject</strong> and created the ticket
+        <strong t-out="object.number or ''">TCK00001</strong>.
+        <t t-if="object.team_id">The <t t-out="object.team_id.name or ''">Support</t> team will get back to you soon.</t></p>
+    <p>Reply to this e-mail to add information to your ticket.</p>
+    <p style="margin: 16px 0;">
+        <a t-att-href="object.get_base_url() + object.get_portal_url()"
+           style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">View ticket</a>
+    </p>
+    <p>Thank you,<br/><t t-out="object.company_id.name or ''">My Company</t></p>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_ticket_solved" model="mail.template">
+        <field name="name">Helpdesk: ticket solved (rating request)</field>
+        <field name="model_id" ref="model_support_ticket"/>
+        <field name="subject">[{{ object.number }}] {{ object.name }}: solved</field>
+        <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+        <field name="partner_to" eval="False"/>
+        <field name="use_default_to" eval="True"/>
+        <field name="description">Sent when a ticket is solved; asks for a rating when the team uses ratings</field>
+        <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-size: 14px;">
+    <p>Hello <t t-out="object.partner_name or object.partner_id.name or ''">Customer</t>,</p>
+    <p>Your ticket <strong t-out="object.number or ''">TCK00001</strong> (<t t-out="object.name or ''">Subject</t>) has been solved.</p>
+    <div t-if="object.resolution" t-out="object.resolution"/>
+    <t t-if="object.team_id.use_rating and object.partner_id">
+        <t t-set="access_token" t-value="object._rating_get_access_token()"/>
+        <p>How was our support?</p>
+        <table style="width: 100%; max-width: 360px;"><tr>
+            <td style="text-align: center;"><a t-attf-href="{{ object.get_base_url() }}/rate/{{ access_token }}/5">
+                <img alt="Satisfied" src="/rating/static/src/img/rating_5.png" title="Satisfied" style="width: 40px;"/></a></td>
+            <td style="text-align: center;"><a t-attf-href="{{ object.get_base_url() }}/rate/{{ access_token }}/3">
+                <img alt="Okay" src="/rating/static/src/img/rating_3.png" title="Okay" style="width: 40px;"/></a></td>
+            <td style="text-align: center;"><a t-attf-href="{{ object.get_base_url() }}/rate/{{ access_token }}/1">
+                <img alt="Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Dissatisfied" style="width: 40px;"/></a></td>
+        </tr></table>
+    </t>
+    <p>If the problem is not solved, simply reply to this e-mail.</p>
+    <p>Thank you,<br/><t t-out="object.company_id.name or ''">My Company</t></p>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

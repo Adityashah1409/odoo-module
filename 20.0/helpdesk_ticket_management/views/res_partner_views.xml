@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_support" model="ir.ui.view">
+        <field name="name">res.partner.form.support</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_support_tickets" type="object" class="oe_stat_button" icon="support"
+                        groups="helpdesk_ticket_management.group_support_user" invisible="not support_ticket_count">
+                    <field name="support_ticket_count" widget="statinfo" string="Tickets"/>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

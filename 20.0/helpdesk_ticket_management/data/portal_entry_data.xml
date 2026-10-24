@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_support_tickets" model="portal.entry">
+        <field name="name">Support Tickets</field>
+        <field name="description">Follow your requests and talk with our support team</field>
+        <field name="url">/my/tickets</field>
+        <field name="image" type="bytes" file="helpdesk_ticket_management/static/description/icon.png"/>
+        <field name="placeholder_count">support_ticket_count</field>
+        <field name="category">service_category</field>
+        <field name="sequence" eval="110"/>
+    </record>
+</odoo>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_support" name="Portal: helpdesk tickets" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="45">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_service_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_service_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/helpdesk_ticket_management/static/description/icon.png'"/>
+                <t t-set="title">Support Tickets</t>
+                <t t-set="url" t-value="'/my/tickets'"/>
+                <t t-set="text">Follow your requests and talk with our support team</t>
+                <t t-set="placeholder_count" t-value="'support_ticket_count'"/>
+                <t t-set="show_count" t-value="True"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_breadcrumbs_support" name="Portal: helpdesk breadcrumbs" inherit_id="portal.portal_breadcrumbs" priority="45">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'support_ticket'" class="breadcrumb-item active">Tickets</li>
+            <li t-if="page_name in ('support_ticket_detail', 'support_ticket_new')" class="breadcrumb-item">
+                <a href="/my/tickets">Tickets</a>
+            </li>
+            <li t-if="page_name == 'support_ticket_detail'" class="breadcrumb-item active" t-out="ticket.number"/>
+            <li t-if="page_name == 'support_ticket_new'" class="breadcrumb-item active">New ticket</li>
+        </xpath>
+    </template>
+
+    <template id="portal_ticket_stage_badge" name="Ticket status badge">
+        <span t-attf-class="badge rounded-pill #{'text-bg-success' if t.is_closed else 'text-bg-info'}" t-out="t.stage_id.name"/>
+    </template>
+
+    <template id="portal_my_tickets" name="My tickets">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tickets</t>
+            </t>
+            <div class="d-flex justify-content-end my-2" t-if="can_create">
+                <a href="/my/tickets/new" class="btn btn-primary o_support_new_ticket"><i class="fa fa-plus me-1"/>New ticket</a>
+            </div>
+            <t t-if="not tickets">
+                <p class="alert alert-info">No ticket here. <a t-if="can_create" href="/my/tickets/new">Create one</a></p>
+            </t>
+            <t t-if="tickets" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Reference</th>
+                        <th>Subject</th>
+                        <th class="d-none d-md-table-cell">Assigned to</th>
+                        <th class="d-none d-md-table-cell">Created</th>
+                        <th class="text-end">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="tickets" t-as="t">
+                        <td><a t-att-href="t.get_portal_url()" t-out="t.number"/></td>
+                        <td><a t-att-href="t.get_portal_url()" t-out="t.name"/></td>
+                        <td class="d-none d-md-table-cell" t-out="t.user_id.name or ''"/>
+                        <td class="d-none d-md-table-cell"><span t-field="t.create_date" t-options="{'widget': 'date'}"/></td>
+                        <td class="text-end"><t t-call="helpdesk_ticket_management.portal_ticket_stage_badge"/></td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_ticket" name="My ticket">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="helpdesk_ticket_management.group_support_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/odoo/tickets/%s' % ticket.id"/>
+                </t>
+            </t>
+            <div t-if="created" class="alert alert-success mt-3" role="status">
+                Thank you! Your ticket <strong t-out="ticket.number"/> was created. We will get back to you soon.
+            </div>
+            <div class="card mt-3 o_support_portal_ticket">
+                <div class="card-header d-flex flex-wrap align-items-center gap-2">
+                    <h4 class="mb-0 flex-grow-1"><span class="text-muted" t-out="ticket.number"/> <t t-out="ticket.name"/></h4>
+                    <t t-call="helpdesk_ticket_management.portal_ticket_stage_badge"><t t-set="t" t-value="ticket"/></t>
+                    <a t-att-href="ticket.get_portal_url(report_type='pdf', download=True)" class="btn btn-sm btn-light"
+                       title="Download"><i class="fa fa-download"/> PDF</a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div t-if="ticket.partner_id"><strong>Customer:</strong> <span t-out="ticket.partner_id.display_name"/></div>
+                            <div t-if="ticket.team_id"><strong>Team:</strong> <span t-out="ticket.team_id.name"/></div>
+                            <div t-if="ticket.user_id"><strong>Assigned to:</strong> <span t-out="ticket.user_id.name"/></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div><strong>Created:</strong> <span t-field="ticket.create_date"/></div>
+                            <div t-if="ticket.type_id"><strong>Type:</strong> <span t-out="ticket.type_id.name"/></div>
+                            <div><strong>Priority:</strong> <span t-field="ticket.priority"/></div>
+                            <div t-if="ticket.date_closed"><strong>Closed:</strong> <span t-field="ticket.date_closed"/></div>
+                        </div>
+                    </div>
+                    <h5>Description</h5>
+                    <div t-field="ticket.description"/>
+                    <t t-if="ticket.resolution">
+                        <h5 class="mt-3">Resolution</h5>
+                        <div t-field="ticket.resolution"/>
+                    </t>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h4>Conversation</h4>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="ticket"/>
+                    <t t-set="token" t-value="ticket.access_token"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_ticket_new" name="New ticket">
+        <t t-call="portal.portal_layout">
+            <div class="row mt-3">
+                <div class="col-lg-8">
+                    <h3>New ticket</h3>
+                    <form action="/my/tickets/new" method="post" enctype="multipart/form-data" class="o_support_ticket_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="name">Subject</label>
+                            <input type="text" name="name" id="name" required="required"
+                                   t-attf-class="form-control #{'is-invalid' if error.get('name') else ''}"
+                                   t-att-value="post.get('name')"/>
+                            <div class="invalid-feedback" t-out="error.get('name')"/>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3" t-if="len(teams) &gt; 1">
+                                <label class="form-label" for="team_id">Team</label>
+                                <select name="team_id" id="team_id" class="form-select">
+                                    <t t-foreach="teams" t-as="team">
+                                        <option t-att-value="team.id" t-att-selected="str(team.id) == post.get('team_id') or (not post.get('team_id') and team.is_default)" t-out="team.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3" t-if="types">
+                                <label class="form-label" for="type_id">Type</label>
+                                <select name="type_id" id="type_id" class="form-select">
+                                    <option value="">-</option>
+                                    <t t-foreach="types" t-as="ttype">
+                                        <option t-att-value="ttype.id" t-att-selected="str(ttype.id) == post.get('type_id')" t-out="ttype.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3" t-if="categories">
+                                <label class="form-label" for="category_id">Category</label>
+                                <select name="category_id" id="category_id" class="form-select">
+                                    <option value="">-</option>
+                                    <t t-foreach="categories" t-as="category">
+                                        <option t-att-value="category.id" t-att-selected="str(category.id) == post.get('category_id')" t-out="category.name"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="priority">Priority</label>
+                                <select name="priority" id="priority" class="form-select">
+                                    <option value="0" t-att-selected="post.get('priority') in (None, '0')">Low</option>
+                                    <option value="1" t-att-selected="post.get('priority') == '1'">Medium</option>
+                                    <option value="2" t-att-selected="post.get('priority') == '2'">High</option>
+                                    <option value="3" t-att-selected="post.get('priority') == '3'">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="description">Description</label>
+                            <textarea name="description" id="description" rows="7" required="required"
+                                      t-attf-class="form-control #{'is-invalid' if error.get('description') else ''}"
+                                      placeholder="What happened? What did you expect?" t-out="post.get('description') or ''"/>
+                            <div class="invalid-feedback" t-out="error.get('description')"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="attachments">Attachments</label>
+                            <input type="file" name="attachments" id="attachments" multiple="multiple"
+                                   t-attf-class="form-control #{'is-invalid' if error.get('attachments') else ''}"/>
+                            <div class="invalid-feedback" t-out="error.get('attachments')"/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/my/tickets" class="btn btn-light ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

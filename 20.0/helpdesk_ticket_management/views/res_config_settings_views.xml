@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_support" model="ir.ui.view">
+        <field name="name">res.config.settings.form.support</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Helpdesk" name="helpdesk_ticket_management" groups="helpdesk_ticket_management.group_support_manager">
+                    <block title="Customer portal" name="support_portal">
+                        <setting help="A &quot;New ticket&quot; form in the portal (/my/tickets/new).">
+                            <field name="support_portal_create"/>
+                        </setting>
+                        <setting string="Attachment limit" help="Largest file a customer can attach, in MB (0 = no limit).">
+                            <field name="support_max_attachment_mb"/>
+                        </setting>
+                    </block>
+                    <block title="Replies" name="support_replies">
+                        <setting string="Customer answers" help="Stage of a ticket when the customer answers us.">
+                            <field name="support_customer_reply_stage_id" options="{'no_create': True}"/>
+                        </setting>
+                        <setting string="Support answers" help="Stage of a ticket when we answer the customer (public message).">
+                            <field name="support_staff_reply_stage_id" options="{'no_create': True}"/>
+                        </setting>
+                    </block>
+                    <block title="Time tracking" name="support_time">
+                        <setting help="Allow one person to run timers on several tickets at once.">
+                            <field name="support_multi_timer"/>
+                        </setting>
+                    </block>
+                    <block title="Configuration" name="support_links">
+                        <setting string="Teams" help="Members, assignment, e-mail alias, working hours, auto-close.">
+                            <button name="%(helpdesk_ticket_management.action_support_team)d" type="action" string="Teams"
+                                    class="btn-link" icon="east"/>
+                        </setting>
+                        <setting string="SLA policies" help="Deadlines per team, priority, type and customer.">
+                            <button name="%(helpdesk_ticket_management.action_support_sla)d" type="action" string="SLA policies"
+                                    class="btn-link" icon="east"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_support_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'helpdesk_ticket_management', 'bin_size': False}</field>
+    </record>
+</odoo>
