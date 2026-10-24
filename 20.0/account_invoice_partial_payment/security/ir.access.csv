@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_account_partial_payment_invoice,account.partial.payment invoice,account.partial.payment,account.group_account_invoice,crud,
+access_account_partial_payment_readonly,account.partial.payment readonly,account.partial.payment,account.group_account_readonly,r,
+account_partial_payment_company_rule,Partial payments: multi-company,account.partial.payment,,crud,"[('company_id', 'in', company_ids)]"
+access_account_partial_payment_line_invoice,account.partial.payment.line invoice,account.partial.payment.line,account.group_account_invoice,crud,
+access_account_partial_payment_line_readonly,account.partial.payment.line readonly,account.partial.payment.line,account.group_account_readonly,r,

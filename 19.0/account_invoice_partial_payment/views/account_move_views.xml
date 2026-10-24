@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_partial_payment" model="ir.ui.view">
+        <field name="name">account.move.form.partial.payment</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
+                <button name="action_partial_payment" type="object" string="Partial Payment"
+                        groups="account.group_account_invoice"
+                        invisible="state != 'posted' or payment_state not in ('not_paid', 'partial') or move_type not in ('out_invoice', 'in_invoice')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

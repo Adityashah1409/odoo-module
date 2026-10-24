@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_partial_payment_view_list" model="ir.ui.view">
+        <field name="name">account.partial.payment.list</field>
+        <field name="model">account.partial.payment</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancel'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="payment_type" optional="hide"/>
+                <field name="journal_id"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="amount" sum="Total"/>
+                <field name="allocated_amount" sum="Total"/>
+                <field name="unallocated_amount" sum="Total"/>
+                <field name="invoice_count" string="Invoices" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="account_partial_payment_view_form" model="ir.ui.view">
+        <field name="name">account.partial.payment.form</field>
+        <field name="model">account.partial.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_load_invoices" type="object" string="Load open invoices" invisible="state != 'draft' or not partner_id"/>
+                    <button name="action_auto_allocate" type="object" string="Auto-allocate" invisible="state != 'draft' or not partner_id"/>
+                    <button name="action_post" type="object" string="Register Payment" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'posted'"
+                            confirm="The payments of this batch will be cancelled and the invoices reopened. Continue?"/>
+                    <button name="action_draft" type="object" string="Reset to Draft" invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_payments" type="object" class="oe_stat_button" icon="payments" invisible="not payment_count">
+                            <field name="payment_count" widget="statinfo" string="Payments"/>
+                        </button>
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="article" invisible="not invoice_count">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="payment_type" widget="radio" options="{'horizontal': true}" readonly="state != 'draft'"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="amount" readonly="state != 'draft'"/>
+                            <field name="memo" readonly="state != 'draft'" placeholder="e.g. Cheque 1042"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="journal_id" readonly="state != 'draft'"/>
+                            <field name="currency_id" groups="base.group_multi_currency" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                            <field name="partner_outstanding" invisible="not partner_id or state != 'draft'"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="state != 'draft' or allocated_amount &lt;= amount">
+                        The allocations are higher than the amount received: lower them or raise the amount.
+                    </div>
+                    <div class="alert alert-info" role="status" invisible="state != 'draft' or unallocated_amount &lt;= 0 or not amount">
+                        The unallocated amount will stay on the partner as an outstanding credit (or debit for a vendor),
+                        ready to be used on a future invoice.
+                    </div>
+                    <notebook>
+                        <page string="Allocations" name="allocations">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="move_id" domain="[('commercial_partner_id', '=', parent.partner_id), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial')), ('move_type', '=', 'out_invoice' if parent.payment_type == 'inbound' else 'in_invoice')]"
+                                           options="{'no_create': True}"/>
+                                    <field name="invoice_date" optional="show"/>
+                                    <field name="date_due" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount_total" optional="show"/>
+                                    <field name="amount_residual"/>
+                                    <field name="amount" sum="Allocated"/>
+                                    <field name="remaining" optional="show"/>
+                                    <field name="payment_id" optional="hide"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="allocated_amount"/>
+                                <field name="unallocated_amount" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_partial_payment_view_search" model="ir.ui.view">
+        <field name="name">account.partial.payment.search</field>
+        <field name="model">account.partial.payment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="line_ids" string="Invoice" filter_domain="[('line_ids.move_id', 'ilike', self)]"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
+                <filter name="with_rest" string="With unallocated amount" domain="[('unallocated_amount', '>', 0)]"/>
+                <group>
+                    <filter name="group_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_partial_payment_customer" model="ir.actions.act_window">
+        <field name="name">Partial Payments</field>
+        <field name="res_model">account.partial.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('payment_type', '=', 'inbound')]</field>
+        <field name="context">{'default_payment_type': 'inbound'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Register a customer receipt across several invoices</p>
+            <p>Enter the amount received, load the customer's open invoices and choose how much goes to each one.
+                What is not allocated stays as an outstanding credit.</p>
+        </field>
+    </record>
+
+    <record id="action_partial_payment_vendor" model="ir.actions.act_window">
+        <field name="name">Partial Payments</field>
+        <field name="res_model">account.partial.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('payment_type', '=', 'outbound')]</field>
+        <field name="context">{'default_payment_type': 'outbound'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Pay several vendor bills partially</p>
+            <p>Enter the amount paid, load the vendor's open bills and choose how much goes to each one.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_partial_payment_customer" action="action_partial_payment_customer"
+              parent="account.menu_finance_receivables" sequence="16" groups="account.group_account_invoice"/>
+    <menuitem id="menu_partial_payment_vendor" action="action_partial_payment_vendor"
+              parent="account.menu_finance_payables" sequence="16" groups="account.group_account_invoice"/>
+</odoo>
