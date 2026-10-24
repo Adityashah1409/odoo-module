@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="access_management.PinPrompt">
+        <div class="o_am_pin o_action h-100 d-flex align-items-center justify-content-center">
+            <form class="o_am_pin_card card shadow-sm p-4 text-center" t-on-submit="this.submit">
+                <div class="o_am_pin_icon d-flex align-items-center justify-content-center mx-auto mb-3"><i class="oi" data-icon="lock"/></div>
+                <h3 class="mb-1">Protected menu</h3>
+                <p class="text-muted mb-3" t-out="this.params.menu"/>
+                <input t-ref="this.input" t-att-value="this.state.code" t-on-input="(ev) => this.state.code = ev.target.value" class="form-control o_am_pin_input mb-2"
+                       t-att-type="'password'" t-att-inputmode="this.isPin ? 'numeric' : 'text'" autocomplete="off"
+                       t-att-placeholder="this.isPin ? 'PIN' : 'Passphrase'"/>
+                <div t-if="this.state.error" class="alert alert-danger py-2 small o_am_pin_error" role="alert" t-out="this.state.error"/>
+                <button type="submit" class="btn btn-primary w-100 o_am_pin_submit" t-att-disabled="this.state.busy or !this.state.code">Unlock</button>
+            </form>
+        </div>
+    </t>
+</templates>

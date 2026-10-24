@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="access_management.Dashboard">
+        <div class="o_access_dashboard o_action h-100 overflow-auto">
+            <div class="o_amd_header d-flex flex-wrap align-items-center gap-2 px-4 py-3 border-bottom">
+                <h2 class="m-0 me-auto">Access dashboard</h2>
+                <button class="btn btn-primary o_amd_new" t-on-click="this.newRule"><i class="oi me-1" data-icon="add"/>New rule</button>
+                <button class="btn btn-secondary" t-on-click="() => this.openRules()">All rules</button>
+                <button class="btn btn-secondary" t-on-click="this.openMap"><i class="oi me-1" data-icon="grid_view"/>Access map</button>
+                <button class="btn btn-secondary o_amd_refresh" t-on-click="this.refreshCaches"><i class="oi me-1" data-icon="refresh"/>Refresh caches</button>
+            </div>
+            <div class="px-4 py-3" t-if="this.state.data">
+                <t t-set="k" t-value="this.state.data.kpis"/>
+                <div class="o_amd_kpis d-grid gap-3 mb-4">
+                    <button class="o_amd_kpi card text-start" t-on-click="() => this.openRules([['active', '=', true]])">
+                        <i class="oi o_amd_icon" data-icon="security"/><span class="o_amd_label">Active rules</span>
+                        <span class="o_amd_value" t-out="k.rules"/>
+                        <span class="o_amd_sub"><t t-out="k.effective"/> applying now</span>
+                    </button>
+                    <div class="o_amd_kpi card">
+                        <i class="oi oi-filled o_amd_icon" data-icon="group"/><span class="o_amd_label">Restricted users</span>
+                        <span class="o_amd_value" t-out="k.users"/>
+                        <span class="o_amd_sub"><t t-out="k.menus"/> menus hidden</span>
+                    </div>
+                    <button class="o_amd_kpi card text-start" t-on-click="() => this.openRules([['is_expired', '=', true]])">
+                        <i class="oi o_amd_icon" data-icon="schedule"/><span class="o_amd_label">Scheduled / expired</span>
+                        <span class="o_amd_value"><t t-out="k.scheduled"/> / <t t-out="k.expired"/></span>
+                        <span class="o_amd_sub">time-limited rules</span>
+                    </button>
+                    <button class="o_amd_kpi card text-start" t-on-click="() => this.openExports()">
+                        <i class="oi o_amd_icon" data-icon="download"/><span class="o_amd_label">Exports (7 days)</span>
+                        <span class="o_amd_value" t-out="k.exports"/>
+                        <span t-attf-class="o_amd_sub {{ k.alerts ? 'text-danger fw-semibold' : '' }}"><t t-out="k.alerts"/> leak alerts</span>
+                    </button>
+                    <button class="o_amd_kpi card text-start" t-on-click="this.openLocks">
+                        <i class="oi o_amd_icon" data-icon="lock"/><span class="o_amd_label">PIN-protected menus</span>
+                        <span class="o_amd_value" t-out="k.locks"/>
+                        <span t-attf-class="o_amd_sub {{ k.failed_pins ? 'text-danger fw-semibold' : '' }}" t-on-click.stop="this.openAttempts"><t t-out="k.failed_pins"/> wrong codes (7 days)</span>
+                    </button>
+                </div>
+                <div class="row g-4">
+                    <div class="col-xl-8 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header d-flex align-items-center"><strong class="me-auto">Rules</strong>
+                                <button t-if="k.expired" class="btn btn-sm btn-outline-warning o_amd_archive" t-on-click="this.archiveExpired">
+                                    Archive <t t-out="k.expired"/> expired</button>
+                            </div>
+                            <table class="table table-sm table-hover mb-0 o_amd_rules">
+                                <thead><tr><th>Rule</th><th>Restrictions</th><th class="text-end">Users</th><th class="text-end">Status</th></tr></thead>
+                                <tbody>
+                                    <tr t-if="!this.state.data.rules.length"><td colspan="4" class="text-center text-muted py-4">No rule yet. Create the first one.</td></tr>
+                                    <tr t-foreach="this.state.data.rules" t-as="rule" t-key="rule.id" role="button" t-on-click="() => this.openRule(rule.id)">
+                                        <td class="fw-semibold" t-out="rule.name"/>
+                                        <td class="small text-muted" t-out="rule.summary"/>
+                                        <td class="text-end" t-out="rule.users"/>
+                                        <td class="text-end">
+                                            <span t-if="rule.expired" class="badge text-bg-warning">Expired</span>
+                                            <span t-elif="rule.effective" class="badge text-bg-success">Applying</span>
+                                            <span t-else="" class="badge text-bg-secondary">Waiting</span>
+                                            <i t-if="rule.scheduled" class="oi ms-1 text-muted" data-icon="schedule" title="Scheduled"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-header"><strong>Restriction types</strong></div>
+                                    <div class="card-body d-flex flex-column gap-2">
+                                        <t t-foreach="this.state.data.kinds" t-as="kind" t-key="kind.key">
+                                            <div role="button" t-on-click="() => this.openKind(kind.key)">
+                                                <div class="d-flex justify-content-between small"><span t-out="kind.label"/><strong t-out="kind.count"/></div>
+                                                <div class="progress o_amd_progress"><div class="progress-bar" t-att-style="this.bar(kind.count, this.state.data.kinds, 'count')"/></div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card h-100">
+                                    <div class="card-header"><strong>Most restricted models</strong></div>
+                                    <div class="card-body d-flex flex-column gap-2">
+                                        <p t-if="!this.state.data.models.length" class="text-muted mb-0">No model rule yet.</p>
+                                        <t t-foreach="this.state.data.models" t-as="model" t-key="model.name">
+                                            <div>
+                                                <div class="d-flex justify-content-between small"><span t-out="model.name"/><span class="text-muted"><t t-out="model.count"/> user-rules</span></div>
+                                                <div class="progress o_amd_progress"><div class="progress-bar bg-warning" t-att-style="this.bar(model.count, this.state.data.models, 'count')"/></div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Records exported, last 7 days</strong></div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-end gap-2 o_amd_days">
+                                    <t t-foreach="this.state.data.days" t-as="day" t-key="day.day">
+                                        <div class="flex-fill d-flex flex-column align-items-center justify-content-end h-100"
+                                             t-att-title="day.exports + ' exports'">
+                                            <span class="small text-muted" t-out="day.records"/>
+                                            <div class="o_amd_column w-100 rounded-top" t-att-style="this.column(day.records)"/>
+                                            <span class="small" t-out="day.day.slice(5)"/>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header d-flex"><strong class="me-auto">Recent exports</strong>
+                                <a href="#" class="small" t-on-click.prevent="() => this.openExports(true)">Alerts</a></div>
+                            <ul class="list-group list-group-flush">
+                                <li t-if="!this.state.data.recent_exports.length" class="list-group-item text-muted">No export yet.</li>
+                                <li t-foreach="this.state.data.recent_exports" t-as="log" t-key="log.id" class="list-group-item d-flex gap-2 align-items-center">
+                                    <div class="me-auto">
+                                        <div><strong t-out="log.user"/> · <t t-out="log.model"/></div>
+                                        <div class="small text-muted" t-out="this.formatDate(log.date)"/>
+                                    </div>
+                                    <span t-attf-class="badge {{ log.alert ? 'text-bg-danger' : 'text-bg-light' }}"><t t-out="log.records"/> rec.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Users with the most rules</strong></div>
+                            <ul class="list-group list-group-flush">
+                                <li t-if="!this.state.data.users.length" class="list-group-item text-muted">Nobody is restricted.</li>
+                                <li t-foreach="this.state.data.users" t-as="user" t-key="user.id" role="button"
+                                    class="list-group-item d-flex justify-content-between" t-on-click="() => this.openUser(user.id)">
+                                    <span t-out="user.name"/><span class="badge rounded-pill text-bg-primary"><t t-out="user.rules"/></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

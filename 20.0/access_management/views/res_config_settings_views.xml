@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.access.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Access Management" name="access_management" groups="access_management.group_access_manager"
+                     logo="/access_management/static/description/icon.png">
+                    <block title="Export tracking" name="am_exports">
+                        <setting string="Leak alert" help="E-mail when one export contains at least this many records (0: off).">
+                            <field name="am_export_alert_threshold"/>
+                            <div class="mt-2">
+                                <field name="am_alert_emails" placeholder="security@example.com, it@example.com"/>
+                            </div>
+                        </setting>
+                        <setting string="Log retention" help="Old export logs are deleted after this many days (0: keep).">
+                            <field name="am_export_log_days"/>
+                        </setting>
+                    </block>
+                    <block title="Rules" name="am_rules">
+                        <setting string="Access rules" help="Hide menus, lock models, hide or mask fields per user or group.">
+                            <button name="%(access_management.action_access_rule)d" type="action" string="Access rules"
+                                    icon="east" class="btn-link"/>
+                        </setting>
+                        <setting string="PIN-protected menus" help="Ask a code before a menu opens.">
+                            <button name="%(access_management.action_access_menu_lock)d" type="action" string="Menu locks"
+                                    icon="east" class="btn-link"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_access_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'access_management', 'bin_size': False}</field>
+    </record>
+</odoo>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- model line: opened in a dialog from the rule -->
+    <record id="access_rule_model_view_form" model="ir.ui.view">
+        <field name="name">access.rule.model.form</field>
+        <field name="model">access.rule.model</field>
+        <field name="arch" type="xml">
+            <form string="Model restrictions">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="model" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="readonly" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Operations">
+                            <field name="no_create" readonly="readonly"/>
+                            <field name="no_edit" readonly="readonly"/>
+                            <field name="no_delete" readonly="readonly"/>
+                            <field name="no_duplicate" readonly="readonly"/>
+                            <field name="no_archive" readonly="readonly"/>
+                            <field name="no_import" readonly="readonly"/>
+                            <field name="no_export"/>
+                        </group>
+                        <group string="Chatter">
+                            <field name="hide_chatter"/>
+                            <field name="hide_send_message" invisible="hide_chatter"/>
+                            <field name="hide_log_note" invisible="hide_chatter"/>
+                            <field name="hide_activities" invisible="hide_chatter"/>
+                            <field name="hide_followers" invisible="hide_chatter"/>
+                            <field name="hide_attachments" invisible="hide_chatter"/>
+                        </group>
+                    </group>
+                    <group string="Records">
+                        <field name="domain" widget="domain" options="{'model': 'model', 'in_dialog': True}" nolabel="1" colspan="2"/>
+                    </group>
+                    <group>
+                        <group string="Print and Action menus">
+                            <field name="hide_all_reports"/>
+                            <field name="report_ids" widget="many2many_tags" invisible="hide_all_reports"
+                                   options="{'no_create': True}"/>
+                            <field name="hide_all_actions"/>
+                            <field name="action_ids" widget="many2many_tags" invisible="hide_all_actions"
+                                   options="{'no_create': True}"/>
+                            <field name="window_action_ids" widget="many2many_tags" invisible="hide_all_actions"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group string="Search">
+                            <field name="hide_filters"/>
+                            <field name="hide_group_by"/>
+                            <field name="hide_search_panel"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="access_rule_view_form" model="ir.ui.view">
+        <field name="name">access.rule.form</field>
+        <field name="model">access.rule</field>
+        <field name="arch" type="xml">
+            <form string="Access Rule">
+                <header>
+                    <button name="action_refresh_cache" type="object" string="Apply now" class="btn-secondary"
+                            help="Refresh the caches so users get the change at their next page load."/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_users" type="object" class="oe_stat_button" icon="fa-users">
+                            <field name="user_count" widget="statinfo" string="Users"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <widget name="web_ribbon" title="Expired" bg_color="text-bg-warning" invisible="not active or not is_expired"/>
+                    <field name="active" invisible="1"/>
+                    <field name="is_expired" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Sales team: no delete, hide costs"/></h1>
+                        <div class="d-flex gap-2 align-items-center">
+                            <span class="badge text-bg-success" invisible="not is_effective">Applying now</span>
+                            <span class="badge text-bg-secondary" invisible="is_effective">Not applying now</span>
+                            <field name="is_effective" invisible="1"/>
+                        </div>
+                    </div>
+                    <group>
+                        <group string="Applies to">
+                            <field name="user_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="group_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="exclude_user_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="company_ids" widget="many2many_tags" options="{'no_create': True}"
+                                   groups="base.group_multi_company"/>
+                        </group>
+                        <group string="When">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="use_schedule"/>
+                            <label for="mon" string="Days" invisible="not use_schedule"/>
+                            <div class="d-flex flex-wrap gap-3 o_am_days" invisible="not use_schedule">
+                                <span><field name="mon" nolabel="1"/> Mon</span>
+                                <span><field name="tue" nolabel="1"/> Tue</span>
+                                <span><field name="wed" nolabel="1"/> Wed</span>
+                                <span><field name="thu" nolabel="1"/> Thu</span>
+                                <span><field name="fri" nolabel="1"/> Fri</span>
+                                <span><field name="sat" nolabel="1"/> Sat</span>
+                                <span><field name="sun" nolabel="1"/> Sun</span>
+                            </div>
+                            <label for="hour_from" string="Hours" invisible="not use_schedule"/>
+                            <div class="d-flex gap-2 align-items-baseline" invisible="not use_schedule">
+                                <field name="hour_from" widget="float_time" class="oe_inline"/>
+                                <span>to</span>
+                                <field name="hour_to" widget="float_time" class="oe_inline"/>
+                            </div>
+                            <field name="tz" invisible="not use_schedule"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Menus" name="menus">
+                            <field name="menu_ids" options="{'no_create': True}">
+                                <list>
+                                    <field name="complete_name" string="Menu"/>
+                                </list>
+                            </field>
+                            <group>
+                                <field name="block_menu_actions"/>
+                            </group>
+                        </page>
+                        <page string="Models" name="models">
+                            <field name="model_line_ids">
+                                <list>
+                                    <field name="model_id"/>
+                                    <field name="model" optional="hide"/>
+                                    <field name="summary" string="Restrictions"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Fields" name="fields">
+                            <field name="field_line_ids">
+                                <list editable="bottom">
+                                    <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="model" column_invisible="1"/>
+                                    <field name="field_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="mode"/>
+                                    <field name="mask_start" invisible="mode != 'mask'"/>
+                                    <field name="mask_end" invisible="mode != 'mask'"/>
+                                    <field name="domain" widget="domain" options="{'model': 'model', 'in_dialog': True}"
+                                           invisible="mode != 'mask'" optional="hide"/>
+                                    <field name="preview" invisible="mode != 'mask'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Buttons and tabs" name="elements">
+                            <field name="element_line_ids">
+                                <list editable="bottom">
+                                    <field name="model_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="element_type"/>
+                                    <field name="name"/>
+                                    <field name="label"/>
+                                    <field name="available" column_invisible="1"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="model_id"/>
+                                        <field name="element_type"/>
+                                        <field name="name"/>
+                                        <field name="available" readonly="1"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <p class="text-muted small mt-2">
+                                Use the technical name: the method or action of a button (e.g. <code>action_confirm</code>),
+                                or the name of a notebook page. Open a line to see the names found in the model's views.
+                            </p>
+                        </page>
+                        <page string="User restrictions" name="user">
+                            <group>
+                                <group>
+                                    <field name="readonly_user"/>
+                                    <field name="no_debug"/>
+                                </group>
+                                <group>
+                                    <field name="block_api"/>
+                                    <field name="block_login"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="description" placeholder="Why this rule exists, who asked for it..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="access_rule_view_list" model="ir.ui.view">
+        <field name="name">access.rule.list</field>
+        <field name="model">access.rule</field>
+        <field name="arch" type="xml">
+            <list string="Access Rules" decoration-muted="not is_effective">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="user_ids" widget="many2many_tags" optional="show"/>
+                <field name="group_ids" widget="many2many_tags" optional="show"/>
+                <field name="user_count" string="Users"/>
+                <field name="menu_count" string="Menus" optional="show"/>
+                <field name="model_count" string="Models" optional="show"/>
+                <field name="field_count" string="Fields" optional="show"/>
+                <field name="element_count" string="Buttons/tabs" optional="hide"/>
+                <field name="readonly_user" optional="hide"/>
+                <field name="date_to" optional="show"/>
+                <field name="is_effective" widget="boolean_toggle" readonly="1" string="Applying"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="access_rule_view_search" model="ir.ui.view">
+        <field name="name">access.rule.search</field>
+        <field name="model">access.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="user_ids"/>
+                <field name="group_ids"/>
+                <field name="model_line_ids" string="Model" filter_domain="[('model_line_ids.model_id', 'ilike', self)]"/>
+                <filter name="effective" string="Applying now" domain="[('is_effective', '=', True)]"/>
+                <filter name="not_effective" string="Not applying now" domain="[('is_effective', '=', False)]"/>
+                <separator/>
+                <filter name="scheduled" string="Scheduled" domain="['|', ('use_schedule', '=', True), ('date_to', '!=', False)]"/>
+                <filter name="expired" string="Expired" domain="[('is_expired', '=', True)]"/>
+                <filter name="readonly" string="Read-only users" domain="[('readonly_user', '=', True)]"/>
+                <separator/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_access_rule" model="ir.actions.act_window">
+        <field name="name">Access Rules</field>
+        <field name="res_model">access.rule</field>
+        <field name="path">access-rules</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first access rule</p>
+            <p>Choose users or groups, then hide menus, lock models, hide or mask fields and buttons.</p>
+        </field>
+    </record>
+</odoo>

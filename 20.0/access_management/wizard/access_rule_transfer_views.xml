@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="access_rule_transfer_view_form" model="ir.ui.view">
+        <field name="name">access.rule.transfer.form</field>
+        <field name="model">access.rule.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Export / import access rules">
+                <field name="state" invisible="1"/>
+                <group>
+                    <field name="mode" widget="radio" options="{'horizontal': true}"/>
+                    <field name="rule_ids" widget="many2many_tags" invisible="mode != 'export'" placeholder="All rules"/>
+                    <field name="file" filename="file_name" invisible="mode != 'import'"/>
+                    <field name="file_name" invisible="1"/>
+                    <field name="dry_run" invisible="mode != 'import'"/>
+                </group>
+                <div invisible="mode != 'import'" class="text-muted small">
+                    Rules are matched by name: existing rules are updated (their lines are replaced), others are
+                    created. Users are found by login, groups and menus by XML id or name, models by technical name.
+                </div>
+                <group string="Result" invisible="not result">
+                    <field name="result" nolabel="1" colspan="2" class="font-monospace"/>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Export" class="btn-primary" invisible="mode != 'export'"/>
+                    <button name="action_import" type="object" string="Check" class="btn-primary"
+                            invisible="mode != 'import' or not dry_run"/>
+                    <button name="action_import" type="object" string="Import" class="btn-primary"
+                            invisible="mode != 'import' or dry_run"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_access_rule_transfer" model="ir.actions.act_window">
+        <field name="name">Export / Import Rules</field>
+        <field name="res_model">access.rule.transfer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_access_rule"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>
