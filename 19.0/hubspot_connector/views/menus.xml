@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_hubspot_root" name="HubSpot" sequence="70" groups="group_hubspot_manager"
+              web_icon="hubspot_connector,static/description/icon.png"/>
+    <menuitem id="menu_hubspot_dashboard" name="Dashboard" parent="menu_hubspot_root" action="action_hubspot_dashboard" sequence="1"/>
+    <menuitem id="menu_hubspot_accounts" name="Accounts" parent="menu_hubspot_root" action="action_hubspot_account" sequence="10"/>
+    <menuitem id="menu_hubspot_queue" name="Queue" parent="menu_hubspot_root" action="action_hubspot_queue" sequence="20"/>
+    <menuitem id="menu_hubspot_logs" name="Log History" parent="menu_hubspot_root" action="action_hubspot_log" sequence="30"/>
+    <menuitem id="menu_hubspot_records" name="Linked Records" parent="menu_hubspot_root" action="action_hubspot_record" sequence="40"/>
+</odoo>

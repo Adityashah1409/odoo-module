@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hubspot_account_view_list" model="ir.ui.view">
+        <field name="name">hubspot.account.list</field>
+        <field name="model">hubspot.account</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="portal_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="link_count" string="Linked records"/>
+                <field name="pending_count" string="Pending jobs"/>
+                <field name="failed_count" string="Failed jobs" decoration-danger="failed_count"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'"
+                       decoration-danger="state == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hubspot_account_view_form" model="ir.ui.view">
+        <field name="name">hubspot.account.form</field>
+        <field name="model">hubspot.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object" string="Test connection" class="oe_highlight"
+                            invisible="state == 'connected'"/>
+                    <button name="action_test_connection" type="object" string="Test connection"
+                            invisible="state != 'connected'"/>
+                    <button name="action_sync_now" type="object" string="Sync now" class="oe_highlight"
+                            invisible="state != 'connected'"/>
+                    <button name="action_import_now" type="object" string="Import" invisible="state != 'connected'"/>
+                    <button name="action_export_now" type="object" string="Export" invisible="state != 'connected'"/>
+                    <button name="action_fetch_metadata" type="object" string="Fetch owners &amp; stages"
+                            invisible="state != 'connected'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_hubspot_queue)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                                context="{'search_default_account_id': id, 'search_default_pending': 1}">
+                            <field name="pending_count" widget="statinfo" string="Pending"/>
+                        </button>
+                        <button name="%(action_hubspot_queue)d" type="action" class="oe_stat_button" icon="fa-exclamation-triangle"
+                                context="{'search_default_account_id': id, 'search_default_failed': 1}">
+                            <field name="failed_count" widget="statinfo" string="Failed"/>
+                        </button>
+                        <button name="%(action_hubspot_record)d" type="action" class="oe_stat_button" icon="fa-link"
+                                context="{'search_default_account_id': id}">
+                            <field name="link_count" widget="statinfo" string="Linked"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title"><h1><field name="name" placeholder="e.g. HubSpot - Sales EU"/></h1></div>
+                    <div class="alert alert-danger" role="alert" invisible="not last_error">
+                        <field name="last_error"/>
+                    </div>
+                    <group>
+                        <group string="Connection">
+                            <field name="access_token" password="True" placeholder="pat-eu1-..."/>
+                            <field name="portal_id"/>
+                            <field name="hubspot_currency"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Rules">
+                            <field name="deal_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="pipeline_id"/>
+                            <field name="conflict_policy" widget="radio" options="{'horizontal': true}"/>
+                            <field name="default_user_id"/>
+                            <field name="fallback_product_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Objects" name="objects">
+                            <field name="object_ids">
+                                <list editable="bottom" create="0" delete="0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="object_type" readonly="1"/>
+                                    <field name="import_enabled" widget="boolean_toggle"/>
+                                    <field name="export_enabled" widget="boolean_toggle"/>
+                                    <field name="last_import"/>
+                                    <field name="last_export"/>
+                                    <field name="link_count"/>
+                                    <button name="action_import_now" type="object" title="Import now" icon="fa-download"
+                                            invisible="not import_enabled"/>
+                                    <button name="action_export_now" type="object" title="Export now" icon="fa-upload"
+                                            invisible="not export_enabled"/>
+                                    <button name="action_view_links" type="object" icon="fa-link" title="Linked records"/>
+                                    <button name="action_reset" type="object" icon="fa-undo" title="Full synchronization next time"
+                                            confirm="Import and export everything again on the next run?"/>
+                                </list>
+                            </field>
+                            <div class="text-muted small">Import order: companies, contacts, products, deals, quotes,
+                                invoices, then engagements (they attach to the records synchronized before).</div>
+                        </page>
+                        <page string="Owners" name="owners">
+                            <field name="owner_ids">
+                                <list editable="bottom" create="0">
+                                    <field name="name" readonly="1"/>
+                                    <field name="email" readonly="1"/>
+                                    <field name="hubspot_id" readonly="1"/>
+                                    <field name="user_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Deal stages" name="stages">
+                            <field name="stage_ids">
+                                <list editable="bottom" create="0" decoration-success="is_won"
+                                      decoration-muted="is_closed and not is_won">
+                                    <field name="pipeline_label" readonly="1"/>
+                                    <field name="pipeline_id" readonly="1" optional="hide"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="hubspot_id" readonly="1" optional="hide"/>
+                                    <field name="probability" readonly="1"/>
+                                    <field name="is_won" readonly="1"/>
+                                    <field name="is_closed" readonly="1"/>
+                                    <field name="crm_stage_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Field mapping" name="mapping">
+                            <field name="mapping_ids">
+                                <list editable="bottom">
+                                    <field name="object_type"/>
+                                    <field name="model_name" column_invisible="1"/>
+                                    <field name="field_id" options="{'no_create': True}"/>
+                                    <field name="hubspot_property"/>
+                                    <field name="direction"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                            <div class="text-muted small">Standard fields are mapped already; add your own properties here
+                                (internal names from HubSpot > Settings > Properties).</div>
+                        </page>
+                        <page string="Scheduling &amp; webhooks" name="advanced">
+                            <group>
+                                <group string="Queue">
+                                    <field name="auto_sync"/>
+                                    <field name="batch_size"/>
+                                    <field name="max_attempts"/>
+                                </group>
+                                <group string="Webhooks (real time)">
+                                    <field name="webhook_url" widget="CopyClipboardChar"/>
+                                    <field name="webhook_secret" password="True"/>
+                                    <div colspan="2" class="text-muted small">Subscribe your app to contact, company, deal
+                                        and product events with this URL; changes are queued at once and processed by
+                                        the next run.</div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hubspot_account" model="ir.actions.act_window">
+        <field name="name">HubSpot Accounts</field>
+        <field name="res_model">hubspot.account</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Connect your HubSpot account</p>
+            <p>Create a private app in HubSpot (Settings > Integrations > Private Apps) with the CRM scopes you need,
+                then paste its access token here.</p>
+        </field>
+    </record>
+    <record id="action_hubspot_dashboard" model="ir.actions.client">
+        <field name="name">HubSpot</field>
+        <field name="tag">hubspot_connector.dashboard</field>
+        <field name="path">hubspot</field>
+    </record>
+</odoo>

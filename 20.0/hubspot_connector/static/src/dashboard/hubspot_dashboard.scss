@@ -1,0 +1,32 @@
+.o_hubspot_dashboard {
+    background-color: $o-webclient-background-color;
+
+    .o_hs_kpis {
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    }
+    .o_hs_kpi {
+        border-left: 4px solid $primary;
+        .o_hs_value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+    }
+    .o_hs_done { border-left-color: $success; }
+    .o_hs_pending { border-left-color: $info; }
+    .o_hs_failed { border-left-color: $danger; .o_hs_value { color: $danger; } }
+    .o_hs_days {
+        height: 140px;
+    }
+    .o_hs_import { background-color: #ff7a59; }
+    .o_hs_export { background-color: #00a4bd; }
+    .o_hs_dot {
+        display: inline-block;
+        width: .7rem;
+        height: .7rem;
+        border-radius: 2px;
+        margin-right: .3rem;
+        vertical-align: middle;
+    }
+}

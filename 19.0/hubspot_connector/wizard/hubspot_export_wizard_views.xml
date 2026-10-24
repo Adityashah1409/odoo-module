@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hubspot_export_wizard_view_form" model="ir.ui.view">
+        <field name="name">hubspot.export.wizard.form</field>
+        <field name="model">hubspot.export.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="res_model" invisible="1"/>
+                <p>Export <field name="record_count" class="oe_inline"/> record(s) to HubSpot. Records already linked are
+                    updated; unchanged ones are skipped.</p>
+                <group>
+                    <field name="account_id" options="{'no_create': True}"/>
+                    <field name="process_now"/>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Export" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_hubspot_export_partner" model="ir.actions.act_window">
+        <field name="name">Export to HubSpot</field>
+        <field name="res_model">hubspot.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="group_ids" eval="[(4, ref('group_hubspot_manager'))]"/>
+    </record>
+    <record id="action_hubspot_export_lead" model="ir.actions.act_window">
+        <field name="name">Export to HubSpot</field>
+        <field name="res_model">hubspot.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="crm.model_crm_lead"/>
+        <field name="group_ids" eval="[(4, ref('group_hubspot_manager'))]"/>
+    </record>
+    <record id="action_hubspot_export_product" model="ir.actions.act_window">
+        <field name="name">Export to HubSpot</field>
+        <field name="res_model">hubspot.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="group_ids" eval="[(4, ref('group_hubspot_manager'))]"/>
+    </record>
+    <record id="action_hubspot_export_sale" model="ir.actions.act_window">
+        <field name="name">Export to HubSpot</field>
+        <field name="res_model">hubspot.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="group_ids" eval="[(4, ref('group_hubspot_manager'))]"/>
+    </record>
+    <record id="action_hubspot_export_invoice" model="ir.actions.act_window">
+        <field name="name">Export to HubSpot</field>
+        <field name="res_model">hubspot.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="group_ids" eval="[(4, ref('group_hubspot_manager'))]"/>
+    </record>
+</odoo>

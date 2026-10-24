@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hubspot_account_manager,hubspot.account manager,model_hubspot_account,group_hubspot_manager,1,1,1,1
+access_hubspot_object_manager,hubspot.object manager,model_hubspot_object,group_hubspot_manager,1,1,1,1
+access_hubspot_owner_manager,hubspot.owner manager,model_hubspot_owner,group_hubspot_manager,1,1,1,1
+access_hubspot_stage_manager,hubspot.stage manager,model_hubspot_stage,group_hubspot_manager,1,1,1,1
+access_hubspot_field_mapping_manager,hubspot.field.mapping manager,model_hubspot_field_mapping,group_hubspot_manager,1,1,1,1
+access_hubspot_log_manager,hubspot.log manager,model_hubspot_log,group_hubspot_manager,1,1,1,1
+access_hubspot_queue_manager,hubspot.queue manager,model_hubspot_queue,group_hubspot_manager,1,1,1,1
+access_hubspot_record_manager,hubspot.record manager,model_hubspot_record,group_hubspot_manager,1,1,1,1
+access_hubspot_export_wizard_manager,hubspot.export.wizard manager,model_hubspot_export_wizard,group_hubspot_manager,1,1,1,0
