@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_product_auto_discount.ProductCard" t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+        <xpath expr="//article" position="inside">
+            <span t-if="this.autoDiscountBadge" t-out="this.autoDiscountBadge"
+                  class="o_pos_auto_discount_badge badge text-bg-danger position-absolute top-0 start-0 m-1"/>
+        </xpath>
+    </t>
+    <t t-name="pos_product_auto_discount.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//li[hasclass('price-per-unit')]" position="after">
+            <li t-if="this.line.autoDiscountRule" class="o_pos_auto_discount_name text-success">
+                <t t-out="this.line.autoDiscountRule.name"/>
+            </li>
+        </xpath>
+    </t>
+</templates>

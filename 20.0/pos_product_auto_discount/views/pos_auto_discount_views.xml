@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_auto_discount_view_list" model="ir.ui.view">
+        <field name="name">pos.auto.discount.list</field>
+        <field name="model">pos.auto.discount</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="status == 'expired'" decoration-info="status == 'scheduled'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="discount" string="Discount %"/>
+                <field name="applies_on"/>
+                <field name="min_qty" optional="show"/>
+                <field name="date_from" optional="show"/>
+                <field name="date_to" optional="show"/>
+                <field name="hour_from" widget="float_time" optional="show"/>
+                <field name="hour_to" widget="float_time" optional="show"/>
+                <field name="config_ids" widget="many2many_tags" optional="show"/>
+                <field name="status" widget="badge" decoration-success="status == 'running'"
+                       decoration-info="status == 'scheduled'" decoration-muted="status == 'expired'"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="pos_auto_discount_view_form" model="ir.ui.view">
+        <field name="name">pos.auto.discount.form</field>
+        <field name="model">pos.auto.discount</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_lines" type="object" class="oe_stat_button" icon="shopping_basket">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="line_count"/></span>
+                                <span class="o_stat_text">Lines</span>
+                            </div>
+                        </button>
+                        <button name="action_view_lines" type="object" class="oe_stat_button" icon="label">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="discount_amount"/></span>
+                                <span class="o_stat_text">Given</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Happy hour on coffee"/></h1>
+                    </div>
+                    <group>
+                        <group string="Discount">
+                            <field name="discount" string="Discount %"/>
+                            <field name="applies_on" widget="radio"/>
+                            <field name="product_tmpl_ids" widget="many2many_tags"
+                                   invisible="applies_on != 'products'" required="applies_on == 'products'"/>
+                            <field name="pos_categ_ids" widget="many2many_tags"
+                                   invisible="applies_on != 'categories'" required="applies_on == 'categories'"/>
+                            <field name="min_qty"/>
+                        </group>
+                        <group string="When and where">
+                            <field name="status" widget="badge" decoration-success="status == 'running'"
+                                   decoration-info="status == 'scheduled'" decoration-muted="status == 'expired'"/>
+                            <label for="date_from" string="Dates"/>
+                            <div class="o_row">
+                                <field name="date_from" placeholder="Start"/>
+                                <span>to</span>
+                                <field name="date_to" placeholder="No end"/>
+                            </div>
+                            <label for="hour_from" string="Happy hour"/>
+                            <div class="o_row">
+                                <field name="hour_from" widget="float_time"/>
+                                <span>to</span>
+                                <field name="hour_to" widget="float_time"/>
+                            </div>
+                            <field name="config_ids" widget="many2many_tags" placeholder="All points of sale"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <div class="text-muted">
+                        When several rules match a line, the highest discount wins. A discount changed by hand in
+                        the register is kept.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_auto_discount_view_search" model="ir.ui.view">
+        <field name="name">pos.auto.discount.search</field>
+        <field name="model">pos.auto.discount</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_tmpl_ids"/>
+                <field name="pos_categ_ids"/>
+                <field name="config_ids"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_applies_on" string="Applies on" context="{'group_by': 'applies_on'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_auto_discount" model="ir.actions.act_window">
+        <field name="name">Automatic Discounts</field>
+        <field name="res_model">pos.auto.discount</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create an automatic discount</p>
+            <p>Discounts apply by themselves in the register: on products or POS categories, from a minimum
+                quantity, between two dates or during happy hours.</p>
+        </field>
+    </record>
+
+    <record id="pos_order_line_auto_discount_list" model="ir.ui.view">
+        <field name="name">pos.order.line.auto.discount.list</field>
+        <field name="model">pos.order.line</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="order_id"/>
+                <field name="create_date" string="Date"/>
+                <field name="product_id"/>
+                <field name="qty"/>
+                <field name="price_unit"/>
+                <field name="discount" string="Disc. %"/>
+                <field name="auto_discount_id"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="auto_discount_amount" sum="Total"/>
+                <field name="price_subtotal_incl" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <menuitem id="menu_pos_auto_discount" name="Automatic Discounts" parent="point_of_sale.pos_config_menu_catalog"
+              action="action_pos_auto_discount" sequence="40" groups="point_of_sale.group_pos_manager"/>
+</odoo>
