@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_home_screen_layout_user,home.screen.layout user,model_home_screen_layout,base.group_user,1,0,0,0
+access_home_screen_layout_system,home.screen.layout system,model_home_screen_layout,base.group_system,1,1,1,1

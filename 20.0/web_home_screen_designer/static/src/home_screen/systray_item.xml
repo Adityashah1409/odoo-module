@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web_home_screen_designer.Systray">
+        <div class="o_hs_systray o-dropdown dropdown">
+            <button class="btn btn-link o-navbar-item" title="Home screen" t-on-click="this.open">
+                <i class="oi oi-lg" data-icon="view_module"/>
+            </button>
+        </div>
+    </t>
+</templates>
