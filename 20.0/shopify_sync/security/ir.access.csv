@@ -1,0 +1,15 @@
+id,name,model_id,group_id/id,operation,domain
+access_instance_user,shopify.instance user,shopify.instance,shopify_sync.group_shopify_user,r,
+access_instance_manager,shopify.instance manager,shopify.instance,shopify_sync.group_shopify_manager,crud,
+rule_shopify_instance_company,Shopify stores: multi-company,shopify.instance,,crud,"[('company_id', 'in', company_ids)]"
+access_location_user,shopify.location user,shopify.location,shopify_sync.group_shopify_user,r,
+access_location_manager,shopify.location manager,shopify.location,shopify_sync.group_shopify_manager,crud,
+access_product_map_user,shopify.product.map user,shopify.product.map,shopify_sync.group_shopify_user,r,
+access_product_map_manager,shopify.product.map manager,shopify.product.map,shopify_sync.group_shopify_manager,crud,
+access_customer_map_user,shopify.customer.map user,shopify.customer.map,shopify_sync.group_shopify_user,r,
+access_customer_map_manager,shopify.customer.map manager,shopify.customer.map,shopify_sync.group_shopify_manager,crud,
+access_queue_user,shopify.queue user,shopify.queue,shopify_sync.group_shopify_user,ru,
+access_queue_manager,shopify.queue manager,shopify.queue,shopify_sync.group_shopify_manager,crud,
+access_log_user,shopify.log user,shopify.log,shopify_sync.group_shopify_user,r,
+access_log_manager,shopify.log manager,shopify.log,shopify_sync.group_shopify_manager,crud,
+access_export_wizard_manager,shopify.export.product.wizard,shopify.export.product.wizard,shopify_sync.group_shopify_manager,crud,

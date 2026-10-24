@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_shopify_root" name="Shopify" sequence="35"
+              web_icon="shopify_sync,static/description/icon.png" groups="group_shopify_user"/>
+    <menuitem id="menu_shopify_dashboard" name="Dashboard" parent="menu_shopify_root"
+              action="action_shopify_dashboard" sequence="10"/>
+    <menuitem id="menu_shopify_orders" name="Orders" parent="menu_shopify_root"
+              action="action_shopify_orders" sequence="20"/>
+    <menuitem id="menu_shopify_catalog" name="Catalog" parent="menu_shopify_root" sequence="30"/>
+    <menuitem id="menu_shopify_products" name="Products" parent="menu_shopify_catalog"
+              action="action_shopify_product_map" sequence="10"/>
+    <menuitem id="menu_shopify_customers" name="Customers" parent="menu_shopify_catalog"
+              action="action_shopify_customer_map" sequence="20"/>
+    <menuitem id="menu_shopify_monitor" name="Monitoring" parent="menu_shopify_root" sequence="40"/>
+    <menuitem id="menu_shopify_queue" name="Sync Queue" parent="menu_shopify_monitor"
+              action="action_shopify_queue" sequence="10"/>
+    <menuitem id="menu_shopify_logs" name="Logs" parent="menu_shopify_monitor"
+              action="action_shopify_log" sequence="20"/>
+    <menuitem id="menu_shopify_config" name="Configuration" parent="menu_shopify_root" sequence="90"
+              groups="group_shopify_manager"/>
+    <menuitem id="menu_shopify_stores" name="Stores" parent="menu_shopify_config"
+              action="action_shopify_instance" sequence="10"/>
+</odoo>

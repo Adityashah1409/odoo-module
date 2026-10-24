@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_shopify_queue_list" model="ir.ui.view">
+        <field name="name">shopify.queue.list</field>
+        <field name="model">shopify.queue</field>
+        <field name="arch" type="xml">
+            <list create="false" decoration-danger="state == 'failed'" decoration-muted="state in ('done', 'skipped')">
+                <header>
+                    <button name="action_retry" type="object" string="Retry"/>
+                </header>
+                <field name="create_date" string="Received"/>
+                <field name="instance_id"/>
+                <field name="data_type"/>
+                <field name="source"/>
+                <field name="name"/>
+                <field name="message"/>
+                <field name="attempts" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-danger="state == 'failed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_shopify_queue_form" model="ir.ui.view">
+        <field name="name">shopify.queue.form</field>
+        <field name="model">shopify.queue</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button name="action_retry" type="object" string="Retry" class="btn-primary" invisible="state != 'failed'"/>
+                    <button name="action_open_record" type="object" string="Open record" invisible="not res_id"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="instance_id"/>
+                            <field name="data_type"/>
+                            <field name="source"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="shopify_id"/>
+                            <field name="attempts"/>
+                            <field name="processed_date"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="res_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="message" readonly="1" invisible="not message"/>
+                    <separator string="Data received"/>
+                    <field name="payload" readonly="1" widget="ace" options="{'mode': 'json'}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_shopify_queue_search" model="ir.ui.view">
+        <field name="name">shopify.queue.search</field>
+        <field name="model">shopify.queue</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="shopify_id"/>
+                <field name="instance_id"/>
+                <filter name="draft" string="To process" domain="[('state', '=', 'draft')]"/>
+                <filter name="failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <separator/>
+                <filter name="orders" string="Orders" domain="[('data_type', '=', 'order')]"/>
+                <filter name="products" string="Products" domain="[('data_type', '=', 'product')]"/>
+                <group>
+                    <filter name="group_type" string="Type" context="{'group_by': 'data_type'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_shopify_queue" model="ir.actions.act_window">
+        <field name="name">Sync Queue</field>
+        <field name="res_model">shopify.queue</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_shopify_log_list" model="ir.ui.view">
+        <field name="name">shopify.log.list</field>
+        <field name="model">shopify.log</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" decoration-danger="level == 'error'" decoration-warning="level == 'warning'">
+                <field name="create_date" string="Date"/>
+                <field name="instance_id"/>
+                <field name="operation"/>
+                <field name="level"/>
+                <field name="message"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_shopify_log_search" model="ir.ui.view">
+        <field name="name">shopify.log.search</field>
+        <field name="model">shopify.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="message"/>
+                <field name="operation"/>
+                <field name="instance_id"/>
+                <filter name="errors" string="Errors" domain="[('level', '=', 'error')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_shopify_log" model="ir.actions.act_window">
+        <field name="name">Logs</field>
+        <field name="res_model">shopify.log</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>
