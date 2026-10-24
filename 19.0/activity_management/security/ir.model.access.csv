@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mail_activity_tag_user,mail.activity.tag user,model_mail_activity_tag,base.group_user,1,0,0,0
+access_mail_activity_tag_manager,mail.activity.tag manager,model_mail_activity_tag,group_activity_manager,1,1,1,1
+access_activity_cancel_wizard,activity.cancel.wizard,model_activity_cancel_wizard,base.group_user,1,1,1,0
+access_activity_done_wizard,activity.done.wizard,model_activity_done_wizard,base.group_user,1,1,1,0
+access_activity_mass_schedule,activity.mass.schedule,model_activity_mass_schedule,base.group_user,1,1,1,0

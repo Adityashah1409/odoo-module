@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_mail_activity_tag_user,mail.activity.tag user,mail.activity.tag,base.group_user,r,
+access_mail_activity_tag_manager,mail.activity.tag manager,mail.activity.tag,activity_management.group_activity_manager,crud,
+access_activity_cancel_wizard,activity.cancel.wizard,activity.cancel.wizard,base.group_user,cru,
+access_activity_done_wizard,activity.done.wizard,activity.done.wizard,base.group_user,cru,
+access_activity_mass_schedule,activity.mass.schedule,activity.mass.schedule,base.group_user,cru,

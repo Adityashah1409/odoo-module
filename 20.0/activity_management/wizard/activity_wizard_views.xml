@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="activity_cancel_wizard_view_form" model="ir.ui.view">
+        <field name="name">activity.cancel.wizard.form</field>
+        <field name="model">activity.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="activity_ids" invisible="1"/>
+                <p class="text-muted">The activity stays in the history as cancelled; the assignee and the supervisor are notified.</p>
+                <group>
+                    <field name="reason" placeholder="e.g. The customer already signed"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Cancel activity" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="activity_done_wizard_view_form" model="ir.ui.view">
+        <field name="name">activity.done.wizard.form</field>
+        <field name="model">activity.done.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="activity_ids" invisible="1"/>
+                <field name="activity_count" invisible="1"/>
+                <group>
+                    <field name="feedback" placeholder="What was done, result, next step..."/>
+                </group>
+                <footer>
+                    <button name="action_done" type="object" string="Done" class="btn-primary"/>
+                    <button name="action_done_schedule_next" type="object" string="Done &amp; schedule next"
+                            invisible="activity_count != 1"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="activity_mass_schedule_view_form" model="ir.ui.view">
+        <field name="name">activity.mass.schedule.form</field>
+        <field name="model">activity.mass.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="res_model" invisible="1"/>
+                <field name="res_ids" invisible="1"/>
+                <div class="alert alert-info" role="status">
+                    One activity per selected record (<field name="record_count" class="oe_inline"/>) and per user.
+                </div>
+                <group>
+                    <group>
+                        <field name="activity_type_id"/>
+                        <field name="summary"/>
+                        <field name="date_deadline"/>
+                        <field name="priority" widget="priority"/>
+                    </group>
+                    <group>
+                        <field name="user_ids" widget="many2many_avatar_user"/>
+                        <field name="supervisor_id" widget="many2one_avatar_user"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    </group>
+                </group>
+                <field name="note" placeholder="Note..."/>
+                <footer>
+                    <button name="action_schedule" type="object" string="Schedule" class="btn-primary"/>
+                    <button string="Discard" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
