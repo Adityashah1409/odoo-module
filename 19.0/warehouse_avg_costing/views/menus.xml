@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_wh_cost_dashboard" model="ir.actions.client">
+        <field name="name">Warehouse Costing</field>
+        <field name="tag">warehouse_avg_costing.dashboard</field>
+        <field name="path">warehouse-costing</field>
+    </record>
+
+    <menuitem id="menu_wh_cost_adjustments" name="Cost Adjustments" parent="stock.menu_stock_warehouse_mgmt"
+              action="action_stock_warehouse_cost_adjustment" sequence="40" groups="group_wh_cost_user"/>
+    <menuitem id="menu_wh_cost_reporting" name="Warehouse Costing" parent="stock.menu_warehouse_report"
+              sequence="120" groups="group_wh_cost_user"/>
+    <menuitem id="menu_wh_cost_dashboard" name="Dashboard" parent="menu_wh_cost_reporting"
+              action="action_wh_cost_dashboard" sequence="1"/>
+    <menuitem id="menu_wh_cost_rows" name="Warehouse Costs" parent="menu_wh_cost_reporting"
+              action="action_stock_warehouse_cost" sequence="2"/>
+    <menuitem id="menu_wh_cost_history" name="Cost History" parent="menu_wh_cost_reporting"
+              action="action_stock_warehouse_cost_line" sequence="3"/>
+    <menuitem id="menu_wh_cost_valuation" name="Valuation Report" parent="menu_wh_cost_reporting"
+              action="action_stock_warehouse_valuation_report" sequence="4"/>
+    <menuitem id="menu_wh_cost_matrix" name="Cost Matrix (Excel)" parent="menu_wh_cost_reporting"
+              action="action_stock_warehouse_cost_matrix" sequence="5" groups="group_wh_cost_manager"/>
+</odoo>

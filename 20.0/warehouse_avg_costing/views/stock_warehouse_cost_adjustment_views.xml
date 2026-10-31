@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_warehouse_cost_adjustment_view_form" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.adjustment.form</field>
+        <field name="model">stock.warehouse.cost.adjustment</field>
+        <field name="arch" type="xml">
+            <form string="Cost Adjustment">
+                <header>
+                    <button name="action_submit" type="object" string="Apply" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state != 'to_approve'"
+                            groups="warehouse_avg_costing.group_wh_cost_manager"/>
+                    <button name="action_refuse" type="object" string="Refuse" invisible="state != 'to_approve'"
+                            groups="warehouse_avg_costing.group_wh_cost_manager"/>
+                    <button name="action_reset" type="object" string="Back to Draft" invisible="state != 'refused'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,to_approve,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="1"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="warehouse_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="quantity" invisible="state == 'done'"/>
+                            <field name="current_cost" invisible="state == 'done'"/>
+                            <field name="old_cost" invisible="state != 'done'"/>
+                            <field name="new_cost" readonly="state != 'draft'"/>
+                            <field name="value_change" invisible="state in ('done', 'refused')"
+                                   decoration-danger="value_change &lt; 0" decoration-success="value_change &gt; 0"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason" readonly="state != 'draft'" placeholder="Why does the cost change?"/>
+                    </group>
+                    <group invisible="state == 'draft'">
+                        <group>
+                            <field name="requested_by"/>
+                            <field name="approved_by" invisible="not approved_by"/>
+                        </group>
+                        <group>
+                            <field name="applied_date" invisible="not applied_date"/>
+                            <field name="line_id" invisible="not line_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_adjustment_view_list" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.adjustment.list</field>
+        <field name="model">stock.warehouse.cost.adjustment</field>
+        <field name="arch" type="xml">
+            <list string="Cost Adjustments" decoration-info="state == 'to_approve'" decoration-muted="state == 'refused'">
+                <field name="name"/>
+                <field name="create_date" string="Requested on" optional="show"/>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="current_cost" optional="show"/>
+                <field name="new_cost"/>
+                <field name="value_change" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="requested_by" widget="many2one_avatar_user"/>
+                <field name="approved_by" widget="many2one_avatar_user" optional="show"/>
+                <field name="state" widget="badge" decoration-info="state == 'to_approve'" decoration-success="state == 'done'"
+                       decoration-danger="state == 'refused'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_adjustment_view_search" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.adjustment.search</field>
+        <field name="model">stock.warehouse.cost.adjustment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to_approve')]"/>
+                <filter name="done" string="Applied" domain="[('state', '=', 'done')]"/>
+                <filter name="mine" string="My Requests" domain="[('requested_by', '=', uid)]"/>
+                <group>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_warehouse" string="Warehouse" context="{'group_by': 'warehouse_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_warehouse_cost_adjustment" model="ir.actions.act_window">
+        <field name="name">Cost Adjustments</field>
+        <field name="res_model">stock.warehouse.cost.adjustment</field>
+        <field name="path">warehouse-cost-adjustments</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Adjust the average cost of a product in one warehouse</p>
+            <p>With approval enabled, requests wait for a Warehouse Costing manager.</p>
+        </field>
+    </record>
+</odoo>

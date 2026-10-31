@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.warehouse.costing</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="stock_account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="valuation_setting_container" position="inside">
+                <setting id="warehouse_costing_setting" string="Warehouse Average Costing"
+                         help="Products with the average cost method get one average cost per warehouse: deliveries leave at the cost of their warehouse, transfers carry the cost to the other warehouse.">
+                    <field name="warehouse_costing"/>
+                    <div class="content-group mt-2" invisible="not warehouse_costing">
+                        <div class="d-flex gap-2 align-items-center">
+                            <field name="warehouse_cost_approval"/>
+                            <label for="warehouse_cost_approval" class="o_light_label"/>
+                        </div>
+                        <button name="action_wh_cost_initialize" type="object" string="Rebuild from stock on hand"
+                                icon="east" class="btn-link"
+                                groups="warehouse_avg_costing.group_wh_cost_manager"
+                                confirm="Rebuild every warehouse cost from the stock on hand at the current product cost? The cost history is reset."/>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

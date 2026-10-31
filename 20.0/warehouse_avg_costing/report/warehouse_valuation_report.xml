@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_warehouse_valuation" model="ir.actions.report">
+        <field name="name">Warehouse Valuation</field>
+        <field name="model">stock.warehouse.valuation.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">warehouse_avg_costing.report_warehouse_valuation</field>
+        <field name="print_report_name">'Warehouse valuation'</field>
+    </record>
+
+    <template id="report_warehouse_valuation">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="data" t-value="wizard._report_data()"/>
+                <t t-set="currency" t-value="data['currency']"/>
+                <t t-call="web.external_layout" company="wizard.company_id">
+                    <div class="page">
+                        <h3 t-out="data['title']"/>
+                        <p class="text-muted small">Printed on <t t-out="data['date'].strftime('%Y-%m-%d %H:%M')"/></p>
+                        <table t-if="data['report_type'] == 'summary'" class="table table-sm o_main_table">
+                            <thead><tr><th>Warehouse</th><th class="text-end">Products</th><th class="text-end">Quantity</th>
+                                <th class="text-end">Value</th><th class="text-end">Share</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="data['summary']" t-as="line">
+                                    <td><t t-out="line['name']"/> <small class="text-muted" t-out="line['code']"/></td>
+                                    <td class="text-end" t-out="line['products']"/>
+                                    <td class="text-end" t-out="'%.2f' % line['quantity']"/>
+                                    <td class="text-end" t-out="line['value']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <td class="text-end"><t t-out="line['share']"/> %</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table t-if="data['report_type'] == 'detailed'" class="table table-sm o_main_table">
+                            <thead><tr><th>Warehouse</th><th>Product</th><th class="text-end">Quantity</th>
+                                <th class="text-end">Average Cost</th><th class="text-end">Company Cost</th><th class="text-end">Value</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="data['detailed']" t-as="line">
+                                    <td t-out="line['warehouse']"/>
+                                    <td><t t-out="line['product']"/></td>
+                                    <td class="text-end"><t t-out="'%.2f' % line['quantity']"/> <t t-out="line['uom']"/></td>
+                                    <td class="text-end" t-out="line['avg_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <td class="text-end" t-out="line['company_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <td class="text-end" t-out="line['value']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table t-if="data['report_type'] == 'comparison'" class="table table-sm o_main_table">
+                            <thead><tr><th>Product</th>
+                                <th t-foreach="data['columns']" t-as="column" class="text-end" t-out="column['code']"/>
+                                <th class="text-end">Company</th><th class="text-end">Spread</th></tr></thead>
+                            <tbody>
+                                <tr t-foreach="data['comparison']" t-as="line">
+                                    <td t-out="line['product']"/>
+                                    <t t-foreach="line['costs']" t-as="cost">
+                                        <td class="text-end"><t t-if="cost is not None" t-out="cost" t-options="{'widget': 'monetary', 'display_currency': currency}"/></td>
+                                    </t>
+                                    <td class="text-end" t-out="line['company_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    <td class="text-end"><t t-out="line['spread']"/> %</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-end fw-bold">Total value:
+                            <span t-out="data['total_value']" t-options="{'widget': 'monetary', 'display_currency': currency}"/></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_warehouse_cost_view_list" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.list</field>
+        <field name="model">stock.warehouse.cost</field>
+        <field name="arch" type="xml">
+            <list string="Warehouse Costs" create="0" edit="0" delete="0" decoration-muted="quantity == 0"
+                  decoration-danger="quantity &lt; 0">
+                <field name="product_id"/>
+                <field name="categ_id" optional="hide"/>
+                <field name="location_label"/>
+                <field name="quantity" sum="Total"/>
+                <field name="uom_id" optional="show" groups="uom.group_uom"/>
+                <field name="avg_cost"/>
+                <field name="company_avg_cost" optional="show"/>
+                <field name="cost_gap" optional="show" decoration-success="cost_gap &lt; 0" decoration-warning="cost_gap &gt; 0"/>
+                <field name="value" sum="Total"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="last_date" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <button name="action_view_history" type="object" icon="fa-history" title="History"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_view_pivot" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.pivot</field>
+        <field name="model">stock.warehouse.cost</field>
+        <field name="arch" type="xml">
+            <pivot string="Warehouse Valuation" sample="1">
+                <field name="warehouse_id" type="col"/>
+                <field name="categ_id" type="row"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_view_graph" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.graph</field>
+        <field name="model">stock.warehouse.cost</field>
+        <field name="arch" type="xml">
+            <graph string="Warehouse Valuation" type="bar" sample="1">
+                <field name="warehouse_id"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_view_search" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.search</field>
+        <field name="model">stock.warehouse.cost</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="categ_id"/>
+                <filter name="in_stock" string="In stock" domain="[('quantity', '&gt;', 0)]"/>
+                <filter name="negative" string="Negative stock" domain="[('quantity', '&lt;', 0)]"/>
+                <filter name="transit" string="In transit" domain="[('warehouse_id', '=', False)]"/>
+                <group>
+                    <filter name="group_warehouse" string="Warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_categ" string="Category" context="{'group_by': 'categ_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_warehouse_cost" model="ir.actions.act_window">
+        <field name="name">Warehouse Costs</field>
+        <field name="res_model">stock.warehouse.cost</field>
+        <field name="path">warehouse-costs</field>
+        <field name="view_mode">list,pivot,graph</field>
+        <field name="context">{'search_default_in_stock': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No warehouse cost yet</p>
+            <p>Enable <b>Warehouse Average Costing</b> in Inventory settings: products using the average cost method
+               then get one average cost per warehouse.</p>
+        </field>
+    </record>
+
+    <!-- history -->
+    <record id="stock_warehouse_cost_line_view_list" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.line.list</field>
+        <field name="model">stock.warehouse.cost.line</field>
+        <field name="arch" type="xml">
+            <list string="Cost History" create="0" edit="0" delete="0">
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="location_label"/>
+                <field name="kind" widget="badge" decoration-success="kind in ('in', 'transfer_in')"
+                       decoration-warning="kind in ('out', 'transfer_out')" decoration-info="kind in ('adjustment', 'revaluation', 'correction')"/>
+                <field name="move_id" optional="hide"/>
+                <field name="picking_id" optional="show"/>
+                <field name="quantity" sum="Total"/>
+                <field name="unit_cost"/>
+                <field name="value" sum="Total"/>
+                <field name="old_avg"/>
+                <field name="new_avg"/>
+                <field name="qty_after" optional="show"/>
+                <field name="value_after" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="note" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_line_view_pivot" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.line.pivot</field>
+        <field name="model">stock.warehouse.cost.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Cost History" sample="1">
+                <field name="kind" type="col"/>
+                <field name="warehouse_id" type="row"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_warehouse_cost_line_view_search" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.line.search</field>
+        <field name="model">stock.warehouse.cost.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id"/>
+                <field name="warehouse_id"/>
+                <field name="picking_id"/>
+                <filter name="cost_changes" string="Cost changes" domain="[('kind', 'in', ('adjustment', 'revaluation', 'correction'))]"/>
+                <filter name="receipts" string="Receipts" domain="[('kind', '=', 'in')]"/>
+                <filter name="deliveries" string="Deliveries" domain="[('kind', '=', 'out')]"/>
+                <filter name="transfers" string="Transfers" domain="[('kind', 'in', ('transfer_in', 'transfer_out'))]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+                <group>
+                    <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_warehouse" string="Warehouse" context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_kind" string="Type" context="{'group_by': 'kind'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_warehouse_cost_line" model="ir.actions.act_window">
+        <field name="name">Cost History</field>
+        <field name="res_model">stock.warehouse.cost.line</field>
+        <field name="path">warehouse-cost-history</field>
+        <field name="view_mode">list,pivot</field>
+    </record>
+</odoo>

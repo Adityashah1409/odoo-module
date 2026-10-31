@@ -1,0 +1,13 @@
+.o_wh_cost_dashboard {
+    background-color: $o-webclient-background-color;
+    .o_whc_kpis { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+    .o_whc_kpi {
+        border-left: 4px solid $primary;
+        .o_whc_label { display: block; font-size: .78rem; text-transform: uppercase; color: $text-muted; }
+        .o_whc_value { display: block; font-size: 1.7rem; font-weight: 600; }
+    }
+    .o_whc_progress { height: 8px; }
+    .o_whc_kind_in, .o_whc_kind_transfer_in { background-color: #d1f2dc; color: #116329; }
+    .o_whc_kind_out, .o_whc_kind_transfer_out { background-color: #fde2c8; color: #8a4b12; }
+    .o_whc_kind_adjustment, .o_whc_kind_revaluation, .o_whc_kind_correction { background-color: #dbe7ff; color: #1f4aa8; }
+}

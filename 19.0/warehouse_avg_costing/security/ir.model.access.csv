@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_warehouse_cost_user,stock.warehouse.cost user,model_stock_warehouse_cost,group_wh_cost_user,1,0,0,0
+access_stock_warehouse_cost_manager,stock.warehouse.cost manager,model_stock_warehouse_cost,group_wh_cost_manager,1,1,1,1
+access_stock_warehouse_cost_line_user,stock.warehouse.cost.line user,model_stock_warehouse_cost_line,group_wh_cost_user,1,0,0,0
+access_stock_warehouse_cost_line_manager,stock.warehouse.cost.line manager,model_stock_warehouse_cost_line,group_wh_cost_manager,1,0,0,1
+access_stock_warehouse_cost_adjustment_user,stock.warehouse.cost.adjustment user,model_stock_warehouse_cost_adjustment,group_wh_cost_user,1,1,1,0
+access_stock_warehouse_cost_adjustment_manager,stock.warehouse.cost.adjustment manager,model_stock_warehouse_cost_adjustment,group_wh_cost_manager,1,1,1,1
+access_stock_warehouse_valuation_report_user,stock.warehouse.valuation.report user,model_stock_warehouse_valuation_report,group_wh_cost_user,1,1,1,1
+access_stock_warehouse_cost_matrix_manager,stock.warehouse.cost.matrix manager,model_stock_warehouse_cost_matrix,group_wh_cost_manager,1,1,1,1

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="warehouse_avg_costing.Dashboard">
+        <div class="o_wh_cost_dashboard o_action h-100 overflow-auto">
+            <div class="d-flex flex-wrap align-items-center gap-2 px-4 py-3 border-bottom">
+                <h2 class="m-0 me-auto">Warehouse costing</h2>
+                <button class="btn btn-secondary" t-on-click="openReport"><i class="fa fa-file-excel-o me-1"/>Valuation report</button>
+                <button class="btn btn-secondary" t-on-click="openHistory"><i class="fa fa-history me-1"/>Cost history</button>
+            </div>
+            <div class="px-4 py-3" t-if="state.data">
+                <t t-set="k" t-value="state.data.kpis"/>
+                <div t-if="!k.enabled" class="alert alert-warning">Warehouse average costing is off for this company. Turn it on in Inventory › Settings › Valuation.</div>
+                <div class="o_whc_kpis d-grid gap-3 mb-4">
+                    <button class="card p-3 text-start o_whc_kpi" t-on-click="() => this.openCosts()"><span class="o_whc_label">Stock value</span>
+                        <span class="o_whc_value" t-esc="money(k.value)"/></button>
+                    <div class="card p-3 o_whc_kpi"><span class="o_whc_label">Warehouses with stock</span><span class="o_whc_value" t-esc="k.warehouses"/></div>
+                    <div class="card p-3 o_whc_kpi"><span class="o_whc_label">Products costed</span><span class="o_whc_value" t-esc="k.products"/></div>
+                    <button class="card p-3 text-start o_whc_kpi" t-on-click="openHistory"><span class="o_whc_label">Cost changes (30 days)</span><span class="o_whc_value" t-esc="k.changes"/></button>
+                    <button class="card p-3 text-start o_whc_kpi" t-on-click="openPending"><span class="o_whc_label">Adjustments to approve</span>
+                        <span t-attf-class="o_whc_value {{ k.pending ? 'text-warning' : '' }}" t-esc="k.pending"/></button>
+                </div>
+                <div class="row g-4">
+                    <div class="col-xl-7 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Value per warehouse</strong></div>
+                            <div class="card-body d-flex flex-column gap-3">
+                                <p t-if="!state.data.warehouses.length" class="text-muted mb-0">No warehouse cost yet.</p>
+                                <div t-foreach="state.data.warehouses" t-as="wh" t-key="wh.code + wh.name" role="button" t-on-click="() => this.openCosts(wh.id)">
+                                    <div class="d-flex justify-content-between"><span><strong t-esc="wh.name"/> <small class="text-muted"><t t-esc="wh.code"/> · <t t-esc="wh.products"/> products</small></span>
+                                        <span class="fw-semibold" t-esc="money(wh.value)"/></div>
+                                    <div class="progress o_whc_progress"><div class="progress-bar" t-att-style="width(wh.value, state.data.warehouses)"/></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Largest cost differences between warehouses</strong></div>
+                            <table class="table table-sm table-hover mb-0">
+                                <thead><tr><th>Product</th><th class="text-end">Lowest</th><th class="text-end">Highest</th><th class="text-end">Spread</th></tr></thead>
+                                <tbody>
+                                    <tr t-if="!state.data.spreads.length"><td colspan="4" class="text-muted text-center py-3">No product is stored in several warehouses.</td></tr>
+                                    <tr t-foreach="state.data.spreads" t-as="s" t-key="s.id" role="button" t-on-click="() => this.openProduct(s.id)">
+                                        <td t-esc="s.name"/>
+                                        <td class="text-end" t-esc="cost(s.low)"/>
+                                        <td class="text-end" t-esc="cost(s.high)"/>
+                                        <td class="text-end"><span t-attf-class="badge {{ s.spread &gt;= 10 ? 'text-bg-warning' : 'text-bg-light' }}"><t t-esc="s.spread"/> %</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 d-flex flex-column gap-4">
+                        <div class="card">
+                            <div class="card-header"><strong>Value by category</strong></div>
+                            <div class="card-body d-flex flex-column gap-2">
+                                <div t-foreach="state.data.categories" t-as="c" t-key="c.name">
+                                    <div class="d-flex justify-content-between small"><span t-esc="c.name"/><span t-esc="money(c.value)"/></div>
+                                    <div class="progress o_whc_progress"><div class="progress-bar bg-success" t-att-style="width(c.value, state.data.categories)"/></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>Latest cost changes</strong></div>
+                            <ul class="list-group list-group-flush">
+                                <li t-if="!state.data.recent.length" class="list-group-item text-muted">Nothing yet.</li>
+                                <li t-foreach="state.data.recent" t-as="r" t-key="r.id" class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <span><strong t-esc="r.product"/> <small class="text-muted">· <t t-esc="r.warehouse"/></small></span>
+                                        <span t-attf-class="badge o_whc_kind_{{ r.kind_key }}" t-esc="r.kind"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span t-esc="formatDate(r.date)"/>
+                                        <span><t t-esc="cost(r.old)"/> → <strong class="text-body" t-esc="cost(r.new)"/></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

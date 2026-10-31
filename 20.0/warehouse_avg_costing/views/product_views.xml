@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_view_warehouse_cost" model="ir.ui.view">
+        <field name="name">product.template.form.warehouse.cost</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_cost_history" type="object" class="oe_stat_button" icon="history"
+                        invisible="not warehouse_costing_active" groups="warehouse_avg_costing.group_wh_cost_user">
+                    <div class="o_stat_info"><span class="o_stat_text">Cost History</span></div>
+                </button>
+            </div>
+            <xpath expr="//notebook" position="inside">
+                <page string="Warehouse Costs" name="warehouse_costs" invisible="not warehouse_costing_active"
+                      groups="warehouse_avg_costing.group_wh_cost_user">
+                    <field name="warehouse_costing_active" invisible="1"/>
+                    <field name="warehouse_cost_ids" readonly="1" nolabel="1">
+                        <list decoration-muted="quantity == 0" decoration-danger="quantity &lt; 0">
+                            <field name="product_id" optional="hide"/>
+                            <field name="location_label"/>
+                            <field name="quantity" sum="Total"/>
+                            <field name="avg_cost"/>
+                            <field name="cost_gap"/>
+                            <field name="value" sum="Total"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="last_date"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

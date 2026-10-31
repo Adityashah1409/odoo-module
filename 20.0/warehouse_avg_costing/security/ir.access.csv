@@ -1,0 +1,12 @@
+id,name,model_id,group_id/id,operation,domain
+access_stock_warehouse_cost_user,stock.warehouse.cost user,stock.warehouse.cost,warehouse_avg_costing.group_wh_cost_user,r,
+access_stock_warehouse_cost_manager,stock.warehouse.cost manager,stock.warehouse.cost,warehouse_avg_costing.group_wh_cost_manager,crud,
+rule_stock_warehouse_cost_company,Warehouse cost: multi-company,stock.warehouse.cost,,crud,"[('company_id', 'in', company_ids)]"
+access_stock_warehouse_cost_line_user,stock.warehouse.cost.line user,stock.warehouse.cost.line,warehouse_avg_costing.group_wh_cost_user,r,
+access_stock_warehouse_cost_line_manager,stock.warehouse.cost.line manager,stock.warehouse.cost.line,warehouse_avg_costing.group_wh_cost_manager,rd,
+rule_stock_warehouse_cost_line_company,Warehouse cost history: multi-company,stock.warehouse.cost.line,,crud,"[('company_id', 'in', company_ids)]"
+access_stock_warehouse_cost_adjustment_user,stock.warehouse.cost.adjustment user,stock.warehouse.cost.adjustment,warehouse_avg_costing.group_wh_cost_user,cru,
+access_stock_warehouse_cost_adjustment_manager,stock.warehouse.cost.adjustment manager,stock.warehouse.cost.adjustment,warehouse_avg_costing.group_wh_cost_manager,crud,
+rule_stock_warehouse_cost_adjustment_company,Warehouse cost adjustment: multi-company,stock.warehouse.cost.adjustment,,crud,"[('company_id', 'in', company_ids)]"
+access_stock_warehouse_valuation_report_user,stock.warehouse.valuation.report user,stock.warehouse.valuation.report,warehouse_avg_costing.group_wh_cost_user,crud,
+access_stock_warehouse_cost_matrix_manager,stock.warehouse.cost.matrix manager,stock.warehouse.cost.matrix,warehouse_avg_costing.group_wh_cost_manager,crud,
