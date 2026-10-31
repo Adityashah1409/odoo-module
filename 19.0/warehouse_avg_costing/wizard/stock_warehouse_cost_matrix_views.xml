@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_warehouse_cost_matrix_view_form" model="ir.ui.view">
+        <field name="name">stock.warehouse.cost.matrix.form</field>
+        <field name="model">stock.warehouse.cost.matrix</field>
+        <field name="arch" type="xml">
+            <form string="Cost Matrix">
+                <group>
+                    <field name="mode" widget="radio" options="{'horizontal': true}"/>
+                    <field name="warehouse_ids" widget="many2many_tags" options="{'no_create': True}"
+                           invisible="mode != 'export'" placeholder="All warehouses"/>
+                    <field name="categ_ids" widget="many2many_tags" options="{'no_create': True}"
+                           invisible="mode != 'export'" placeholder="All categories"/>
+                    <field name="file" filename="file_name" invisible="mode != 'import'"/>
+                    <field name="file_name" invisible="1"/>
+                    <field name="reason" invisible="mode != 'import'"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <div class="text-muted small" invisible="mode != 'import'">
+                    Import the file exported here after changing the yellow cells (average cost per warehouse).
+                    Each changed cell becomes a cost adjustment; with approval enabled, they wait for a manager.
+                </div>
+                <group string="Result" invisible="not result">
+                    <field name="result" nolabel="1" colspan="2" class="font-monospace"/>
+                    <field name="adjustment_ids" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Export" class="btn-primary" invisible="mode != 'export'"/>
+                    <button name="action_import" type="object" string="Import" class="btn-primary" invisible="mode != 'import'"/>
+                    <button name="action_open_adjustments" type="object" string="Open adjustments" invisible="not adjustment_ids"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_stock_warehouse_cost_matrix" model="ir.actions.act_window">
+        <field name="name">Cost Matrix (Excel)</field>
+        <field name="res_model">stock.warehouse.cost.matrix</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
