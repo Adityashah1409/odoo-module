@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_short_url" name="Short URL">
+        <div class="s_short_url my-3" data-snippet="s_short_url" data-name="Short URL">
+            <p class="small text-muted mb-1">Share this page</p>
+            <div class="input-group">
+                <span class="input-group-text"><i class="oi" data-icon="link"/></span>
+                <input type="text" class="form-control s_short_url_value" readonly="readonly" value="…"
+                       aria-label="Short link of this page"/>
+                <button type="button" class="btn btn-primary s_short_url_copy"><i class="oi me-1" data-icon="content_copy"/>Copy</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="s_short_url_qr" name="Short URL QR Code">
+        <div class="s_short_url_qr my-3 text-center" data-snippet="s_short_url_qr" data-name="Short URL QR Code">
+            <img class="s_short_url_qr_img img-fluid" src="/short_urls/static/src/img/qr_placeholder.svg"
+                 alt="QR code of this page" style="width: 180px"/>
+            <p class="small text-muted mt-2 mb-0">Scan to open this page</p>
+        </div>
+    </template>
+
+    <template id="snippets" inherit_id="website.snippets" name="Short URL snippets">
+        <xpath expr="//snippets[@id='snippet_content']" position="inside">
+            <t t-snippet="short_urls.s_short_url" string="Short URL" t-thumbnail="/short_urls/static/src/img/s_short_url.svg"/>
+            <t t-snippet="short_urls.s_short_url_qr" string="Short URL QR" t-thumbnail="/short_urls/static/src/img/s_short_url_qr.svg"/>
+        </xpath>
+    </template>
+</odoo>

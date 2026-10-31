@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="short_url_click_view_list" model="ir.ui.view">
+        <field name="name">short.url.click.list</field>
+        <field name="model">short.url.click</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="date"/>
+                <field name="link_id"/>
+                <field name="target_url" optional="show"/>
+                <field name="channel_id" optional="show"/>
+                <field name="device"/>
+                <field name="browser"/>
+                <field name="country_id"/>
+                <field name="referrer" optional="show"/>
+                <field name="ip_network" optional="hide"/>
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+                <field name="is_bot" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="short_url_click_view_graph" model="ir.ui.view">
+        <field name="name">short.url.click.graph</field>
+        <field name="model">short.url.click</field>
+        <field name="arch" type="xml">
+            <graph type="line" sample="1">
+                <field name="date" interval="day"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="short_url_click_view_pivot" model="ir.ui.view">
+        <field name="name">short.url.click.pivot</field>
+        <field name="model">short.url.click</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="link_id" type="row"/>
+                <field name="device" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="short_url_click_view_search" model="ir.ui.view">
+        <field name="name">short.url.click.search</field>
+        <field name="model">short.url.click</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="link_id"/>
+                <field name="target_url"/>
+                <field name="channel_id"/>
+                <field name="referrer"/>
+                <filter name="humans" string="People" domain="[('is_bot', '=', False)]"/>
+                <filter name="bots" string="Bots and previews" domain="[('is_bot', '=', True)]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+                <group>
+                    <filter name="by_link" string="Short URL" context="{'group_by': 'link_id'}"/>
+                    <filter name="by_channel" string="Channel" context="{'group_by': 'channel_id'}"/>
+                    <filter name="by_device" string="Device" context="{'group_by': 'device'}"/>
+                    <filter name="by_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    <filter name="by_referrer" string="Referrer" context="{'group_by': 'referrer'}"/>
+                    <filter name="by_day" string="Day" context="{'group_by': 'date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_short_url_click" model="ir.actions.act_window">
+        <field name="name">Short URL Clicks</field>
+        <field name="res_model">short.url.click</field>
+        <field name="path">short-url-clicks</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="context">{'search_default_humans': 1}</field>
+    </record>
+</odoo>

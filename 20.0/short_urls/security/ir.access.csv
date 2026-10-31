@@ -1,0 +1,10 @@
+id,name,model_id,group_id/id,operation,domain
+access_short_url_editor,short.url editor,short.url,website.group_website_restricted_editor,cru,
+access_short_url_designer,short.url designer,short.url,website.group_website_designer,crud,
+rule_short_url_website,Short URL: websites of the user's companies,short.url,,crud,"['|', ('website_id', '=', False), ('website_id.company_id', 'in', company_ids)]"
+access_short_url_click_editor,short.url.click editor,short.url.click,website.group_website_restricted_editor,r,
+access_short_url_click_designer,short.url.click designer,short.url.click,website.group_website_designer,crud,
+access_short_url_channel_editor,short.url.channel editor,short.url.channel,website.group_website_restricted_editor,r,
+access_short_url_channel_designer,short.url.channel designer,short.url.channel,website.group_website_designer,crud,
+access_short_url_rule_editor,short.url.rule editor,short.url.rule,website.group_website_restricted_editor,r,
+access_short_url_rule_designer,short.url.rule designer,short.url.rule,website.group_website_designer,crud,

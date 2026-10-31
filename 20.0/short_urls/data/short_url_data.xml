@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="seq_short_url" model="ir.sequence">
+        <field name="name">Short URL codes</field>
+        <field name="code">short.url</field>
+        <field name="padding">4</field>
+        <field name="number_next">1000</field>
+    </record>
+
+    <record id="ir_cron_short_url_rules" model="ir.cron">
+        <field name="name">Short URLs: apply the automatic rules</field>
+        <field name="model_id" ref="model_short_url_rule"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_apply()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <data noupdate="1">
+        <record id="channel_facebook" model="short.url.channel">
+            <field name="name">Facebook</field>
+            <field name="utm_source">facebook</field>
+            <field name="utm_medium">social</field>
+            <field name="color">4</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="channel_instagram" model="short.url.channel">
+            <field name="name">Instagram</field>
+            <field name="utm_source">instagram</field>
+            <field name="utm_medium">social</field>
+            <field name="color">9</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="channel_linkedin" model="short.url.channel">
+            <field name="name">LinkedIn</field>
+            <field name="utm_source">linkedin</field>
+            <field name="utm_medium">social</field>
+            <field name="color">2</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="channel_newsletter" model="short.url.channel">
+            <field name="name">Newsletter</field>
+            <field name="utm_source">newsletter</field>
+            <field name="utm_medium">email</field>
+            <field name="color">10</field>
+            <field name="sequence">4</field>
+        </record>
+        <record id="channel_print" model="short.url.channel">
+            <field name="name">Print / flyer (QR)</field>
+            <field name="utm_source">print</field>
+            <field name="utm_medium">qr</field>
+            <field name="color">1</field>
+            <field name="sequence">5</field>
+        </record>
+    </data>
+</odoo>

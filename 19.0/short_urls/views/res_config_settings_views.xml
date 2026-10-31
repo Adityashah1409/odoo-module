@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_short_urls" model="ir.ui.view">
+        <field name="name">res.config.settings.form.short_urls</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="website_settings" position="after">
+                <block title="Short URLs" id="short_urls_settings" invisible="not website_id">
+                    <setting id="short_url_codes" string="Short codes" help="How new short codes are generated">
+                        <div class="content-group mt-2">
+                            <div class="row">
+                                <label for="short_url_token_style" string="Style" class="col-lg-4 o_light_label"/>
+                                <field name="short_url_token_style" class="col-lg-8"/>
+                            </div>
+                            <div class="row" invisible="short_url_token_style != 'random'">
+                                <label for="short_url_token_length" string="Length" class="col-lg-4 o_light_label"/>
+                                <field name="short_url_token_length" class="col-lg-2"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="short_url_validity" string="Default validity"
+                             help="Expiry of links created from the page dialog and the rules">
+                        <div class="content-group mt-2">
+                            <field name="short_url_validity_days" class="o_field_short_input" style="width: 4rem"/> days
+                            <span class="text-muted">(0 = no expiry)</span>
+                        </div>
+                        <div class="mt-2">
+                            <button name="action_open_short_urls" type="object" icon="oi-arrow-right" string="Short URLs" class="btn-link p-0"/>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

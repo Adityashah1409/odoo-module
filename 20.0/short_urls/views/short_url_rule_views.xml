@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="short_url_rule_view_list" model="ir.ui.view">
+        <field name="name">short.url.rule.list</field>
+        <field name="model">short.url.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+                <field name="channel_id"/>
+                <field name="link_count" string="Links"/>
+                <field name="last_run"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="short_url_rule_view_form" model="ir.ui.view">
+        <field name="name">short.url.rule.form</field>
+        <field name="model">short.url.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_apply" type="object" string="Create the links now" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_links" type="object" class="oe_stat_button" icon="link">
+                            <field name="link_count" string="Links" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Every published product"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model" invisible="1"/>
+                            <field name="published_only"/>
+                            <field name="website_id" groups="website.group_multi_website" placeholder="All websites"/>
+                        </group>
+                        <group>
+                            <field name="channel_id"/>
+                            <field name="add_utm"/>
+                            <field name="validity_days"/>
+                            <field name="last_run"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <label for="domain"/>
+                    <field name="domain" widget="domain" options="{'model': 'model'}" invisible="not model"/>
+                    <p class="text-muted small mt-2">Runs every day: records that match and have no link from this rule
+                        get one. Existing links are never changed.</p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_short_url_rule" model="ir.actions.act_window">
+        <field name="name">Short URL Rules</field>
+        <field name="res_model">short.url.rule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create links automatically</p>
+            <p>For example a short link and QR code for every published page or product.</p>
+        </field>
+    </record>
+</odoo>
