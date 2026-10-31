@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="link_unavailable" name="Short link unavailable">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="container py-5 text-center">
+                    <div class="display-1 text-muted mb-3"><i class="oi" data-icon="link_off"/></div>
+                    <h1 class="h3">This link is no longer available</h1>
+                    <p class="text-muted" t-if="link and link.state == 'expired'">The short link
+                        <b>/s/<t t-out="token"/></b> expired.</p>
+                    <p class="text-muted" t-else="">The short link <b>/s/<t t-out="token"/></b> does not exist.</p>
+                    <a href="/" class="btn btn-primary mt-3">Go to the home page</a>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

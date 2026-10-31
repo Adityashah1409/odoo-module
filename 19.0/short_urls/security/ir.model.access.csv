@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_short_url_editor,short.url editor,model_short_url,website.group_website_restricted_editor,1,1,1,0
+access_short_url_designer,short.url designer,model_short_url,website.group_website_designer,1,1,1,1
+access_short_url_click_editor,short.url.click editor,model_short_url_click,website.group_website_restricted_editor,1,0,0,0
+access_short_url_click_designer,short.url.click designer,model_short_url_click,website.group_website_designer,1,1,1,1
+access_short_url_channel_editor,short.url.channel editor,model_short_url_channel,website.group_website_restricted_editor,1,0,0,0
+access_short_url_channel_designer,short.url.channel designer,model_short_url_channel,website.group_website_designer,1,1,1,1
+access_short_url_rule_editor,short.url.rule editor,model_short_url_rule,website.group_website_restricted_editor,1,0,0,0
+access_short_url_rule_designer,short.url.rule designer,model_short_url_rule,website.group_website_designer,1,1,1,1

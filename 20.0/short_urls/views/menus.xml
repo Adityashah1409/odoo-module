@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_short_urls" name="Short URLs" parent="website.menu_website_global_configuration"
+              sequence="40" groups="website.group_website_restricted_editor"/>
+    <menuitem id="menu_short_url_links" name="Short URLs" parent="menu_short_urls" action="action_short_url" sequence="1"/>
+    <menuitem id="menu_short_url_by_target" name="By target" parent="menu_short_urls" action="action_short_url_by_target" sequence="2"/>
+    <menuitem id="menu_short_url_channels" name="Channels" parent="menu_short_urls" action="action_short_url_channel"
+              sequence="3" groups="website.group_website_designer"/>
+    <menuitem id="menu_short_url_rules" name="Automatic rules" parent="menu_short_urls" action="action_short_url_rule"
+              sequence="4" groups="website.group_website_designer"/>
+    <menuitem id="menu_short_url_clicks" name="Short URL Clicks" parent="website.menu_reporting"
+              action="action_short_url_click" sequence="40" groups="website.group_website_restricted_editor"/>
+    <!-- Site > This page > Short URLs (dialog in the website preview) -->
+    <menuitem id="menu_short_url_page" name="Short URLs" parent="website.menu_current_page"
+              action="website.website_preview" sequence="35" groups="website.group_website_restricted_editor"/>
+</odoo>

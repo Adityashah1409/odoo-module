@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="short_urls.PageShortUrlsDialog">
+        <Dialog title="'Short URLs of this page'" size="'lg'">
+            <div class="o_page_short_urls">
+                <p class="text-muted mb-3">Page: <code t-out="this.props.path"/></p>
+                <div t-if="!this.state.links.length" class="alert alert-info">No short link for this page yet.</div>
+                <table t-else="" class="table table-sm align-middle">
+                    <thead>
+                        <tr><th>QR</th><th>Short link</th><th>Channel</th><th class="text-end">Clicks</th><th>Expires</th><th/></tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="this.state.links" t-as="link" t-key="link.id" t-attf-class="o_page_short_url #{link.state !== 'valid' ? 'text-muted' : ''}">
+                            <td><img t-att-src="link.qr_url + '?size=120'" width="56" height="56" alt="QR code"/></td>
+                            <td>
+                                <t t-if="this.state.editing === link.id">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">/s/</span>
+                                        <input type="text" class="form-control o_page_short_url_token" t-att-value="this.state.editToken"
+                                               t-on-input="(ev) => this.state.editToken = ev.target.value"/>
+                                        <button class="btn btn-primary" t-on-click="() => this.saveEdit(link)">Save</button>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <a t-att-href="link.short_url" target="_blank" class="fw-bold" t-out="link.short_url"/>
+                                    <div class="small text-muted" t-out="link.name"/>
+                                    <span t-if="link.state === 'expired'" class="badge text-bg-danger">Expired</span>
+                                    <span t-if="link.state === 'archived'" class="badge text-bg-secondary">Archived</span>
+                                </t>
+                            </td>
+                            <td><span t-if="link.channel" class="badge text-bg-light border" t-out="link.channel"/></td>
+                            <td class="text-end" t-out="link.clicks"/>
+                            <td class="small" t-out="this.expireLabel(link)"/>
+                            <td class="text-end text-nowrap">
+                                <button class="btn btn-sm btn-link" title="Copy" t-on-click="() => this.copy(link)"><i class="oi" data-icon="content_copy"/></button>
+                                <a class="btn btn-sm btn-link" title="Download the QR code" t-att-href="link.qr_url + '?download=1'"><i class="oi" data-icon="download"/></a>
+                                <button class="btn btn-sm btn-link" title="Edit the code" t-on-click="() => this.startEdit(link)"><i class="oi oi-filled" data-icon="edit"/></button>
+                                <button class="btn btn-sm btn-link text-danger" title="Delete" t-on-click="() => this.remove(link)"><i class="oi oi-filled" data-icon="delete"/></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="border rounded p-3 bg-light">
+                    <div class="fw-bold mb-2">New short link</div>
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label small">Code (empty = generated)</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">/s/</span>
+                                <input type="text" class="form-control o_page_short_url_new_token" placeholder="spring"
+                                       t-att-value="this.state.token" t-on-input="(ev) => this.state.token = ev.target.value"/>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Channel</label>
+                            <select class="form-select form-select-sm" t-on-change="(ev) => this.state.channelId = ev.target.value">
+                                <option value="">None</option>
+                                <option t-foreach="this.state.channels" t-as="c" t-key="c.id" t-att-value="c.id" t-out="c.name"/>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Expires on</label>
+                            <input type="date" class="form-control form-control-sm" t-att-value="this.state.expire"
+                                   t-on-change="(ev) => this.state.expire = ev.target.value"/>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary btn-sm w-100 o_page_short_url_create" t-on-click="this.create">
+                                <i class="oi me-1" data-icon="add"/>Create
+                            </button>
+                        </div>
+                    </div>
+                    <div t-if="this.state.error" class="alert alert-danger mt-2 mb-0 py-1 small" t-out="this.state.error"/>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.props.close">Close</button>
+                <button class="btn btn-secondary" t-on-click="this.openList">All short URLs</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
