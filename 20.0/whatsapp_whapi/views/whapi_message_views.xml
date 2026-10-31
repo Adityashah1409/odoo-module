@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whapi_message_view_kanban" model="ir.ui.view">
+        <field name="name">whapi.message.kanban</field>
+        <field name="model">whapi.message</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" group_create="0" group_delete="0" group_edit="0" records_draggable="0"
+                    quick_create="0" create="0">
+                <field name="direction"/>
+                <field name="attachment_ids"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <i t-attf-class="oi #{record.direction.raw_value == 'in' ? 'fa-arrow-down text-success' : 'fa-arrow-up text-primary'}"
+                               title="Direction"/>
+                            <field name="chat_id" class="fw-bold text-truncate"/>
+                            <field name="msg_type" class="ms-auto badge text-bg-light"/>
+                        </div>
+                        <field name="preview" class="text-break"/>
+                        <footer class="pt-1">
+                            <field name="author_name" class="text-muted small"/>
+                            <field name="date" class="ms-auto text-muted small" widget="datetime"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="whapi_message_view_list" model="ir.ui.view">
+        <field name="name">whapi.message.list</field>
+        <field name="model">whapi.message</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-danger="state == 'failed'" decoration-muted="state == 'deleted'">
+                <field name="date"/>
+                <field name="chat_id"/>
+                <field name="direction"/>
+                <field name="author_name"/>
+                <field name="msg_type"/>
+                <field name="preview"/>
+                <field name="state" widget="badge" decoration-success="state == 'read'"
+                       decoration-info="state in ('sent', 'delivered', 'received')" decoration-danger="state == 'failed'"/>
+                <field name="account_id" optional="hide"/>
+                <field name="user_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="whapi_message_view_form" model="ir.ui.view">
+        <field name="name">whapi.message.form</field>
+        <field name="model">whapi.message</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_retry" type="object" string="Retry" class="btn-primary"
+                            invisible="state != 'failed' or direction != 'out'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="sent,delivered,read"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="chat_id"/>
+                            <field name="direction"/>
+                            <field name="msg_type"/>
+                            <field name="author_name"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="wa_id"/>
+                            <field name="reply_to_id"/>
+                            <field name="forwarded"/>
+                            <field name="starred"/>
+                            <field name="error" invisible="not error" class="text-danger"/>
+                            <field name="res_model" invisible="1"/>
+                            <field name="res_id" invisible="not res_model"/>
+                        </group>
+                    </group>
+                    <field name="body" placeholder="No text"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <separator string="Read receipts" invisible="not status_ids"/>
+                    <field name="status_ids" invisible="not status_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="recipient"/>
+                            <field name="status"/>
+                            <field name="date"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="whapi_message_view_search" model="ir.ui.view">
+        <field name="name">whapi.message.search</field>
+        <field name="model">whapi.message</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="body"/>
+                <field name="chat_id"/>
+                <field name="partner_id"/>
+                <field name="author_name"/>
+                <filter name="incoming" string="Received" domain="[('direction', '=', 'in')]"/>
+                <filter name="outgoing" string="Sent" domain="[('direction', '=', 'out')]"/>
+                <separator/>
+                <filter name="failed" string="Failed" domain="[('state', '=', 'failed')]"/>
+                <filter name="starred" string="Starred" domain="[('starred', '=', True)]"/>
+                <filter name="media" string="With files" domain="[('attachment_ids', '!=', False)]"/>
+                <separator/>
+                <filter name="date" string="Date" date="date"/>
+                <group>
+                    <filter name="by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="by_chat" string="Chat" context="{'group_by': 'chat_id'}"/>
+                    <filter name="by_type" string="Type" context="{'group_by': 'msg_type'}"/>
+                    <filter name="by_user" string="Sent by" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="whapi_message_view_pivot" model="ir.ui.view">
+        <field name="name">whapi.message.pivot</field>
+        <field name="model">whapi.message</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="date" interval="day" type="row"/>
+                <field name="direction" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_whapi_message" model="ir.actions.act_window">
+        <field name="name">Messages</field>
+        <field name="res_model">whapi.message</field>
+        <field name="path">whatsapp-messages</field>
+        <field name="view_mode">kanban,list,form,pivot</field>
+    </record>
+</odoo>

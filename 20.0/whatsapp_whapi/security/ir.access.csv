@@ -1,0 +1,18 @@
+id,name,model_id,group_id/id,operation,domain
+rule_whapi_account_user,WhatsApp account: allowed users,whapi.account,whatsapp_whapi.group_whapi_user,r,"['&', ('company_id', 'in', company_ids), '|', ('user_ids', '=', False), ('user_ids', 'in', user.id)]"
+rule_whapi_account_user_1,WhatsApp account: allowed users,whapi.account,whatsapp_whapi.group_whapi_manager,crud,"['&', ('company_id', 'in', company_ids), '|', ('user_ids', '=', False), ('user_ids', 'in', user.id)]"
+rule_whapi_account_manager,WhatsApp account: administrators (own companies),whapi.account,whatsapp_whapi.group_whapi_manager,crud,"[('company_id', 'in', company_ids)]"
+rule_whapi_chat_user,WhatsApp chat: accounts of the user,whapi.chat,whatsapp_whapi.group_whapi_user,cru,"['&', ('company_id', 'in', company_ids), '|', ('account_id.user_ids', '=', False), ('account_id.user_ids', 'in', user.id)]"
+rule_whapi_chat_user_1,WhatsApp chat: accounts of the user,whapi.chat,whatsapp_whapi.group_whapi_manager,crud,"['&', ('company_id', 'in', company_ids), '|', ('account_id.user_ids', '=', False), ('account_id.user_ids', 'in', user.id)]"
+rule_whapi_chat_manager,WhatsApp chat: administrators (own companies),whapi.chat,whatsapp_whapi.group_whapi_manager,crud,"[('company_id', 'in', company_ids)]"
+access_whapi_chat_participant_user,whapi.chat.participant user,whapi.chat.participant,whatsapp_whapi.group_whapi_user,crud,
+access_whapi_chat_event_user,whapi.chat.event user,whapi.chat.event,whatsapp_whapi.group_whapi_user,cr,
+access_whapi_chat_event_manager,whapi.chat.event manager,whapi.chat.event,whatsapp_whapi.group_whapi_manager,crud,
+rule_whapi_message_user,WhatsApp message: accounts of the user,whapi.message,whatsapp_whapi.group_whapi_user,cru,"['&', ('company_id', 'in', company_ids), '|', ('account_id.user_ids', '=', False), ('account_id.user_ids', 'in', user.id)]"
+rule_whapi_message_user_1,WhatsApp message: accounts of the user,whapi.message,whatsapp_whapi.group_whapi_manager,crud,"['&', ('company_id', 'in', company_ids), '|', ('account_id.user_ids', '=', False), ('account_id.user_ids', 'in', user.id)]"
+rule_whapi_message_manager,WhatsApp message: administrators (own companies),whapi.message,whatsapp_whapi.group_whapi_manager,crud,"[('company_id', 'in', company_ids)]"
+access_whapi_message_status_user,whapi.message.status user,whapi.message.status,whatsapp_whapi.group_whapi_user,cru,
+access_whapi_message_status_manager,whapi.message.status manager,whapi.message.status,whatsapp_whapi.group_whapi_manager,crud,
+access_whapi_template_user,whapi.template user,whapi.template,whatsapp_whapi.group_whapi_user,r,
+access_whapi_template_manager,whapi.template manager,whapi.template,whatsapp_whapi.group_whapi_manager,crud,
+access_whapi_composer_user,whapi.composer user,whapi.composer,whatsapp_whapi.group_whapi_user,crud,
