@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="whatsapp_whapi.Chat">
+        <div class="o_action o_whapi d-flex h-100 overflow-hidden position-relative">
+            <!-- chat list -->
+            <aside class="o_whapi_sidebar d-flex flex-column">
+                <div class="o_whapi_sidebar_head p-2 d-flex align-items-center gap-2">
+                    <i class="oi oi-2x o_whapi_logo" data-icon="oi_whatsapp"/>
+                    <select t-if="this.state.accounts.length > 1" class="form-select form-select-sm o_whapi_account" t-on-change="this.onAccount">
+                        <option value="">All accounts</option>
+                        <t t-foreach="this.state.accounts" t-as="acc" t-key="acc.id">
+                            <option t-att-value="acc.id" t-att-selected="acc.id === this.state.accountId" t-out="acc.name"/>
+                        </t>
+                    </select>
+                    <span t-else="" class="fw-bold flex-grow-1 text-truncate" t-out="this.state.accounts.length ? this.state.accounts[0].name : 'WhatsApp'"/>
+                    <span t-if="this.state.accounts.some((a) => a.sandbox)" class="badge text-bg-warning" title="Nothing is sent to WhatsApp">Sandbox</span>
+                    <button t-if="!this.notificationsAsked" class="btn btn-sm btn-link p-0" title="Enable browser notifications" t-on-click="this.askNotifications">
+                        <i class="oi" data-icon="notifications"/>
+                    </button>
+                </div>
+                <div class="px-2 pb-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white"><i class="oi" data-icon="search"/></span>
+                        <input type="text" class="form-control o_whapi_search" placeholder="Search or start a chat"
+                               t-att-value="this.state.search" t-on-input="this.onSearch"/>
+                    </div>
+                    <div class="d-flex gap-1 mt-2">
+                        <button t-foreach="[['all', 'All'], ['unread', 'Unread'], ['groups', 'Groups']]" t-as="m" t-key="m[0]"
+                                t-attf-class="btn btn-sm rounded-pill o_whapi_mode #{this.state.mode === m[0] ? 'active' : ''}"
+                                t-on-click="() => this.setMode(m[0])" t-out="m[1]"/>
+                    </div>
+                </div>
+                <div class="o_whapi_chats flex-grow-1 overflow-auto">
+                    <t t-foreach="this.state.chats" t-as="c" t-key="c.id">
+                        <div t-attf-class="o_whapi_chat_item d-flex align-items-center gap-2 px-2 py-2 #{c.id === this.state.chatId ? 'active' : ''}"
+                             t-on-click="() => this.openChat(c.id)">
+                            <span class="o_whapi_avatar" t-attf-style="background: #{this.avatarColor(c.name)}">
+                                <i t-if="c.type === 'group'" class="oi oi-filled" data-icon="group"/>
+                                <t t-else="" t-out="this.initials(c.name)"/>
+                            </span>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex">
+                                    <span class="fw-semibold text-truncate flex-grow-1 o_whapi_chat_name" t-out="c.name"/>
+                                    <small t-attf-class="ms-2 #{c.unread ? 'text-success fw-bold' : 'text-muted'}" t-out="this.shortDate(c.last_message_at)"/>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <small class="text-muted text-truncate flex-grow-1" t-out="c.preview"/>
+                                    <i t-if="c.pinned" class="oi text-muted ms-1" data-icon="push_pin" title="Pinned"/>
+                                    <span t-if="c.unread" class="badge rounded-pill o_whapi_unread ms-1" t-out="c.unread"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <div t-if="!this.state.chats.length" class="text-muted text-center p-4 small">
+                        No chat yet. Incoming WhatsApp messages appear here.
+                    </div>
+                </div>
+            </aside>
+
+            <!-- conversation -->
+            <section class="o_whapi_main d-flex flex-column flex-grow-1">
+                <t t-if="this.state.chat">
+                    <header class="o_whapi_header d-flex align-items-center gap-2 px-3 py-2">
+                        <span class="o_whapi_avatar" t-attf-style="background: #{this.avatarColor(this.state.chat.name)}">
+                            <i t-if="this.state.chat.type === 'group'" class="oi oi-filled" data-icon="group"/>
+                            <t t-else="" t-out="this.initials(this.state.chat.name)"/>
+                        </span>
+                        <div class="flex-grow-1 overflow-hidden" role="button" t-on-click="this.togglePanel">
+                            <div class="fw-bold text-truncate o_whapi_title" t-out="this.state.chat.name"/>
+                            <small class="text-muted">
+                                <t t-if="this.state.chat.type === 'group'"><t t-out="this.state.chat.participants"/> participants · click for group info</t>
+                                <t t-else=""><t t-out="this.state.chat.phone"/><t t-if="this.state.chat.partner_name"> · <t t-out="this.state.chat.partner_name"/></t></t>
+                            </small>
+                        </div>
+                        <button t-if="this.state.chat.partner_id" class="btn btn-sm btn-light" title="Open contact"
+                                t-on-click="() => this.openPartner(this.state.chat.partner_id)"><i class="oi" data-icon="contact_mail"/></button>
+                        <button class="btn btn-sm btn-light" title="Chat settings" t-on-click="this.openChatRecord"><i class="oi oi-filled" data-icon="settings"/></button>
+                        <button t-attf-class="btn btn-sm #{this.state.panel ? 'btn-secondary' : 'btn-light'} o_whapi_info_btn"
+                                title="Info" t-on-click="this.togglePanel"><i class="oi oi-filled" data-icon="info"/></button>
+                    </header>
+
+                    <div class="o_whapi_messages flex-grow-1 overflow-auto px-4 py-3" t-ref="this.messagesRef">
+                        <div t-if="this.state.more" class="text-center mb-2">
+                            <button class="btn btn-sm btn-light rounded-pill" t-on-click="this.loadOlder">Older messages</button>
+                        </div>
+                        <t t-foreach="this.blocks" t-as="block" t-key="block.key">
+                            <div t-if="block.kind === 'day'" class="text-center my-2">
+                                <span class="o_whapi_day" t-out="block.label"/>
+                            </div>
+                            <div t-elif="block.kind === 'album'" t-attf-class="o_whapi_row #{block.direction === 'out' ? 'o_out' : 'o_in'}">
+                                <div class="o_whapi_bubble o_whapi_album_bubble">
+                                    <div t-if="this.showGroupAuthor(block.messages[0])" class="o_whapi_author px-1" t-attf-style="color: #{this.avatarColor(block.author)}" t-out="block.author"/>
+                                    <div class="o_whapi_album">
+                                        <t t-foreach="block.messages" t-as="am" t-key="am.id">
+                                            <a t-foreach="am.attachments" t-as="att" t-key="att.id" t-att-href="att.url" target="_blank">
+                                                <img t-att-src="att.url" t-att-alt="att.name"/>
+                                            </a>
+                                        </t>
+                                    </div>
+                                    <div class="o_whapi_meta">
+                                        <t t-out="this.time(block.messages[block.messages.length - 1].date)"/>
+                                        <i t-if="block.direction === 'out'" t-attf-class="oi #{this.statusIcon(block.messages[block.messages.length - 1])} ms-1"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-else="">
+                            <t t-set="m" t-value="block.message"/>
+                            <div t-attf-class="o_whapi_row #{m.direction === 'out' ? 'o_out' : 'o_in'} #{m.type === 'system' ? 'o_system' : ''}">
+                                <div t-attf-class="o_whapi_bubble o_whapi_message #{m.deleted ? 'o_deleted' : ''} #{!m.body and !m.deleted ? 'o_nobody' : ''}" t-att-data-id="m.id">
+                                    <button class="o_whapi_menu_btn btn btn-sm" title="Message actions" t-on-click.stop="() => this.toggleMenu(m)">
+                                        <i class="oi" data-icon="expand_more"/>
+                                    </button>
+                                    <div t-if="this.state.menuFor === m.id" t-attf-class="o_whapi_menu dropdown-menu show #{this.menuUp(m) ? 'o_up' : ''}">
+                                        <button class="dropdown-item" t-if="!m.deleted" t-on-click="() => this.reply(m)"><i class="oi me-2" data-icon="reply"/>Reply</button>
+                                        <button class="dropdown-item o_whapi_forward" t-if="!m.deleted" t-on-click="() => this.startForward(m)"><i class="oi me-2" data-icon="share"/>Forward</button>
+                                        <button class="dropdown-item" t-if="!m.deleted" t-on-click="() => this.toggleStar(m)"><i class="oi oi-filled me-2" data-icon="star"/><t t-out="m.starred ? 'Unstar' : 'Star'"/></button>
+                                        <button class="dropdown-item" t-on-click="() => this.showInfo(m)"><i class="oi me-2" data-icon="info"/>Info</button>
+                                        <button class="dropdown-item text-danger" t-if="!m.deleted" t-on-click="() => this.deleteMessage(m)"><i class="oi oi-filled me-2" data-icon="delete"/>Delete</button>
+                                    </div>
+                                    <div t-if="this.showGroupAuthor(m)" class="o_whapi_author" t-attf-style="color: #{this.avatarColor(m.author)}" t-out="m.author"/>
+                                    <div t-if="m.forwarded" class="o_whapi_forwarded"><i class="oi me-1" data-icon="share"/>Forwarded</div>
+                                    <div t-if="m.reply" class="o_whapi_quote">
+                                        <div class="fw-bold" t-out="m.reply.author"/>
+                                        <div class="text-truncate" t-out="m.reply.preview"/>
+                                    </div>
+                                    <div t-if="m.deleted" class="o_whapi_body">
+                                        <i class="oi me-1" data-icon="block"/><em>This message was deleted</em><span class="o_whapi_spacer"/>
+                                    </div>
+                                    <t t-foreach="m.attachments" t-as="att" t-key="att.id">
+                                        <a t-if="this.isImage(att)" t-att-href="att.url" target="_blank" class="d-block o_whapi_image">
+                                            <img t-att-src="att.url" t-att-alt="att.name"/>
+                                        </a>
+                                        <audio t-elif="this.isAudio(att)" controls="" preload="none" t-att-src="att.url" class="o_whapi_audio"/>
+                                        <video t-elif="this.isVideo(att)" controls="" preload="metadata" t-att-src="att.url" class="o_whapi_video"/>
+                                        <a t-else="" t-att-href="att.download" class="o_whapi_file d-flex align-items-center gap-2">
+                                            <i class="oi oi-2x" data-icon="article"/>
+                                            <span class="text-truncate" t-out="att.name"/>
+                                            <i class="oi ms-auto" data-icon="download"/>
+                                        </a>
+                                    </t>
+                                    <div t-if="m.body" class="o_whapi_body"><t t-out="m.body"/><span t-attf-class="o_whapi_spacer #{m.starred ? 'o_wide' : ''}"/></div>
+                                    <div class="o_whapi_meta">
+                                        <i t-if="m.starred" class="oi oi-filled me-1" data-icon="star" title="Starred"/>
+                                        <t t-out="this.time(m.date)"/>
+                                        <i t-if="m.direction === 'out' and !m.deleted" t-attf-class="oi #{this.statusIcon(m)} ms-1" t-att-title="m.error || m.state"/>
+                                    </div>
+                                </div>
+                            </div>
+                            </t>
+                        </t>
+                    </div>
+
+                    <footer class="o_whapi_footer">
+                        <div t-if="this.state.replyTo" class="o_whapi_reply_bar d-flex align-items-center px-3 py-2">
+                            <div class="o_whapi_quote flex-grow-1 mb-0">
+                                <div class="fw-bold" t-out="this.state.replyTo.author || 'You'"/>
+                                <div class="text-truncate" t-out="this.state.replyTo.body || (this.state.replyTo.attachments[0] and this.state.replyTo.attachments[0].name)"/>
+                            </div>
+                            <button class="btn btn-sm btn-link" t-on-click="() => this.state.replyTo = null"><i class="oi" data-icon="close"/></button>
+                        </div>
+                        <div t-if="this.state.files.length" class="d-flex flex-wrap gap-2 px-3 pt-2">
+                            <div t-foreach="this.state.files" t-as="f" t-key="f_index" class="o_whapi_pending_file">
+                                <img t-if="f.mimetype.startsWith('image/')" t-att-src="f.url"/>
+                                <span t-else="" class="small"><i class="oi me-1" data-icon="description"/><t t-out="f.name"/></span>
+                                <button class="btn btn-sm btn-light o_whapi_remove_file" t-on-click="() => this.removeFile(f_index)"><i class="oi" data-icon="close"/></button>
+                            </div>
+                        </div>
+                        <div t-if="this.state.emoji" class="o_whapi_emojis px-3 pt-2">
+                            <button t-foreach="this.emojis" t-as="e" t-key="e" class="btn btn-sm" t-on-click="() => this.addEmoji(e)" t-out="e"/>
+                        </div>
+                        <div t-if="this.state.templates" class="o_whapi_templates px-3 pt-2">
+                            <div t-if="!this.state.templates.length" class="text-muted small">No contact template yet (WhatsApp › Configuration › Templates).</div>
+                            <button t-foreach="this.state.templates" t-as="tpl" t-key="tpl.id" class="btn btn-sm btn-light me-1 mb-1"
+                                    t-on-click="() => this.useTemplate(tpl)" t-att-title="tpl.body" t-out="tpl.name"/>
+                        </div>
+                        <div class="d-flex align-items-end gap-1 px-2 py-2">
+                            <button class="btn btn-link o_whapi_tool" title="Emoji" t-on-click="() => this.state.emoji = !this.state.emoji"><i class="oi oi-lg" data-icon="sentiment_satisfied"/></button>
+                            <button class="btn btn-link o_whapi_tool" title="Attach files" t-on-click="this.pickFiles"><i class="oi oi-lg" data-icon="attach_file"/></button>
+                            <button class="btn btn-link o_whapi_tool" title="Templates" t-on-click="this.toggleTemplates"><i class="oi oi-lg" data-icon="article"/></button>
+                            <input type="file" multiple="multiple" class="d-none" t-ref="this.fileRef" t-on-change="this.onFiles"/>
+                            <textarea class="form-control o_whapi_input" rows="1" placeholder="Type a message"
+                                      t-att-value="this.state.body" t-on-input="this.onBody" t-on-keydown="this.onKeydown"/>
+                            <button t-if="this.state.body.trim() or this.state.files.length" class="btn o_whapi_send o_whapi_send_text" title="Send" t-key="'send'"
+                                    t-att-disabled="this.state.sending" t-on-click="() => this.send()"><i class="oi oi-filled" data-icon="send"/></button>
+                            <button t-else="" t-key="'mic'" t-attf-class="btn o_whapi_send o_whapi_mic #{this.state.recording ? 'o_recording' : ''}"
+                                    t-att-title="this.state.recording ? 'Stop and send' : 'Record a voice message'" t-on-click="this.toggleRecording">
+                                <i t-attf-class="oi #{this.state.recording ? '' : ''}" t-attf-data-icon="#{this.state.recording ? 'stop' : 'mic'}"/>
+                            </button>
+                        </div>
+                    </footer>
+                </t>
+                <div t-else="" class="o_whapi_empty d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                    <i class="oi" data-icon="oi_whatsapp" style="font-size: 5rem"/>
+                    <h3 class="mt-3">WhatsApp for Odoo</h3>
+                    <p>Pick a chat on the left. New messages arrive live.</p>
+                </div>
+            </section>
+
+            <!-- info panel -->
+            <aside t-if="this.state.panel and this.state.info" class="o_whapi_panel overflow-auto">
+                <div class="d-flex align-items-center p-3 border-bottom">
+                    <span class="fw-bold flex-grow-1" t-out="this.state.info.chat.type === 'group' ? 'Group info' : 'Contact info'"/>
+                    <button class="btn btn-sm btn-link" t-on-click="this.togglePanel"><i class="oi" data-icon="close"/></button>
+                </div>
+                <div class="text-center p-3">
+                    <span class="o_whapi_avatar o_big" t-attf-style="background: #{this.avatarColor(this.state.info.chat.name)}">
+                        <i t-if="this.state.info.chat.type === 'group'" class="oi oi-filled" data-icon="group"/>
+                        <t t-else="" t-out="this.initials(this.state.info.chat.name)"/>
+                    </span>
+                    <h4 class="mt-2 mb-0" t-out="this.state.info.chat.name"/>
+                    <div class="text-muted small" t-out="this.state.info.chat.type === 'group' ? this.state.info.participants.length + ' participants' : this.state.info.chat.phone"/>
+                    <p t-if="this.state.info.description" class="small mt-2 text-start" t-out="this.state.info.description"/>
+                </div>
+                <div t-if="this.state.info.chat.type === 'group'" class="px-3 pb-3 o_whapi_participants">
+                    <div class="o_whapi_panel_title">Participants</div>
+                    <div t-foreach="this.state.info.participants" t-as="p" t-key="p.id" class="d-flex align-items-center gap-2 py-1 o_whapi_participant">
+                        <span class="o_whapi_avatar o_small" t-attf-style="background: #{this.avatarColor(p.name)}" t-out="this.initials(p.name)"/>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="text-truncate" t-out="p.name"/>
+                            <small class="text-muted" t-out="p.phone"/>
+                        </div>
+                        <span t-if="p.rank !== 'member'" class="badge o_whapi_admin_badge" t-out="p.rank === 'creator' ? 'Owner' : 'Admin'"/>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-link text-muted" data-bs-toggle="dropdown" title="Manage"><i class="oi" data-icon="more_vert"/></button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <button t-if="p.rank === 'member'" class="dropdown-item" t-on-click="() => this.setAdmin(p, true)">Make admin</button>
+                                <button t-if="p.rank === 'admin'" class="dropdown-item" t-on-click="() => this.setAdmin(p, false)">Dismiss as admin</button>
+                                <button class="dropdown-item text-danger" t-on-click="() => this.removeParticipant(p)">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group input-group-sm mt-2">
+                        <input type="text" class="form-control" placeholder="+32 470 12 34 56, …" t-att-value="this.state.addPhones" t-on-input="this.onAddPhones"/>
+                        <button class="btn btn-outline-secondary" t-on-click="this.addParticipants" t-att-disabled="!this.state.addPhones.trim()"><i class="oi oi-filled" data-icon="person_add"/></button>
+                    </div>
+                </div>
+                <div class="px-3 pb-3">
+                    <div class="o_whapi_panel_title">Media and files</div>
+                    <div class="o_whapi_media_grid">
+                        <a t-foreach="this.state.info.media" t-as="att" t-key="att.id" t-att-href="att.url" target="_blank" t-att-title="att.name">
+                            <img t-if="this.isImage(att)" t-att-src="att.url"/>
+                            <span t-else="" class="o_whapi_media_file"><i class="oi" data-icon="description"/></span>
+                        </a>
+                    </div>
+                    <div t-if="!this.state.info.media.length" class="text-muted small">No media yet.</div>
+                </div>
+                <div class="px-3 pb-3">
+                    <div class="o_whapi_panel_title"><i class="oi oi-filled me-1" data-icon="star"/>Starred messages</div>
+                    <div t-foreach="this.state.info.starred" t-as="s" t-key="s.id" class="o_whapi_starred small py-1 border-bottom">
+                        <div class="text-muted"><t t-out="s.author"/> · <t t-out="this.shortDate(s.date)"/></div>
+                        <div t-out="s.body or (s.attachments[0] and s.attachments[0].name)"/>
+                    </div>
+                    <div t-if="!this.state.info.starred.length" class="text-muted small">No starred message.</div>
+                </div>
+                <div t-if="this.state.info.chat.type === 'group'" class="px-3 pb-3">
+                    <div class="o_whapi_panel_title">Group log</div>
+                    <div t-foreach="this.state.info.events" t-as="e" t-key="e.id" class="small py-1 o_whapi_event">
+                        <span class="text-muted me-1" t-out="this.shortDate(e.date)"/><t t-out="e.label"/>
+                    </div>
+                    <div t-if="!this.state.info.events.length" class="text-muted small">Nothing yet.</div>
+                </div>
+            </aside>
+
+            <!-- forward dialog -->
+            <div t-if="this.state.forward" class="o_whapi_overlay" t-on-click.self="() => this.state.forward = null">
+                <div class="o_whapi_dialog card shadow">
+                    <div class="card-header d-flex align-items-center">
+                        <b class="flex-grow-1">Forward message to</b>
+                        <button class="btn btn-sm btn-link" t-on-click="() => this.state.forward = null"><i class="oi" data-icon="close"/></button>
+                    </div>
+                    <div class="p-2">
+                        <input type="text" class="form-control form-control-sm" placeholder="Search chats"
+                               t-att-value="this.state.forward.search" t-on-input="(ev) => this.state.forward.search = ev.target.value"/>
+                    </div>
+                    <div class="o_whapi_dialog_list overflow-auto">
+                        <label t-foreach="this.forwardChats" t-as="fc" t-key="fc.id" class="d-flex align-items-center gap-2 px-3 py-2 o_whapi_forward_item">
+                            <input type="checkbox" class="form-check-input" t-att-checked="this.state.forward.selected.includes(fc.id)"
+                                   t-on-change="() => this.toggleForward(fc.id)"/>
+                            <span class="o_whapi_avatar o_small" t-attf-style="background: #{this.avatarColor(fc.name)}">
+                                <i t-if="fc.type === 'group'" class="oi oi-filled" data-icon="group"/>
+                                <t t-else="" t-out="this.initials(fc.name)"/>
+                            </span>
+                            <span class="text-truncate" t-out="fc.name"/>
+                        </label>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button class="btn btn-primary o_whapi_forward_confirm" t-att-disabled="!this.state.forward.selected.length" t-on-click="this.confirmForward">
+                            <i class="oi me-1" data-icon="share"/>Forward (<t t-out="this.state.forward.selected.length"/>)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- message info dialog -->
+            <div t-if="this.state.messageInfo" class="o_whapi_overlay" t-on-click.self="() => this.state.messageInfo = null">
+                <div class="o_whapi_dialog card shadow">
+                    <div class="card-header d-flex align-items-center">
+                        <b class="flex-grow-1">Message info</b>
+                        <button class="btn btn-sm btn-link" t-on-click="() => this.state.messageInfo = null"><i class="oi" data-icon="close"/></button>
+                    </div>
+                    <div class="card-body">
+                        <div class="o_whapi_quote mb-3">
+                            <div t-out="this.state.messageInfo.message.body or (this.state.messageInfo.message.attachments[0] and this.state.messageInfo.message.attachments[0].name) or ''"/>
+                        </div>
+                        <div class="mb-2">Status: <b t-out="this.state.messageInfo.message.state"/></div>
+                        <div t-foreach="this.state.messageInfo.statuses" t-as="st" t-key="st_index" class="d-flex py-1 border-bottom small">
+                            <span class="flex-grow-1" t-out="st.name"/>
+                            <span t-attf-class="me-2 #{st.status === 'read' ? 'text-info' : 'text-muted'}" t-out="st.status"/>
+                            <span class="text-muted" t-out="this.shortDate(st.date) + ' ' + this.time(st.date)"/>
+                        </div>
+                        <div t-if="this.state.messageInfo.pending.length" class="mt-3 small">
+                            <div class="fw-bold">Not read yet</div>
+                            <div t-out="this.state.messageInfo.pending.join(', ')"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

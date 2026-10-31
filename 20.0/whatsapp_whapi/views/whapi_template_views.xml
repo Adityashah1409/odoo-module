@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whapi_template_view_list" model="ir.ui.view">
+        <field name="name">whapi.template.list</field>
+        <field name="model">whapi.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="report_id"/>
+                <field name="binding_action_id" string="In Action menu" widget="boolean"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="whapi_template_view_form" model="ir.ui.view">
+        <field name="name">whapi.template.form</field>
+        <field name="model">whapi.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_add_binding" type="object" string="Add to the Action menu"
+                            invisible="binding_action_id" class="btn-primary"/>
+                    <button name="action_remove_binding" type="object" string="Remove from the Action menu"
+                            invisible="not binding_action_id"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Quotation ready"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="model_id" options="{'no_create': True}"/>
+                            <field name="model" invisible="1"/>
+                            <field name="report_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="binding_action_id" invisible="not binding_action_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <label for="body"/>
+                    <field name="body" placeholder="Hello {{ object.name }}, ..."/>
+                    <div class="text-muted small">Placeholders: <code>{{ object.name }}</code>,
+                        <code>{{ object.partner_id.name }}</code>, <code>{{ user.name }}</code> …</div>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_whapi_template" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">whapi.template</field>
+        <field name="path">whatsapp-templates</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

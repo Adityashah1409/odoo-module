@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_whapi_root" name="WhatsApp" web_icon="whatsapp_whapi,static/description/icon.png"
+              groups="whatsapp_whapi.group_whapi_user" sequence="8"/>
+    <menuitem id="menu_whapi_chat" name="Chat" parent="menu_whapi_root" action="action_whapi_chat" sequence="1"/>
+    <menuitem id="menu_whapi_chats" name="Chats" parent="menu_whapi_root" action="action_whapi_chat_list" sequence="2"/>
+    <menuitem id="menu_whapi_messages" name="Messages" parent="menu_whapi_root" action="action_whapi_message" sequence="3"/>
+    <menuitem id="menu_whapi_config" name="Configuration" parent="menu_whapi_root" sequence="9"
+              groups="whatsapp_whapi.group_whapi_manager"/>
+    <menuitem id="menu_whapi_accounts" name="Accounts" parent="menu_whapi_config" action="action_whapi_account" sequence="1"/>
+    <menuitem id="menu_whapi_templates" name="Templates" parent="menu_whapi_config" action="action_whapi_template" sequence="2"/>
+</odoo>

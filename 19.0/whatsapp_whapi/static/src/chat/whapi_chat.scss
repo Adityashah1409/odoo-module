@@ -1,0 +1,406 @@
+$whapi-green: #1fa855;
+$whapi-out: #d9fdd3;
+$whapi-wall: #efeae2;
+
+.o_whapi {
+    flex-direction: row !important;
+    background: $o-webclient-background-color;
+
+    .o_whapi_sidebar_head {
+        min-width: 0;
+
+        .badge {
+            flex-shrink: 0;
+        }
+    }
+
+    .o_whapi_sidebar {
+        width: 340px;
+        min-width: 280px;
+        background: $white;
+        border-right: 1px solid $border-color;
+    }
+
+    .o_whapi_logo {
+        color: $whapi-green;
+    }
+
+    .o_whapi_mode {
+        background: $gray-100;
+        color: $gray-700;
+
+        &.active {
+            background: #d8fdd2;
+            color: #0a6b33;
+            font-weight: 600;
+        }
+    }
+
+    .o_whapi_chat_item {
+        cursor: pointer;
+        border-bottom: 1px solid $gray-100;
+
+        &:hover {
+            background: $gray-100;
+        }
+
+        &.active {
+            background: #f0f2f5;
+            box-shadow: inset 3px 0 0 $whapi-green;
+        }
+    }
+
+    .o_whapi_unread {
+        background: $whapi-green;
+        color: $white;
+    }
+
+    .o_whapi_avatar {
+        flex: 0 0 auto;
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: $white;
+        font-weight: 700;
+        font-size: 0.85rem;
+
+        &.o_small {
+            width: 2rem;
+            height: 2rem;
+            font-size: 0.7rem;
+        }
+
+        &.o_big {
+            width: 5rem;
+            height: 5rem;
+            font-size: 1.6rem;
+        }
+    }
+
+    .o_whapi_main {
+        min-width: 0;
+        background: $whapi-wall;
+    }
+
+    .o_whapi_header {
+        background: #f0f2f5;
+        border-bottom: 1px solid $border-color;
+    }
+
+    .o_whapi_messages {
+        background-color: $whapi-wall;
+        background-image: radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 1px);
+        background-size: 18px 18px;
+    }
+
+    .o_whapi_day {
+        display: inline-block;
+        padding: 0.2rem 0.7rem;
+        border-radius: 0.5rem;
+        background: #ffffffd9;
+        color: $gray-600;
+        font-size: 0.75rem;
+        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.1);
+    }
+
+    .o_whapi_row {
+        display: flex;
+        margin: 0.15rem 0;
+
+        &.o_out {
+            justify-content: flex-end;
+        }
+
+        &.o_system {
+            justify-content: center;
+
+            .o_whapi_bubble {
+                background: #fff5c4;
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    .o_whapi_bubble {
+        position: relative;
+        max-width: 65%;
+        padding: 0.35rem 0.55rem 0.3rem;
+        border-radius: 0.6rem;
+        background: $white;
+        box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+        word-wrap: break-word;
+
+        .o_out & {
+            background: $whapi-out;
+        }
+
+        &.o_deleted {
+            color: $gray-600;
+        }
+
+        &.o_nobody {
+            padding-bottom: 1.3rem;
+        }
+
+        &:hover .o_whapi_menu_btn {
+            opacity: 1;
+        }
+    }
+
+    .o_whapi_menu_btn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0 0.35rem;
+        opacity: 0.3;
+        color: $gray-600;
+        z-index: 2;
+    }
+
+    .o_whapi_menu {
+        top: 1.4rem;
+        right: 0;
+        left: auto;
+
+        &.o_up {
+            top: auto;
+            bottom: 1.4rem;
+        }
+    }
+
+    .o_whapi_author {
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .o_whapi_forwarded {
+        font-size: 0.75rem;
+        color: $gray-600;
+        font-style: italic;
+    }
+
+    .o_whapi_quote {
+        border-left: 4px solid $whapi-green;
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 0.35rem;
+        padding: 0.25rem 0.5rem;
+        margin-bottom: 0.25rem;
+        font-size: 0.8rem;
+        max-width: 100%;
+    }
+
+    .o_whapi_body {
+        white-space: pre-wrap;
+    }
+
+    .o_whapi_spacer {
+        display: inline-block;
+        width: 4.4rem;
+        height: 0.5rem;
+
+        &.o_wide {
+            width: 5.4rem;
+        }
+    }
+
+    .o_whapi_meta {
+        position: absolute;
+        right: 0.5rem;
+        bottom: 0.1rem;
+        font-size: 0.68rem;
+        color: $gray-600;
+        white-space: nowrap;
+
+        .o_whapi_double::after {
+            content: "\f00c";
+            margin-left: -0.45em;
+        }
+
+        .o_whapi_read {
+            color: #53bdeb;
+        }
+    }
+
+    .o_whapi_image img,
+    .o_whapi_video {
+        display: block;
+        max-width: 320px;
+        max-height: 320px;
+        border-radius: 0.4rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .o_whapi_audio {
+        width: 260px;
+        height: 40px;
+        margin-bottom: 0.2rem;
+    }
+
+    .o_whapi_file {
+        background: rgba(0, 0, 0, 0.05);
+        border-radius: 0.4rem;
+        padding: 0.5rem 0.6rem;
+        margin-bottom: 0.25rem;
+        color: $gray-800;
+        min-width: 220px;
+    }
+
+    .o_whapi_album_bubble {
+        padding: 0.2rem;
+    }
+
+    .o_whapi_album {
+        display: grid;
+        grid-template-columns: repeat(2, 150px);
+        gap: 3px;
+
+        img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.35rem;
+        }
+    }
+
+    .o_whapi_album_bubble .o_whapi_meta {
+        right: 0.6rem;
+        bottom: 0.5rem;
+        color: $white;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .o_whapi_footer {
+        background: #f0f2f5;
+        border-top: 1px solid $border-color;
+    }
+
+    .o_whapi_input {
+        resize: none;
+        border-radius: 1.2rem;
+        max-height: 8rem;
+    }
+
+    .o_whapi_tool {
+        color: $gray-600;
+    }
+
+    .o_whapi_send {
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 50%;
+        background: $whapi-green;
+        color: $white;
+
+        &:hover {
+            background: darken($whapi-green, 6%);
+            color: $white;
+        }
+
+        &.o_recording {
+            background: $danger;
+            animation: o_whapi_pulse 1.2s infinite;
+        }
+    }
+
+    .o_whapi_pending_file {
+        position: relative;
+        background: $white;
+        border-radius: 0.4rem;
+        padding: 0.3rem;
+        max-width: 200px;
+
+        img {
+            height: 70px;
+            border-radius: 0.3rem;
+        }
+
+        .o_whapi_remove_file {
+            position: absolute;
+            top: -0.4rem;
+            right: -0.4rem;
+            padding: 0 0.3rem;
+            border-radius: 50%;
+        }
+    }
+
+    .o_whapi_emojis .btn {
+        font-size: 1.25rem;
+        padding: 0.1rem 0.25rem;
+    }
+
+    .o_whapi_panel {
+        width: 330px;
+        min-width: 300px;
+        background: $white;
+        border-left: 1px solid $border-color;
+    }
+
+    .o_whapi_panel_title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: $gray-600;
+        margin: 0.75rem 0 0.4rem;
+    }
+
+    .o_whapi_admin_badge {
+        background: #d8fdd2;
+        color: #0a6b33;
+    }
+
+    .o_whapi_media_grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+
+        img,
+        .o_whapi_media_file {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: 0.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: $gray-100;
+            color: $gray-600;
+        }
+    }
+
+    .o_whapi_overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .o_whapi_dialog {
+        width: 420px;
+        max-height: 80%;
+    }
+
+    .o_whapi_dialog_list {
+        max-height: 360px;
+    }
+
+    .o_whapi_forward_item:hover {
+        background: $gray-100;
+    }
+}
+
+@keyframes o_whapi_pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(220, 53, 69, 0);
+    }
+}

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whapi_account_view_list" model="ir.ui.view">
+        <field name="name">whapi.account.list</field>
+        <field name="model">whapi.account</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="sandbox" widget="boolean_toggle" readonly="1"/>
+                <field name="state" widget="badge" decoration-success="state == 'connected'"
+                       decoration-warning="state in ('new', 'qr')" decoration-danger="state == 'error'"/>
+                <field name="last_check"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="whapi_account_view_form" model="ir.ui.view">
+        <field name="name">whapi.account.form</field>
+        <field name="model">whapi.account</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_check_connection" type="object" string="Check connection" class="btn-primary"/>
+                    <button name="action_get_qr" type="object" string="Link a phone (QR)" invisible="sandbox or state == 'connected'"/>
+                    <button name="action_set_webhook" type="object" string="Register webhook" invisible="sandbox"/>
+                    <button name="action_sync" type="object" string="Synchronise chats" invisible="sandbox"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_chat" type="object" class="oe_stat_button" icon="fa-whatsapp">
+                            <field name="chat_count" string="Chats" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_messages" type="object" class="oe_stat_button" icon="fa-comments">
+                            <field name="message_count" string="Messages" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Sandbox" bg_color="text-bg-warning" invisible="not sandbox"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Sales WhatsApp"/></h1>
+                    </div>
+                    <group>
+                        <group string="Whapi.Cloud channel">
+                            <field name="api_url"/>
+                            <field name="token" password="True" groups="whatsapp_whapi.group_whapi_manager"/>
+                            <field name="sandbox"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Status">
+                            <field name="status_text"/>
+                            <field name="phone"/>
+                            <field name="wa_name"/>
+                            <field name="last_check"/>
+                        </group>
+                    </group>
+                    <div invisible="not qr_code or state == 'connected'" class="text-center my-3">
+                        <p class="text-muted">Scan with WhatsApp › Linked devices › Link a device, then click
+                            <b>Check connection</b>.</p>
+                        <field name="qr_code" widget="image" options="{'size': [240, 240]}"/>
+                    </div>
+                    <notebook>
+                        <page string="Options" name="options">
+                            <group>
+                                <group>
+                                    <field name="sync_groups"/>
+                                    <field name="log_in_chatter"/>
+                                    <field name="notify"/>
+                                </group>
+                                <group>
+                                    <field name="user_ids" widget="many2many_tags" placeholder="Every WhatsApp user"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Webhook" name="webhook" groups="whatsapp_whapi.group_whapi_manager">
+                            <p class="text-muted">Whapi.Cloud posts incoming messages, statuses and group events to
+                                this address. <b>Register webhook</b> sets it on the channel; the database must be
+                                reachable from the internet (web.base.url).</p>
+                            <group>
+                                <field name="webhook_url" widget="CopyClipboardChar" readonly="1"/>
+                            </group>
+                            <button name="action_regenerate_secret" type="object" string="New secret"
+                                    class="btn-secondary" confirm="The old webhook address stops working. Continue?"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_whapi_account" model="ir.actions.act_window">
+        <field name="name">WhatsApp Accounts</field>
+        <field name="res_model">whapi.account</field>
+        <field name="path">whatsapp-accounts</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Connect a WhatsApp number</p>
+            <p>Create a channel on Whapi.Cloud, paste its token here and scan the QR code with the phone.</p>
+        </field>
+    </record>
+</odoo>

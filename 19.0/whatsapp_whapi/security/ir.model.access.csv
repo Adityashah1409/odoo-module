@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_whapi_account_user,whapi.account user,model_whapi_account,group_whapi_user,1,0,0,0
+access_whapi_account_manager,whapi.account manager,model_whapi_account,group_whapi_manager,1,1,1,1
+access_whapi_chat_user,whapi.chat user,model_whapi_chat,group_whapi_user,1,1,1,0
+access_whapi_chat_manager,whapi.chat manager,model_whapi_chat,group_whapi_manager,1,1,1,1
+access_whapi_chat_participant_user,whapi.chat.participant user,model_whapi_chat_participant,group_whapi_user,1,1,1,1
+access_whapi_chat_event_user,whapi.chat.event user,model_whapi_chat_event,group_whapi_user,1,0,1,0
+access_whapi_chat_event_manager,whapi.chat.event manager,model_whapi_chat_event,group_whapi_manager,1,1,1,1
+access_whapi_message_user,whapi.message user,model_whapi_message,group_whapi_user,1,1,1,0
+access_whapi_message_manager,whapi.message manager,model_whapi_message,group_whapi_manager,1,1,1,1
+access_whapi_message_status_user,whapi.message.status user,model_whapi_message_status,group_whapi_user,1,1,1,0
+access_whapi_message_status_manager,whapi.message.status manager,model_whapi_message_status,group_whapi_manager,1,1,1,1
+access_whapi_template_user,whapi.template user,model_whapi_template,group_whapi_user,1,0,0,0
+access_whapi_template_manager,whapi.template manager,model_whapi_template,group_whapi_manager,1,1,1,1
+access_whapi_composer_user,whapi.composer user,model_whapi_composer,group_whapi_user,1,1,1,1

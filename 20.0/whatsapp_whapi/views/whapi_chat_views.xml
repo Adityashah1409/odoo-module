@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whapi_chat_view_list" model="ir.ui.view">
+        <field name="name">whapi.chat.list</field>
+        <field name="model">whapi.chat</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="blocked" decoration-bf="unread_count &gt; 0">
+                <field name="name"/>
+                <field name="chat_type"/>
+                <field name="phone"/>
+                <field name="partner_id"/>
+                <field name="last_message_at"/>
+                <field name="last_message_preview"/>
+                <field name="unread_count" string="Unread"/>
+                <field name="blocked" widget="boolean_toggle"/>
+                <field name="account_id" optional="hide"/>
+                <button name="action_open" type="object" string="Open" icon="forum"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="whapi_chat_view_form" model="ir.ui.view">
+        <field name="name">whapi.chat.form</field>
+        <field name="model">whapi.chat</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open" type="object" string="Open chat" class="btn-primary"/>
+                    <button name="action_link_partner" type="object" string="Find contact"
+                            invisible="partner_id or chat_type == 'group'"/>
+                    <button name="action_refresh_group" type="object" string="Refresh group"
+                            invisible="chat_type != 'group'"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_messages" type="object" class="oe_stat_button" icon="forum" icon_class="oi-filled">
+                            <field name="message_count" string="Messages" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="chat_type"/>
+                            <field name="wa_id"/>
+                            <field name="phone" invisible="chat_type == 'group'"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="account_id"/>
+                            <field name="last_message_at"/>
+                            <field name="blocked"/>
+                            <field name="pinned"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Participants" name="participants" invisible="chat_type != 'group'">
+                            <field name="participant_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="wa_id"/>
+                                    <field name="partner_id"/>
+                                    <field name="rank" widget="badge" decoration-info="rank != 'member'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Group log" name="events" invisible="chat_type != 'group'">
+                            <field name="event_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="kind"/>
+                                    <field name="participant"/>
+                                    <field name="author"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="whapi_chat_view_search" model="ir.ui.view">
+        <field name="name">whapi.chat.search</field>
+        <field name="model">whapi.chat</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="wa_id"/>
+                <field name="partner_id"/>
+                <filter name="unread" string="Unread" domain="[('unread_count', '&gt;', 0)]"/>
+                <filter name="groups" string="Groups" domain="[('chat_type', '=', 'group')]"/>
+                <filter name="contacts" string="Contacts" domain="[('chat_type', '=', 'contact')]"/>
+                <filter name="no_partner" string="Unknown contact" domain="[('chat_type', '=', 'contact'), ('partner_id', '=', False)]"/>
+                <separator/>
+                <filter name="ignored" string="Ignored" domain="[('blocked', '=', True)]"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="by_account" string="Account" context="{'group_by': 'account_id'}"/>
+                    <filter name="by_type" string="Type" context="{'group_by': 'chat_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_whapi_chat_list" model="ir.actions.act_window">
+        <field name="name">Chats</field>
+        <field name="res_model">whapi.chat</field>
+        <field name="path">whatsapp-chats</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_whapi_chat" model="ir.actions.client">
+        <field name="name">WhatsApp</field>
+        <field name="tag">whatsapp_whapi.chat</field>
+        <field name="path">whatsapp</field>
+    </record>
+</odoo>

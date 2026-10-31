@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whapi_composer_view_form" model="ir.ui.view">
+        <field name="name">whapi.composer.form</field>
+        <field name="model">whapi.composer</field>
+        <field name="arch" type="xml">
+            <form string="Send by WhatsApp">
+                <field name="res_model" invisible="1"/>
+                <field name="res_ids" invisible="1"/>
+                <group>
+                    <field name="account_id" options="{'no_create': True}"/>
+                    <field name="template_id" options="{'no_create': True}"/>
+                    <field name="recipient_summary" string="Recipients" readonly="1"/>
+                </group>
+                <field name="body" placeholder="Write a message…" class="o_whapi_composer_body"/>
+                <div class="text-muted small" invisible="record_count &lt; 2 or not template_id">
+                    The text is rendered for each document when several are selected.
+                </div>
+                <group>
+                    <field name="attach_report" invisible="not has_report" string="Attach the PDF"/>
+                    <field name="has_report" invisible="1"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <field name="record_count" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_send" type="object" string="Send" class="btn-primary" icon="oi_whatsapp"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
