@@ -1,0 +1,79 @@
+.o_login_as_pill {
+    background: $danger;
+    color: $white;
+    font-size: 0.85rem;
+    white-space: nowrap;
+
+    .o_login_as_timer {
+        position: static;
+        transform: none;
+        font-size: 0.75rem;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.o_login_as_active .o_main_navbar {
+    position: relative;
+
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: $danger;
+        pointer-events: none;
+        z-index: 2;
+    }
+}
+
+.o_login_as_switch {
+    background: $o-webclient-background-color;
+
+    .o_login_as_hero_icon {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: $white;
+        background: linear-gradient(135deg, #4f46e5, #9333ea);
+    }
+
+    .o_login_as_users {
+        max-height: calc(100vh - 260px);
+        overflow-y: auto;
+    }
+}
+
+.o_login_as_avatar {
+    flex: 0 0 auto;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: $white;
+    background: #4f46e5;
+
+    &.o_admin {
+        background: $danger;
+    }
+
+    &.o_portal {
+        background: #d97706;
+    }
+
+    &.o_big {
+        width: 3.5rem;
+        height: 3.5rem;
+        font-size: 1.2rem;
+    }
+}

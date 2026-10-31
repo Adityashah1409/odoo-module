@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="login_as_user.Switch">
+        <div class="o_login_as_switch o_action h-100 overflow-auto">
+            <div class="container-fluid py-4" style="max-width: 1180px">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="o_login_as_hero_icon me-3"><i class="oi" data-icon="oi_user-secret"/></div>
+                    <div>
+                        <h2 class="mb-0">Log in as another user</h2>
+                        <div class="text-muted">See Odoo exactly as they see it. The session is logged
+                            <t t-if="this.state.maxMinutes"> and ends after <b t-out="this.state.maxMinutes"/> minutes</t>.</div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-7">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="oi" data-icon="search"/></span>
+                            <input type="text" class="form-control o_login_as_search" placeholder="Search a user by name, login or email…"
+                                   t-att-value="this.state.term" t-on-input="this.onSearch"/>
+                        </div>
+                        <div class="list-group o_login_as_users">
+                            <t t-foreach="this.state.users" t-as="u" t-key="u.id">
+                                <button type="button" t-on-click="() => this.select(u)"
+                                        t-attf-class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 o_login_as_user #{u.id === this.state.selectedId ? 'active' : ''}">
+                                    <span t-attf-class="o_login_as_avatar #{u.portal ? 'o_portal' : u.admin ? 'o_admin' : ''}" t-out="this.initials(u.name)"/>
+                                    <span class="flex-grow-1 text-start">
+                                        <span class="fw-bold d-block" t-out="u.name"/>
+                                        <small class="opacity-75" t-out="u.login"/>
+                                    </span>
+                                    <span t-if="u.recent" class="badge text-bg-info">Recent</span>
+                                    <span t-if="u.admin" class="badge text-bg-danger">Admin</span>
+                                    <span t-if="u.portal" class="badge text-bg-warning">Portal</span>
+                                    <small class="opacity-75 d-none d-xl-inline" t-out="u.company"/>
+                                </button>
+                            </t>
+                            <div t-if="!this.state.loading and !this.state.users.length" class="list-group-item text-muted text-center py-4">
+                                No user matches your search.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="card o_login_as_panel shadow-sm">
+                            <div class="card-body" t-if="this.selected">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <span t-attf-class="o_login_as_avatar o_big #{this.selected.portal ? 'o_portal' : this.selected.admin ? 'o_admin' : ''}" t-out="this.initials(this.selected.name)"/>
+                                    <div>
+                                        <h4 class="mb-0 o_login_as_selected_name" t-out="this.selected.name"/>
+                                        <div class="text-muted" t-out="this.selected.login"/>
+                                        <small class="text-muted" t-if="this.selected.login_date">Last login: <t t-out="this.selected.login_date"/> UTC</small>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="small text-uppercase text-muted fw-bold mb-1">Access</div>
+                                    <div class="d-flex flex-wrap gap-1 o_login_as_groups">
+                                        <span t-foreach="this.selected.groups" t-as="g" t-key="g" class="badge rounded-pill text-bg-light border" t-out="g"/>
+                                        <span t-if="!this.selected.groups.length" class="text-muted small">Portal access only</span>
+                                    </div>
+                                </div>
+                                <label class="form-label fw-bold" for="login_as_reason">
+                                    Reason <span t-if="this.state.requireReason" class="text-danger">*</span>
+                                </label>
+                                <textarea id="login_as_reason" class="form-control o_login_as_reason mb-3" rows="3"
+                                          placeholder="e.g. Ticket #4211: user cannot see the sales report"
+                                          t-att-value="this.state.reason" t-on-input="this.onReason"/>
+                                <div t-if="this.state.error" class="alert alert-danger py-2 o_login_as_error" t-out="this.state.error"/>
+                                <button class="btn btn-primary w-100 o_login_as_submit" t-att-disabled="!this.canSubmit" t-on-click="this.submit">
+                                    <i class="oi me-1" data-icon="login"/> Log in as <t t-out="this.selected.name"/>
+                                </button>
+                                <div class="small text-muted mt-2">
+                                    <i class="oi oi-filled me-1" data-icon="info"/>Use <b>Back to <t t-out="this.state.origin"/></b> in the top bar to return.
+                                </div>
+                            </div>
+                            <div class="card-body text-center text-muted py-5" t-else="">
+                                <i class="oi oi-2x mb-2" data-icon="pan_tool_alt"/>
+                                <div>Pick a user on the left.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

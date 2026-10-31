@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_login_as" model="ir.ui.view">
+        <field name="name">res.config.settings.form.login_as</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="users_setting_container" position="inside">
+                <setting id="login_as_setting" string="Login as other user"
+                         help="Let support people open Odoo as another user to see exactly what they see">
+                    <field name="login_as_enabled"/>
+                    <div class="content-group mt-2" invisible="not login_as_enabled">
+                        <div class="d-flex gap-2">
+                            <field name="login_as_require_reason" class="w-auto"/>
+                            <label for="login_as_require_reason" class="o_light_label"/>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <field name="login_as_notify_user" class="w-auto"/>
+                            <label for="login_as_notify_user" class="o_light_label"/>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <field name="login_as_allow_portal" class="w-auto"/>
+                            <label for="login_as_allow_portal" class="o_light_label"/>
+                        </div>
+                        <div class="d-flex gap-2 align-items-baseline">
+                            <label for="login_as_max_minutes" class="o_light_label"/>
+                            <field name="login_as_max_minutes" class="o_field_short_input" style="width: 4rem"/>
+                        </div>
+                        <div class="mt-2">
+                            <button name="%(login_as_user.action_login_as_log)d" type="action" icon="oi-arrow-right"
+                                    string="Login As Log" class="btn-link p-0"/>
+                        </div>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

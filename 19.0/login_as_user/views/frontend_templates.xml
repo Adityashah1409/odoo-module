@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="frontend_layout_login_as" inherit_id="web.frontend_layout" name="Login As banner">
+        <xpath expr="//div[@id='wrapwrap']" position="before">
+            <t t-set="login_as_origin" t-value="request and request.session.get('login_as_origin')"/>
+            <div t-if="login_as_origin" class="o_login_as_frontend_banner d-print-none">
+                <i class="fa fa-user-secret me-2"/>
+                <span>Viewing as <b t-out="request.env.user.name"/></span>
+                <a href="/login_as/back" class="btn btn-sm btn-light ms-3">Back to <t t-out="login_as_origin['name']"/></a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="login_as_log_view_list" model="ir.ui.view">
+        <field name="name">login.as.log.list</field>
+        <field name="model">login.as.log</field>
+        <field name="arch" type="xml">
+            <list string="Login as log" create="0" edit="0" decoration-success="state == 'active'"
+                  decoration-muted="state == 'closed' and end_reason == 'expired'">
+                <field name="start"/>
+                <field name="origin_user_id" widget="many2one_avatar_user"/>
+                <field name="target_user_id" widget="many2one_avatar_user"/>
+                <field name="target_is_admin" string="Admin" optional="show"/>
+                <field name="target_share" string="Portal" optional="show"/>
+                <field name="reason" optional="show"/>
+                <field name="end" optional="hide"/>
+                <field name="duration" sum="Total" widget="float_time" optional="show"/>
+                <field name="end_reason" optional="show"/>
+                <field name="ip_address" optional="hide"/>
+                <field name="state" widget="badge" decoration-success="state == 'active'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="login_as_log_view_form" model="ir.ui.view">
+        <field name="name">login.as.log.form</field>
+        <field name="model">login.as.log</field>
+        <field name="arch" type="xml">
+            <form string="Login as session" create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="origin_user_id" widget="many2one_avatar_user" class="d-inline-block"/>
+                            <i class="oi mx-3 text-muted" data-icon="east" title="as"/>
+                            <field name="target_user_id" widget="many2one_avatar_user" class="d-inline-block"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Session">
+                            <field name="start"/>
+                            <field name="end"/>
+                            <field name="duration" widget="float_time"/>
+                            <field name="end_reason"/>
+                        </group>
+                        <group string="Target">
+                            <field name="target_is_admin"/>
+                            <field name="target_share"/>
+                            <field name="ip_address"/>
+                            <field name="user_agent"/>
+                        </group>
+                    </group>
+                    <separator string="Reason"/>
+                    <field name="reason" placeholder="No reason given"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="login_as_log_view_search" model="ir.ui.view">
+        <field name="name">login.as.log.search</field>
+        <field name="model">login.as.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="origin_user_id"/>
+                <field name="target_user_id"/>
+                <field name="reason"/>
+                <field name="ip_address"/>
+                <filter name="active_sessions" string="Running" domain="[('state', '=', 'active')]"/>
+                <filter name="closed" string="Ended" domain="[('state', '=', 'closed')]"/>
+                <separator/>
+                <filter name="admins" string="As an administrator" domain="[('target_is_admin', '=', True)]"/>
+                <filter name="portal" string="As a portal user" domain="[('target_share', '=', True)]"/>
+                <separator/>
+                <filter name="mine" string="Done by me" domain="[('origin_user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="start" string="Date" date="start"/>
+                <group>
+                    <filter name="by_origin" string="Done by" context="{'group_by': 'origin_user_id'}"/>
+                    <filter name="by_target" string="Logged in as" context="{'group_by': 'target_user_id'}"/>
+                    <filter name="by_reason" string="End" context="{'group_by': 'end_reason'}"/>
+                    <filter name="by_day" string="Day" context="{'group_by': 'start:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="login_as_log_view_pivot" model="ir.ui.view">
+        <field name="name">login.as.log.pivot</field>
+        <field name="model">login.as.log</field>
+        <field name="arch" type="xml">
+            <pivot string="Login as sessions">
+                <field name="target_user_id" type="row"/>
+                <field name="origin_user_id" type="col"/>
+                <field name="duration" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_login_as_log" model="ir.actions.act_window">
+        <field name="name">Login As Log</field>
+        <field name="res_model">login.as.log</field>
+        <field name="path">login-as-logs</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No session opened as another user yet</p>
+            <p>Every time someone uses <b>Log in as</b>, the session is recorded here with the reason, the duration
+                and how it ended.</p>
+        </field>
+    </record>
+
+    <record id="action_login_as_switch" model="ir.actions.client">
+        <field name="name">Log in as</field>
+        <field name="tag">login_as_user.switch</field>
+        <field name="path">login-as</field>
+    </record>
+
+    <menuitem id="menu_login_as_root" name="Login As" parent="base.menu_administration" sequence="3"
+              groups="login_as_user.group_login_as"/>
+    <menuitem id="menu_login_as_switch" name="Log in as a User" parent="menu_login_as_root" sequence="1"
+              action="action_login_as_switch"/>
+    <menuitem id="menu_login_as_log" name="Login As Log" parent="menu_login_as_root" sequence="2"
+              action="action_login_as_log"/>
+</odoo>
