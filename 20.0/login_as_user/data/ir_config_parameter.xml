@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_enabled" model="ir.config_parameter">
+        <field name="key">login_as_user.enabled</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_require_reason" model="ir.config_parameter">
+        <field name="key">login_as_user.require_reason</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_notify" model="ir.config_parameter">
+        <field name="key">login_as_user.notify_user</field>
+        <field name="value">True</field>
+    </record>
+    <record id="param_max_minutes" model="ir.config_parameter">
+        <field name="key">login_as_user.max_minutes</field>
+        <field name="value">60</field>
+    </record>
+</odoo>

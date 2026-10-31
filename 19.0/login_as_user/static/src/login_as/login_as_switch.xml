@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="login_as_user.Switch">
+        <div class="o_login_as_switch o_action h-100 overflow-auto">
+            <div class="container-fluid py-4" style="max-width: 1180px">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="o_login_as_hero_icon me-3"><i class="fa fa-user-secret"/></div>
+                    <div>
+                        <h2 class="mb-0">Log in as another user</h2>
+                        <div class="text-muted">See Odoo exactly as they see it. The session is logged
+                            <t t-if="state.maxMinutes"> and ends after <b t-esc="state.maxMinutes"/> minutes</t>.</div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-7">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa fa-search"/></span>
+                            <input type="text" class="form-control o_login_as_search" placeholder="Search a user by name, login or email…"
+                                   t-att-value="state.term" t-on-input="onSearch"/>
+                        </div>
+                        <div class="list-group o_login_as_users">
+                            <t t-foreach="state.users" t-as="u" t-key="u.id">
+                                <button type="button" t-on-click="() => this.select(u)"
+                                        t-attf-class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-2 o_login_as_user #{u.id === state.selectedId ? 'active' : ''}">
+                                    <span t-attf-class="o_login_as_avatar #{u.portal ? 'o_portal' : u.admin ? 'o_admin' : ''}" t-esc="initials(u.name)"/>
+                                    <span class="flex-grow-1 text-start">
+                                        <span class="fw-bold d-block" t-esc="u.name"/>
+                                        <small class="opacity-75" t-esc="u.login"/>
+                                    </span>
+                                    <span t-if="u.recent" class="badge text-bg-info">Recent</span>
+                                    <span t-if="u.admin" class="badge text-bg-danger">Admin</span>
+                                    <span t-if="u.portal" class="badge text-bg-warning">Portal</span>
+                                    <small class="opacity-75 d-none d-xl-inline" t-esc="u.company"/>
+                                </button>
+                            </t>
+                            <div t-if="!state.loading and !state.users.length" class="list-group-item text-muted text-center py-4">
+                                No user matches your search.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="card o_login_as_panel shadow-sm">
+                            <div class="card-body" t-if="selected">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <span t-attf-class="o_login_as_avatar o_big #{selected.portal ? 'o_portal' : selected.admin ? 'o_admin' : ''}" t-esc="initials(selected.name)"/>
+                                    <div>
+                                        <h4 class="mb-0 o_login_as_selected_name" t-esc="selected.name"/>
+                                        <div class="text-muted" t-esc="selected.login"/>
+                                        <small class="text-muted" t-if="selected.login_date">Last login: <t t-esc="selected.login_date"/> UTC</small>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="small text-uppercase text-muted fw-bold mb-1">Access</div>
+                                    <div class="d-flex flex-wrap gap-1 o_login_as_groups">
+                                        <span t-foreach="selected.groups" t-as="g" t-key="g" class="badge rounded-pill text-bg-light border" t-esc="g"/>
+                                        <span t-if="!selected.groups.length" class="text-muted small">Portal access only</span>
+                                    </div>
+                                </div>
+                                <label class="form-label fw-bold" for="login_as_reason">
+                                    Reason <span t-if="state.requireReason" class="text-danger">*</span>
+                                </label>
+                                <textarea id="login_as_reason" class="form-control o_login_as_reason mb-3" rows="3"
+                                          placeholder="e.g. Ticket #4211: user cannot see the sales report"
+                                          t-att-value="state.reason" t-on-input="onReason"/>
+                                <div t-if="state.error" class="alert alert-danger py-2 o_login_as_error" t-esc="state.error"/>
+                                <button class="btn btn-primary w-100 o_login_as_submit" t-att-disabled="!canSubmit" t-on-click="submit">
+                                    <i class="fa fa-sign-in me-1"/> Log in as <t t-esc="selected.name"/>
+                                </button>
+                                <div class="small text-muted mt-2">
+                                    <i class="fa fa-info-circle me-1"/>Use <b>Back to <t t-esc="state.origin"/></b> in the top bar to return.
+                                </div>
+                            </div>
+                            <div class="card-body text-center text-muted py-5" t-else="">
+                                <i class="fa fa-hand-pointer-o fa-2x mb-2"/>
+                                <div>Pick a user on the left.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

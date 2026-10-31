@@ -1,0 +1,3 @@
+id,name,model_id,group_id/id,operation,domain
+rule_login_as_log_own,Login as log: own sessions,login.as.log,login_as_user.group_login_as,r,"[('origin_user_id', '=', user.id)]"
+rule_login_as_log_all,Login as log: administrators see everything,login.as.log,base.group_system,rd,
