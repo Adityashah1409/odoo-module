@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_order_notification" model="mail.template">
+            <field name="name">Sales: internal order notification</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="subject">{{ object.state == 'sale' and 'Order confirmed' or (object.state == 'cancel' and 'Order cancelled' or 'New quotation') }} {{ object.name }} - {{ object.partner_id.commercial_partner_id.name }} - {{ format_amount(object.amount_total, object.currency_id) }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="description">Sent to the people of a notification rule</field>
+            <field name="body_html" type="html">
+<div style="margin: 0; padding: 0; font-size: 13px;">
+    <p style="font-size: 16px; font-weight: bold; margin-bottom: 4px;">
+        <t t-if="object.state == 'sale'">Order confirmed</t>
+        <t t-elif="object.state == 'cancel'">Order cancelled</t>
+        <t t-else="">New quotation</t>
+        <t t-out="object.name or ''">S00042</t>
+    </p>
+    <p style="color: #666; margin-top: 0;" t-if="ctx.get('order_notification_rule')">
+        Rule: <t t-out="ctx.get('order_notification_rule') or ''">Big orders</t>
+    </p>
+    <table style="border-collapse: collapse; margin-bottom: 12px;">
+        <tr><td style="padding: 2px 12px 2px 0; color: #666;">Customer</td>
+            <td style="padding: 2px 0;"><strong t-out="object.partner_id.display_name or ''">Delta Logistics, Nora</strong></td></tr>
+        <tr><td style="padding: 2px 12px 2px 0; color: #666;">Total</td>
+            <td style="padding: 2px 0;"><strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 1,250.00</strong></td></tr>
+        <tr t-if="object.user_id"><td style="padding: 2px 12px 2px 0; color: #666;">Salesperson</td>
+            <td style="padding: 2px 0;" t-out="object.user_id.name or ''">Mitchell Admin</td></tr>
+        <tr t-if="object.team_id"><td style="padding: 2px 12px 2px 0; color: #666;">Sales team</td>
+            <td style="padding: 2px 0;" t-out="object.team_id.name or ''">Sales</td></tr>
+        <tr t-if="object.commitment_date"><td style="padding: 2px 12px 2px 0; color: #666;">Delivery date</td>
+            <td style="padding: 2px 0;" t-out="format_date(object.commitment_date) or ''">11/15/2026</td></tr>
+        <tr t-if="'website_id' in object._fields and object.website_id"><td style="padding: 2px 12px 2px 0; color: #666;">Channel</td>
+            <td style="padding: 2px 0;">eCommerce</td></tr>
+    </table>
+    <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
+        <tr style="border-bottom: 1px solid #ddd;">
+            <th style="text-align: left; padding: 4px;">Product</th>
+            <th style="text-align: right; padding: 4px;">Quantity</th>
+            <th style="text-align: right; padding: 4px;">Amount</th>
+        </tr>
+        <t t-foreach="object.order_line.filtered(lambda l: not l.display_type)" t-as="line">
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 4px;" t-out="line.product_id.display_name or line.name or ''">Desk</td>
+                <td style="padding: 4px; text-align: right;" t-out="line.product_uom_qty">2</td>
+                <td style="padding: 4px; text-align: right;" t-out="format_amount(line.price_subtotal, object.currency_id) or ''">$ 500.00</td>
+            </tr>
+        </t>
+    </table>
+    <p style="margin-top: 16px;">
+        <a t-att-href="'%s/odoo/sale.order/%s' % (object.get_base_url(), object.id)"
+           style="background-color: #714B67; color: #fff; padding: 8px 14px; border-radius: 4px; text-decoration: none;">Open the order</a>
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
