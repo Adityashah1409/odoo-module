@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="rule_example_big_orders" model="sale.order.notification.rule">
+            <field name="name">Big orders to the management</field>
+            <field name="active" eval="False"/>
+            <field name="trigger">confirm</field>
+            <field name="min_amount">10000</field>
+            <field name="notify_team_leader" eval="True"/>
+            <field name="attach_pdf" eval="True"/>
+        </record>
+        <record id="rule_example_new_quotations" model="sale.order.notification.rule">
+            <field name="name">New quotations to the salesperson</field>
+            <field name="active" eval="False"/>
+            <field name="trigger">create</field>
+            <field name="notify_salesperson" eval="True"/>
+        </record>
+    </data>
+</odoo>

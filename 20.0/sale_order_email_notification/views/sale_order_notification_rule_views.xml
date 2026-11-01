@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_notification_rule_view_list" model="ir.ui.view">
+        <field name="name">sale.order.notification.rule.list</field>
+        <field name="model">sale.order.notification.rule</field>
+        <field name="arch" type="xml">
+            <list string="Order notifications" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="trigger"/>
+                <field name="channel"/>
+                <field name="team_ids" widget="many2many_tags" optional="show"/>
+                <field name="min_amount" optional="show"/>
+                <field name="user_ids" widget="many2many_avatar_user" optional="show"/>
+                <field name="notify_salesperson" optional="show"/>
+                <field name="notify_team_leader" optional="hide"/>
+                <field name="notify_customer" optional="show"/>
+                <field name="sent_count" optional="show"/>
+                <field name="last_sent" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_order_notification_rule_view_form" model="ir.ui.view">
+        <field name="name">sale.order.notification.rule.form</field>
+        <field name="model">sale.order.notification.rule</field>
+        <field name="arch" type="xml">
+            <form string="Order notification">
+                <header>
+                    <button name="action_test" type="object" string="Send a test"
+                            help="Send the notification now for the last order, to check the e-mail."/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Big orders to the management"/></h1>
+                    </div>
+                    <group>
+                        <group string="When" name="when">
+                            <field name="trigger" widget="radio"/>
+                            <field name="channel" widget="radio"/>
+                            <field name="team_ids" widget="many2many_tags" placeholder="All teams"/>
+                            <field name="min_amount"/>
+                            <field name="company_id" groups="base.group_multi_company" placeholder="All companies"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Who" name="who">
+                            <field name="user_ids" widget="many2many_avatar_user"/>
+                            <field name="email_list" placeholder="orders@example.com, warehouse@example.com"/>
+                            <field name="notify_salesperson"/>
+                            <field name="notify_team_leader"/>
+                            <field name="notify_customer"/>
+                        </group>
+                        <group string="E-mail" name="email">
+                            <field name="template_id" options="{'no_create': True}"/>
+                            <field name="customer_template_id" options="{'no_create': True}" invisible="not notify_customer"/>
+                            <field name="attach_pdf"/>
+                        </group>
+                        <group string="Statistics" name="stats">
+                            <field name="sent_count"/>
+                            <field name="last_sent"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_order_notification_rule_view_search" model="ir.ui.view">
+        <field name="name">sale.order.notification.rule.search</field>
+        <field name="model">sale.order.notification.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="by_trigger" string="When" context="{'group_by': 'trigger'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sale_order_notification_rule" model="ir.actions.act_window">
+        <field name="name">Order notifications</field>
+        <field name="res_model">sale.order.notification.rule</field>
+        <field name="path">order-notifications</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Who should know about new orders?</p>
+            <p>Create a rule: when (new quotation, confirmed, cancelled), which orders, and who gets an e-mail.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_sale_order_notification_rule" name="Order Notifications" parent="sale.menu_sale_config"
+              action="action_sale_order_notification_rule" sequence="40" groups="sales_team.group_sale_manager"/>
+</odoo>

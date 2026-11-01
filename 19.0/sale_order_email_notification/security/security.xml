@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_order_notification_rule_company" model="ir.rule">
+        <field name="name">Order notification rules: companies</field>
+        <field name="model_id" ref="model_sale_order_notification_rule"/>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+</odoo>

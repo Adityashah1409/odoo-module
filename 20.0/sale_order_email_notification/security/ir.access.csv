@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_order_notification_rule_salesman,sale.order.notification.rule salesman,sale.order.notification.rule,sales_team.group_sale_salesman,r,
+access_order_notification_rule_manager,sale.order.notification.rule manager,sale.order.notification.rule,sales_team.group_sale_manager,crud,
+rule_order_notification_rule_company,Order notification rules: companies,sale.order.notification.rule,,crud,"[('company_id', 'in', company_ids + [False])]"
