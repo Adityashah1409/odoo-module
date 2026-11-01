@@ -1,0 +1,11 @@
+id,name,model_id,group_id/id,operation,domain
+access_visitor_visit_user,visitor.visit user,visitor.visit,visitor_management.group_visitor_user,cru,
+access_visitor_visit_manager,visitor.visit manager,visitor.visit,visitor_management.group_visitor_manager,crud,
+rule_visitor_visit_company,Visits: companies,visitor.visit,,crud,"[('company_id', 'in', company_ids)]"
+access_visitor_visit_type_user,visitor.visit.type user,visitor.visit.type,visitor_management.group_visitor_user,r,
+access_visitor_visit_type_manager,visitor.visit.type manager,visitor.visit.type,visitor_management.group_visitor_manager,crud,
+access_visitor_visit_category_user,visitor.visit.category user,visitor.visit.category,visitor_management.group_visitor_user,r,
+access_visitor_visit_category_manager,visitor.visit.category manager,visitor.visit.category,visitor_management.group_visitor_manager,crud,
+access_visitor_destination_user,visitor.destination user,visitor.destination,visitor_management.group_visitor_user,r,
+access_visitor_destination_manager,visitor.destination manager,visitor.destination,visitor_management.group_visitor_manager,crud,
+rule_visitor_destination_company,Destinations: companies,visitor.destination,,crud,"[('company_id', 'in', company_ids + [False])]"

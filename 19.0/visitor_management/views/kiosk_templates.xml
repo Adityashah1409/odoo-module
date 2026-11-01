@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="kiosk_layout" name="Visitor kiosk layout">
+        <t t-call="web.frontend_layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+            <t t-set="title" t-value="company.name"/>
+            <div class="o_visitor_kiosk d-flex flex-column min-vh-100">
+                <div class="o_visitor_kiosk_bar d-flex align-items-center justify-content-between px-4 py-3">
+                    <a t-attf-href="/visitor/kiosk/#{token}" class="d-flex align-items-center gap-3 text-decoration-none">
+                        <img t-if="company.logo and not company.uses_default_logo" t-attf-src="/web/image/res.company/#{company.id}/logo/160x60"
+                             alt="Logo" class="o_visitor_kiosk_logo"/>
+                        <span class="fs-4 fw-bold text-white" t-out="company.name"/>
+                    </a>
+                    <span class="text-white-50 small">Visitor check-in</span>
+                </div>
+                <div class="flex-grow-1 d-flex align-items-center justify-content-center p-3">
+                    <div class="o_visitor_kiosk_card card shadow-lg border-0 w-100">
+                        <div class="card-body p-4 p-md-5">
+                            <t t-out="0"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="kiosk_home" name="Visitor kiosk">
+        <t t-call="visitor_management.kiosk_layout">
+            <div class="text-center">
+                <h1 class="display-5 fw-bold mb-2">Welcome</h1>
+                <p class="lead text-muted mb-5" t-out="company.visitor_kiosk_message or 'Please check in at the kiosk. Your host will be notified.'"/>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <a t-attf-href="/visitor/kiosk/#{token}/check-in" class="btn btn-primary btn-lg w-100 py-4 o_visitor_kiosk_big">
+                            <i class="fa fa-sign-in fa-2x d-block mb-2" title="Check in"/>Check in
+                        </a>
+                    </div>
+                    <div class="col-sm-6">
+                        <a t-attf-href="/visitor/kiosk/#{token}/check-out" class="btn btn-outline-secondary btn-lg w-100 py-4 o_visitor_kiosk_big">
+                            <i class="fa fa-sign-out fa-2x d-block mb-2" title="Check out"/>Check out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="kiosk_error" name="Visitor kiosk: error">
+        <div t-if="error" class="alert alert-danger" role="alert">
+            <i class="fa fa-exclamation-circle me-1" title="Error"/> <t t-out="error"/>
+        </div>
+    </template>
+
+    <template id="kiosk_check_in" name="Visitor kiosk: check in">
+        <t t-call="visitor_management.kiosk_layout">
+            <h2 class="fw-bold mb-4">Check in</h2>
+            <t t-call="visitor_management.kiosk_error"/>
+            <form method="post" t-attf-action="/visitor/kiosk/#{token}/check-in" class="o_visitor_kiosk_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="p-3 mb-4 rounded bg-light">
+                    <label for="pass_code" class="form-label fw-bold">Invited? Enter your pass code</label>
+                    <div class="input-group input-group-lg">
+                        <input type="text" id="pass_code" name="pass_code" class="form-control text-uppercase font-monospace"
+                               maxlength="12" autocomplete="off" placeholder="e.g. K7M2QX" t-att-value="post.get('pass_code')"/>
+                        <button type="submit" class="btn btn-primary" name="with_code" value="1">Check in</button>
+                    </div>
+                </div>
+                <p class="text-muted text-center mb-3">or fill in your details</p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="visitor_name" class="form-label">Your name *</label>
+                        <input type="text" id="visitor_name" name="visitor_name" class="form-control form-control-lg"
+                               maxlength="128" t-att-value="post.get('visitor_name')"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="visitor_company" class="form-label">Company</label>
+                        <input type="text" id="visitor_company" name="visitor_company" class="form-control form-control-lg"
+                               maxlength="128" t-att-value="post.get('visitor_company')"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="tel" id="phone" name="phone" class="form-control form-control-lg"
+                               maxlength="64" t-att-value="post.get('phone')"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="email" id="email" name="email" class="form-control form-control-lg"
+                               maxlength="128" t-att-value="post.get('email')"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="host_id" class="form-label">Who are you visiting? *</label>
+                        <select id="host_id" name="host_id" class="form-select form-select-lg">
+                            <option value="">Choose a person...</option>
+                            <t t-foreach="hosts" t-as="host">
+                                <option t-att-value="host.id" t-att-selected="str(host.id) == post.get('host_id')"
+                                        t-out="host.name + (' (%s)' % host.department_id.name if host.department_id else '')"/>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="visit_type_id" class="form-label">Reason</label>
+                        <select id="visit_type_id" name="visit_type_id" class="form-select form-select-lg">
+                            <option value="">-</option>
+                            <t t-foreach="visit_types" t-as="visit_type">
+                                <option t-att-value="visit_type.id" t-att-selected="str(visit_type.id) == post.get('visit_type_id')"
+                                        t-out="visit_type.name"/>
+                            </t>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="purpose" class="form-label">Details</label>
+                        <input type="text" id="purpose" name="purpose" class="form-control form-control-lg"
+                               maxlength="256" t-att-value="post.get('purpose')"/>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a t-attf-href="/visitor/kiosk/#{token}" class="btn btn-link">Back</a>
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Check in</button>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="kiosk_welcome" name="Visitor kiosk: welcome">
+        <t t-call="visitor_management.kiosk_layout">
+            <div class="text-center">
+                <i class="fa fa-check-circle fa-4x text-success mb-3" title="Checked in"/>
+                <h2 class="fw-bold">Welcome, <t t-out="visit.visitor_name"/>!</h2>
+                <p class="lead" t-if="visit.host_id">
+                    <t t-out="visit.host_id.name"/> has been told you are here.
+                </p>
+                <p class="text-muted" t-if="visit.destination_id">
+                    Please go to <strong t-out="visit.destination_id.name"/>
+                    <t t-if="visit.destination_id.note"> (<t t-out="visit.destination_id.note"/>)</t>.
+                </p>
+                <p class="text-muted" t-elif="visit.host_id">Please take a seat, someone will come and pick you up.</p>
+                <div class="my-4">
+                    <div class="text-muted small">Your pass code, keep it to check out</div>
+                    <div class="o_visitor_kiosk_code font-monospace fw-bold" t-out="visit.pass_code"/>
+                </div>
+                <div t-if="visit.escort" class="alert alert-warning">Please wait at the reception: you will be escorted.</div>
+                <a t-attf-href="/visitor/kiosk/#{token}" class="btn btn-outline-primary btn-lg">Done</a>
+            </div>
+            <script>setTimeout(function () { window.location.href = '<t t-out="'/visitor/kiosk/%s' % token"/>'; }, 20000);</script>
+        </t>
+    </template>
+
+    <template id="kiosk_check_out" name="Visitor kiosk: check out">
+        <t t-call="visitor_management.kiosk_layout">
+            <h2 class="fw-bold mb-4">Check out</h2>
+            <t t-call="visitor_management.kiosk_error"/>
+            <form method="post" t-attf-action="/visitor/kiosk/#{token}/check-out">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <label for="pass_code" class="form-label">Enter the pass code you received at check-in</label>
+                <input type="text" id="pass_code" name="pass_code" required="required" maxlength="12" autocomplete="off"
+                       class="form-control form-control-lg text-uppercase font-monospace o_visitor_kiosk_code_input"
+                       placeholder="e.g. K7M2QX"/>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a t-attf-href="/visitor/kiosk/#{token}" class="btn btn-link">Back</a>
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Check out</button>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="kiosk_goodbye" name="Visitor kiosk: goodbye">
+        <t t-call="visitor_management.kiosk_layout">
+            <div class="text-center">
+                <i class="fa fa-hand-paper-o fa-4x text-primary mb-3" title="Goodbye"/>
+                <h2 class="fw-bold">Goodbye, <t t-out="visit.visitor_name"/>!</h2>
+                <p class="lead text-muted">Thank you for your visit. Please hand your pass back at the reception.</p>
+                <a t-attf-href="/visitor/kiosk/#{token}" class="btn btn-outline-primary btn-lg mt-3">Done</a>
+            </div>
+            <script>setTimeout(function () { window.location.href = '<t t-out="'/visitor/kiosk/%s' % token"/>'; }, 10000);</script>
+        </t>
+    </template>
+</odoo>

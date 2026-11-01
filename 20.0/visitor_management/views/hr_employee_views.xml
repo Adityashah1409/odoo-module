@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_visitor" model="ir.ui.view">
+        <field name="name">hr.employee.form.visitor</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_visitor_visits" type="object" class="oe_stat_button" icon="badge"
+                        groups="visitor_management.group_visitor_user">
+                    <field name="visitor_visit_count" widget="statinfo" string="Visitors"/>
+                </button>
+            </div>
+            <group name="user" position="inside">
+                <field name="visitor_kiosk_host"/>
+            </group>
+        </field>
+    </record>
+</odoo>

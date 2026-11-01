@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_visitor_pass" model="report.paperformat">
+        <field name="name">Visitor pass (A6)</field>
+        <field name="format">A6</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">6</field>
+        <field name="margin_bottom">6</field>
+        <field name="margin_left">6</field>
+        <field name="margin_right">6</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_visitor_pass" model="ir.actions.report">
+        <field name="name">Visitor pass</field>
+        <field name="model">visitor.visit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">visitor_management.report_visitor_pass</field>
+        <field name="report_file">visitor_management.report_visitor_pass</field>
+        <field name="print_report_name">'Pass - %s' % (object.visitor_name)</field>
+        <field name="paperformat_id" ref="paperformat_visitor_pass"/>
+        <field name="binding_model_id" ref="model_visitor_visit"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_visitor_pass">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="visit">
+                <t t-call="web.basic_layout">
+                    <div class="page o_visitor_pass" style="font-family: sans-serif;">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td><img t-if="visit.company_id.logo and not visit.company_id.uses_default_logo" t-att-src="image_data_uri(visit.company_id.logo)"
+                                         style="max-height: 36px; max-width: 160px;" alt="Logo"/></td>
+                                <td style="text-align: right; font-size: 11px; color: #666;" t-out="visit.company_id.name"/>
+                            </tr>
+                        </table>
+                        <div t-attf-style="margin: 10px 0; padding: 8px; text-align: center; color: white; font-weight: bold; letter-spacing: 6px; font-size: 22px; background: {{ 'firebrick' if visit.escort else '#3f51b5' }};">
+                            VISITOR
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 24px; font-weight: bold;" t-out="visit.visitor_name"/>
+                            <div t-if="visit.visitor_company" style="font-size: 14px; color: #555;" t-out="visit.visitor_company"/>
+                        </div>
+                        <table style="width: 100%; margin-top: 12px; font-size: 12px;">
+                            <tr t-if="visit.host_id">
+                                <td style="color: #777; width: 35%;">Host</td>
+                                <td><span t-out="visit.host_id.name"/></td>
+                            </tr>
+                            <tr t-if="visit.destination_id">
+                                <td style="color: #777;">Destination</td>
+                                <td>
+                                    <span t-out="visit.destination_id.name"/>
+                                    <div t-if="visit.destination_id.note" style="font-size: 10px; color: #777;" t-out="visit.destination_id.note"/>
+                                </td>
+                            </tr>
+                            <tr t-if="visit.visit_type_id">
+                                <td style="color: #777;">Visit</td>
+                                <td><span t-out="visit.visit_type_id.name"/></td>
+                            </tr>
+                            <tr>
+                                <td style="color: #777;">Date</td>
+                                <td><span t-out="visit.check_in or visit.planned_date or visit.create_date"
+                                          t-options="{'widget': 'datetime', 'format': 'medium'}"/></td>
+                            </tr>
+                            <tr t-if="visit.guests and visit.guests &gt; 1">
+                                <td style="color: #777;">People</td>
+                                <td><span t-out="visit.guests"/></td>
+                            </tr>
+                        </table>
+                        <table style="margin: 14px auto 0 auto;">
+                            <tr>
+                                <td style="padding-right: 12px;">
+                                    <img t-att-src="visit._pass_qr_src()" style="width: 30mm; height: 30mm;" alt="QR code"/>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <div style="font-size: 10px; color: #777;">Pass code</div>
+                                    <div style="font-size: 22px; font-weight: bold; letter-spacing: 4px; font-family: monospace;" t-out="visit.pass_code"/>
+                                    <div style="font-size: 10px; color: #777;" t-out="visit.name"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div t-if="visit.escort" style="margin-top: 10px; text-align: center; color: firebrick; font-weight: bold; font-size: 12px;">
+                            Must be escorted at all times
+                        </div>
+                        <div style="margin-top: 10px; text-align: center; font-size: 10px; color: #777;">
+                            Wear this pass visibly and hand it back when you leave.
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
