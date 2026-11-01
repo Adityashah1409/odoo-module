@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_message_view_list_pinned" model="ir.ui.view">
+        <field name="name">mail.message.list.pinned</field>
+        <field name="model">mail.message</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <list string="Pinned messages" create="false" edit="false" delete="false" default_order="pinned_at desc">
+                <field name="pinned_at" string="Pinned on"/>
+                <field name="pinned_by_id" widget="many2one_avatar_user"/>
+                <field name="model" column_invisible="True"/>
+                <field name="res_id" column_invisible="True"/>
+                <field name="record_name" string="Document"/>
+                <field name="author_id" widget="many2one_avatar"/>
+                <field name="date" string="Written on" optional="show"/>
+                <field name="preview" string="Message"/>
+                <field name="subtype_id" optional="hide"/>
+                <button name="action_open_document" type="object" string="Open" icon="fa-external-link" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_message_view_search_pinned" model="ir.ui.view">
+        <field name="name">mail.message.search.pinned</field>
+        <field name="model">mail.message</field>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <search string="Pinned messages">
+                <field name="body" string="Message"/>
+                <field name="author_id"/>
+                <field name="pinned_by_id"/>
+                <filter name="pinned_by_me" string="Pinned by me" domain="[('pinned_by_id', '=', uid)]"/>
+                <filter name="notes" string="Notes" domain="[('subtype_id', '=', %(mail.mt_note)d)]"/>
+                <separator/>
+                <filter name="pinned_on" string="Pinned on" date="pinned_at"/>
+                <group>
+                    <filter name="by_model" string="Document type" context="{'group_by': 'model'}"/>
+                    <filter name="by_pinned_by" string="Pinned by" context="{'group_by': 'pinned_by_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pinned_messages" model="ir.actions.act_window">
+        <field name="name">Pinned messages</field>
+        <field name="res_model">mail.message</field>
+        <field name="path">pinned-messages</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="mail_message_view_list_pinned"/>
+        <field name="search_view_id" ref="mail_message_view_search_pinned"/>
+        <field name="domain">[('pinned_at', '!=', False), ('model', '!=', 'discuss.channel')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No pinned messages</p>
+            <p>Use <i>Pin</i> in the actions of a message in the chatter of any record.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_pinned_messages" name="Pinned" parent="mail.menu_root_discuss"
+              action="action_pinned_messages" sequence="2" groups="base.group_user"/>
+</odoo>
