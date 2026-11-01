@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payslip_document_user,hr.payslip.document user,model_hr_payslip_document,base.group_user,1,0,0,0
+access_payslip_document_officer,hr.payslip.document officer,model_hr_payslip_document,group_payslip_officer,1,1,1,1
+access_payslip_batch_officer,hr.payslip.document.batch officer,model_hr_payslip_document_batch,group_payslip_officer,1,1,1,1
+access_payslip_import_officer,hr.payslip.import.wizard officer,model_hr_payslip_import_wizard,group_payslip_officer,1,1,1,0

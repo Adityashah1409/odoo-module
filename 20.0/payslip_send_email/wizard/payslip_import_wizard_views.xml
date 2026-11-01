@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_import_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.import.wizard.form</field>
+        <field name="model">hr.payslip.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import payslip PDFs">
+                <p class="text-muted">
+                    Add one PDF per employee, or a ZIP of PDFs. Each file is matched to an employee when its name
+                    contains the employee's badge ID or all the words of the employee's name
+                    (e.g. <code>2026-10_Janssens_Lotte.pdf</code>). Files that cannot be matched are added without
+                    employee, to assign by hand.
+                </p>
+                <group>
+                    <field name="batch_id" readonly="1"/>
+                    <field name="attachment_ids" widget="many2many_binary" string="Files"/>
+                </group>
+                <footer>
+                    <button name="action_import" type="object" string="Import" class="btn-primary"/>
+                    <button special="cancel" string="Cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

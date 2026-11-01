@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_payslip" model="mail.template">
+            <field name="name">Payslip: send to employee</field>
+            <field name="model_id" ref="model_hr_payslip_document"/>
+            <field name="subject">Your payslip for {{ object.period_label }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="description">Sent to the employee with the payslip PDF</field>
+            <field name="body_html" type="html">
+<div style="margin: 0; padding: 0;">
+    <p>Hello <t t-out="object.employee_id.name or ''">Nora</t>,</p>
+    <p>Please find attached your payslip for <strong t-out="object.period_label or ''">October 2026</strong>.</p>
+    <p t-if="object.pdf_protected">
+        The PDF is protected: the password is your date of birth written as <strong>DDMMYYYY</strong>
+        (for example 05031990 for 5 March 1990).
+    </p>
+    <p>You also find all your payslips in Odoo, under <em>Employees › My payslips</em>.</p>
+    <p>Kind regards,<br/><t t-out="object.company_id.name or ''">YourCompany</t></p>
+</div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

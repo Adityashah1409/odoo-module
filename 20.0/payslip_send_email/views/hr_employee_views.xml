@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_form_payslip" model="ir.ui.view">
+        <field name="name">hr.employee.form.payslip</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_payslip_documents" type="object" class="oe_stat_button" icon="picture_as_pdf"
+                        groups="payslip_send_email.group_payslip_officer">
+                    <field name="payslip_document_count" widget="statinfo" string="Payslips"/>
+                </button>
+            </div>
+            <field name="private_email" position="after">
+                <field name="payslip_email_mode"/>
+            </field>
+        </field>
+    </record>
+</odoo>

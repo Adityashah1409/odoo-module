@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+rule_payslip_document_own,Payslips: own payslips,hr.payslip.document,base.group_user,r,"[('user_id', '=', user.id), ('state', '=', 'sent')]"
+rule_payslip_document_officer,Payslips: officers,hr.payslip.document,payslip_send_email.group_payslip_officer,crud,
+rule_payslip_document_company,Payslips: companies,hr.payslip.document,,crud,"[('company_id', 'in', company_ids)]"
+access_payslip_batch_officer,hr.payslip.document.batch officer,hr.payslip.document.batch,payslip_send_email.group_payslip_officer,crud,
+rule_payslip_batch_company,Payslip batches: companies,hr.payslip.document.batch,,crud,"[('company_id', 'in', company_ids)]"
+access_payslip_import_officer,hr.payslip.import.wizard officer,hr.payslip.import.wizard,payslip_send_email.group_payslip_officer,cru,
