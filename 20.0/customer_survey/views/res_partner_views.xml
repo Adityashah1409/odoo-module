@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_customer_survey" model="ir.ui.view">
+        <field name="name">res.partner.form.customer.survey</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_customer_survey_answers" type="object" class="oe_stat_button"
+                        icon="check_box" groups="survey.group_survey_user" invisible="not customer_survey_count">
+                    <field name="customer_survey_count" widget="statinfo" string="Surveys"/>
+                </button>
+            </div>
+            <page name="internal_notes" position="after">
+                <page name="customer_surveys" string="Surveys" groups="survey.group_survey_user">
+                    <group>
+                        <group>
+                            <field name="customer_survey_id" placeholder="Default customer survey"
+                                   options="{'no_create': True}"/>
+                            <field name="customer_survey_last_date" invisible="not customer_survey_last_date"/>
+                        </group>
+                    </group>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button name="action_customer_survey_start" type="object" class="btn-primary"
+                                icon="edit_square" string="Fill in now"
+                                help="Open the survey to answer it with the customer (visit, phone call)."/>
+                        <button name="action_customer_survey_send" type="object" class="btn-secondary"
+                                icon="mail" string="Send by e-mail"/>
+                        <button name="action_customer_survey_print" type="object" class="btn-secondary"
+                                icon="print" string="Print blank form"/>
+                    </div>
+                    <field name="customer_survey_answer_ids" readonly="1">
+                        <list create="false" delete="false" decoration-muted="state == 'new'"
+                              decoration-info="state == 'in_progress'">
+                            <field name="create_date" string="Started"/>
+                            <field name="end_datetime" string="Completed"/>
+                            <field name="survey_id"/>
+                            <field name="customer_mode"/>
+                            <field name="customer_collected_by_id" widget="many2one_avatar_user"/>
+                            <field name="scoring_type" column_invisible="True"/>
+                            <field name="scoring_percentage" string="Score (%)" invisible="scoring_type == 'no_scoring'"/>
+                            <field name="state" widget="badge" decoration-success="state == 'done'"
+                                   decoration-info="state == 'in_progress'"/>
+                            <button name="action_print_answers" type="object" string="Answers" icon="article"
+                                    class="btn-link" invisible="state == 'new'"/>
+                            <button name="action_customer_resume" type="object" string="Continue" icon="play_arrow"
+                                    class="btn-link" invisible="state == 'done' or customer_mode != 'visit'"/>
+                            <button name="action_resend" type="object" string="Remind" icon="mail"
+                                    class="btn-link" invisible="state == 'done' or customer_mode != 'email'"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="action_partner_send_customer_survey" model="ir.actions.server">
+        <field name="name">Send survey</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_customer_survey_send()</field>
+        <field name="group_ids" eval="[Command.link(ref('survey.group_survey_user'))]"/>
+    </record>
+</odoo>

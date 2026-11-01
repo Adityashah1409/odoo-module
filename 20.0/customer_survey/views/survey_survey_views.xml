@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_survey_view_form_customer" model="ir.ui.view">
+        <field name="name">survey.survey.form.customer</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_customer_answers" type="object" class="oe_stat_button" icon="contact_page"
+                        invisible="not customer_answer_count">
+                    <field name="customer_answer_count" widget="statinfo" string="Customers"/>
+                </button>
+            </div>
+            <group name="participants" position="inside">
+                <field name="customer_default"/>
+            </group>
+        </field>
+    </record>
+</odoo>
