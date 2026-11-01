@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_user_input_view_form_customer" model="ir.ui.view">
+        <field name="name">survey.user_input.form.customer</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="customer_partner_id"/>
+                <field name="customer_mode" invisible="not customer_mode"/>
+                <field name="customer_collected_by_id" invisible="not customer_collected_by_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_list_customer" model="ir.ui.view">
+        <field name="name">survey.user_input.list.customer</field>
+        <field name="model">survey.user_input</field>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <list string="Customer answers" create="false" sample="1"
+                  decoration-muted="state == 'new'" decoration-info="state == 'in_progress'">
+                <field name="create_date" string="Started" optional="show"/>
+                <field name="end_datetime" string="Completed" optional="show"/>
+                <field name="customer_partner_id"/>
+                <field name="customer_commercial_id" optional="hide"/>
+                <field name="survey_id"/>
+                <field name="customer_mode" optional="show"/>
+                <field name="customer_collected_by_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="customer_salesperson_id" widget="many2one_avatar_user" optional="hide"/>
+                <field name="customer_country_id" optional="hide"/>
+                <field name="scoring_type" column_invisible="True"/>
+                <field name="scoring_percentage" string="Score (%)" avg="Average" optional="show"
+                       invisible="scoring_type == 'no_scoring'"/>
+                <field name="scoring_success" optional="hide" invisible="scoring_type == 'no_scoring'"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'"
+                       decoration-info="state == 'in_progress'"/>
+                <button name="action_print_answers" type="object" string="Answers" icon="fa-file-text-o"
+                        class="btn-link" invisible="state == 'new'"/>
+                <button name="action_customer_resume" type="object" string="Continue" icon="fa-play"
+                        class="btn-link" invisible="state == 'done' or customer_mode != 'visit'"/>
+                <button name="action_resend" type="object" string="Remind" icon="fa-envelope-o"
+                        class="btn-link" invisible="state == 'done' or customer_mode != 'email'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_search_customer" model="ir.ui.view">
+        <field name="name">survey.user_input.search.customer</field>
+        <field name="model">survey.user_input</field>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <search string="Customer answers">
+                <field name="customer_partner_id"/>
+                <field name="survey_id"/>
+                <field name="customer_salesperson_id"/>
+                <field name="customer_collected_by_id"/>
+                <filter name="done" string="Completed" domain="[('state', '=', 'done')]"/>
+                <filter name="in_progress" string="In progress" domain="[('state', 'in', ('new', 'in_progress'))]"/>
+                <separator/>
+                <filter name="by_email" string="Sent by e-mail" domain="[('customer_mode', '=', 'email')]"/>
+                <filter name="by_visit" string="Filled in with the customer" domain="[('customer_mode', '=', 'visit')]"/>
+                <separator/>
+                <filter name="my_customers" string="My customers" domain="[('customer_salesperson_id', '=', uid)]"/>
+                <filter name="collected_by_me" string="Collected by me" domain="[('customer_collected_by_id', '=', uid)]"/>
+                <separator/>
+                <filter name="completed_on" string="Completed on" date="end_datetime"/>
+                <group>
+                    <filter name="group_survey" string="Survey" context="{'group_by': 'survey_id'}"/>
+                    <filter name="group_customer" string="Customer" context="{'group_by': 'customer_commercial_id'}"/>
+                    <filter name="group_mode" string="Collected" context="{'group_by': 'customer_mode'}"/>
+                    <filter name="group_salesperson" string="Salesperson" context="{'group_by': 'customer_salesperson_id'}"/>
+                    <filter name="group_country" string="Country" context="{'group_by': 'customer_country_id'}"/>
+                    <filter name="group_month" string="Month" context="{'group_by': 'end_datetime:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_pivot_customer" model="ir.ui.view">
+        <field name="name">survey.user_input.pivot.customer</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <pivot string="Customer answers" sample="1">
+                <field name="survey_id" type="row"/>
+                <field name="customer_mode" type="col"/>
+                <field name="scoring_percentage" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_graph_customer" model="ir.ui.view">
+        <field name="name">survey.user_input.graph.customer</field>
+        <field name="model">survey.user_input</field>
+        <field name="arch" type="xml">
+            <graph string="Customer answers" type="bar" sample="1">
+                <field name="end_datetime" interval="month"/>
+                <field name="survey_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_customer_survey_answers" model="ir.actions.act_window">
+        <field name="name">Customer answers</field>
+        <field name="res_model">survey.user_input</field>
+        <field name="path">customer-survey-answers</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="domain">[('customer_partner_id', '!=', False), ('test_entry', '=', False)]</field>
+        <field name="context">{'search_default_done': 1}</field>
+        <field name="search_view_id" ref="survey_user_input_view_search_customer"/>
+        <field name="view_ids" eval="[Command.clear(),
+            Command.create({'view_mode': 'list', 'view_id': ref('survey_user_input_view_list_customer')}),
+            Command.create({'view_mode': 'form', 'view_id': ref('survey.survey_user_input_view_form')}),
+            Command.create({'view_mode': 'pivot', 'view_id': ref('survey_user_input_view_pivot_customer')}),
+            Command.create({'view_mode': 'graph', 'view_id': ref('survey_user_input_view_graph_customer')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No customer answers yet</p>
+            <p>Open a contact, choose a survey in its <i>Surveys</i> tab, then send it or fill it in with the customer.</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_customer_survey_answers" name="Customer answers" parent="survey.menu_surveys"
+              action="action_customer_survey_answers" sequence="4"/>
+</odoo>
