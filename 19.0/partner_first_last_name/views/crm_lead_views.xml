@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form_names" model="ir.ui.view">
+        <field name="name">crm.lead.form.names</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='lead_info']/div[field[@name='contact_name']]" position="after">
+                <label for="contact_first_name" string="First / last name"/>
+                <div class="o_row">
+                    <field name="contact_first_name" placeholder="First name"/>
+                    <field name="contact_last_name" placeholder="Last name"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[field[@id='contact_name_page_lead']]" position="after">
+                <label for="contact_first_name_page_lead" string="First / last name"/>
+                <div class="o_row">
+                    <field name="contact_first_name" id="contact_first_name_page_lead" placeholder="First name"/>
+                    <field name="contact_last_name" id="contact_last_name_page_lead" placeholder="Last name"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

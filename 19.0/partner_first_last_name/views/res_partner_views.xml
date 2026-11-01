@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_names" model="ir.ui.view">
+        <field name="name">res.partner.form.names</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h1[field[@name='name']]" position="after">
+                <div class="o_partner_names row g-2 my-1 w-md-75" invisible="is_company">
+                    <div class="col-4">
+                        <label for="first_name" class="o_form_label d-block small text-muted mb-0"/>
+                        <field name="first_name" placeholder="John"/>
+                    </div>
+                    <div class="col-4" invisible="not partner_names_show_middle">
+                        <label for="middle_name" class="o_form_label d-block small text-muted mb-0"/>
+                        <field name="middle_name" placeholder="Paul"/>
+                    </div>
+                    <div class="col-4">
+                        <label for="last_name" class="o_form_label d-block small text-muted mb-0"/>
+                        <field name="last_name" placeholder="Smith"/>
+                    </div>
+                    <field name="partner_names_show_middle" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_simple_form_names" model="ir.ui.view">
+        <field name="name">res.partner.simplified.form.names</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@id='individual']" position="after">
+                <div class="d-flex gap-2 mt-1" invisible="is_company">
+                    <field name="first_name" placeholder="First name"/>
+                    <field name="last_name" placeholder="Last name"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_tree_names" model="ir.ui.view">
+        <field name="name">res.partner.list.names</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="complete_name" position="after">
+                <field name="first_name" optional="hide"/>
+                <field name="last_name" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_names" model="ir.ui.view">
+        <field name="name">res.partner.search.names</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="first_name"/>
+                <field name="last_name"/>
+            </field>
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter name="names_incomplete" string="Missing first or last name"
+                        domain="[('is_company', '=', False), '|', ('first_name', '=', False), ('last_name', '=', False)]"/>
+            </xpath>
+            <xpath expr="//search/group" position="inside">
+                <filter name="group_last_name" string="Last name" context="{'group_by': 'last_name'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_server_partner_names_split" model="ir.actions.server">
+        <field name="name">Split names (first / last)</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_partner_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_partner_names_split()</field>
+    </record>
+</odoo>

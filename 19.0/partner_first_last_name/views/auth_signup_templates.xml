@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="signup_names" inherit_id="auth_signup.signup" name="Sign up: first and last name">
+        <xpath expr="//div[hasclass('field-name')]" position="replace">
+            <div class="row g-2 mb-3 field-name">
+                <div class="col-6">
+                    <label for="first_name" class="form-label">First name</label>
+                    <input type="text" name="first_name" id="first_name" class="form-control" t-att-value="first_name"
+                           placeholder="John" autofocus="autofocus" required="required" autocomplete="given-name"/>
+                </div>
+                <div class="col-6">
+                    <label for="last_name" class="form-label">Last name</label>
+                    <input type="text" name="last_name" id="last_name" class="form-control" t-att-value="last_name"
+                           placeholder="Doe" required="required" autocomplete="family-name"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
