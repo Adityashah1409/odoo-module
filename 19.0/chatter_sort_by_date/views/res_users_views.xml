@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_simple_modif_chatter_order" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.chatter.order</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="mail.view_users_form_simple_modif_mail"/>
+        <field name="arch" type="xml">
+            <field name="notification_type" position="after">
+                <field name="chatter_message_order" widget="radio" readonly="0" options="{'horizontal': true}"
+                       placeholder="Company default"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_users_form_chatter_order" model="ir.ui.view">
+        <field name="name">res.users.form.chatter.order</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="mail.view_users_form_mail"/>
+        <field name="arch" type="xml">
+            <field name="notification_type" position="after">
+                <field name="chatter_message_order" invisible="share" placeholder="Company default"/>
+            </field>
+        </field>
+    </record>
+</odoo>
