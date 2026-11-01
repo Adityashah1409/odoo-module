@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <xpath expr="//button[@aria-label='Search Messages']" position="before">
+            <button class="o_chatter_order_toggle btn btn-link text-nowrap px-1" t-att-title="this.chatterOrderTitle"
+                    aria-label="Sort messages by date" t-on-click="this.onClickChatterOrder"
+                    t-att-disabled="!this.state.thread?.id">
+                <i class="oi" t-att-data-icon="this.state.chatterOrder === 'asc' ? 'arrow_upward' : 'arrow_downward'" role="img"/>
+                <span class="o_chatter_order_label ms-1 small" t-out="this.chatterOrderLabel"/>
+            </button>
+        </xpath>
+        <xpath expr="//Thread" position="attributes">
+            <attribute name="order">this.state.chatterOrder</attribute>
+        </xpath>
+    </t>
+</templates>
