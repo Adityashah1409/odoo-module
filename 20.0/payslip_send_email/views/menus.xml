@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_payslip_root" name="Payslips" parent="hr.menu_hr_root" sequence="80"
+              groups="payslip_send_email.group_payslip_officer"/>
+    <menuitem id="menu_payslip_batches" name="Batches" parent="menu_payslip_root"
+              action="action_payslip_document_batch" sequence="1"/>
+    <menuitem id="menu_payslip_documents" name="All payslips" parent="menu_payslip_root"
+              action="action_payslip_document" sequence="2"/>
+    <menuitem id="menu_my_payslips" name="My payslips" parent="hr.menu_hr_root" sequence="81"
+              action="action_my_payslips" groups="base.group_user"/>
+</odoo>

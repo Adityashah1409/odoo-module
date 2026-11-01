@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_payslip_document_view_search" model="ir.ui.view">
+        <field name="name">hr.payslip.document.search</field>
+        <field name="model">hr.payslip.document</field>
+        <field name="arch" type="xml">
+            <search string="Payslips">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="batch_id"/>
+                <field name="pdf_filename"/>
+                <filter name="to_send" string="To send" domain="[('state', '=', 'draft')]"/>
+                <filter name="sent" string="Sent" domain="[('state', '=', 'sent')]"/>
+                <filter name="error" string="Not sent" domain="[('state', '=', 'error')]"/>
+                <filter name="no_employee" string="Without employee" domain="[('employee_id', '=', False)]"/>
+                <separator/>
+                <filter name="period" string="Period" date="date_from"/>
+                <group>
+                    <filter name="by_batch" string="Batch" context="{'group_by': 'batch_id'}"/>
+                    <filter name="by_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="by_department" string="Department" context="{'group_by': 'department_id'}"/>
+                    <filter name="by_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payslip_document_view_list" model="ir.ui.view">
+        <field name="name">hr.payslip.document.list</field>
+        <field name="model">hr.payslip.document</field>
+        <field name="arch" type="xml">
+            <list string="Payslips" multi_edit="1" sample="1" decoration-muted="state == 'cancel'"
+                  decoration-danger="state == 'error'">
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="state != 'draft' and state != 'error'"/>
+                <field name="department_id" optional="show"/>
+                <field name="period_label" string="Period"/>
+                <field name="pdf_filename" optional="show"/>
+                <field name="batch_id" optional="hide"/>
+                <field name="sent_to" optional="show"/>
+                <field name="sent_date" optional="show"/>
+                <field name="error_message" optional="show" decoration-danger="1"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'sent'"
+                       decoration-danger="state == 'error'"/>
+                <button name="action_send" type="object" string="Send" icon="send" icon_class="oi-filled" class="btn-link"
+                        invisible="state not in ('draft', 'error') or not employee_id"/>
+                <button name="action_download" type="object" string="Download" icon="download" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_payslip_document_view_form" model="ir.ui.view">
+        <field name="name">hr.payslip.document.form</field>
+        <field name="model">hr.payslip.document</field>
+        <field name="arch" type="xml">
+            <form string="Payslip">
+                <header>
+                    <button name="action_send" type="object" string="Send by e-mail" class="btn-primary"
+                            invisible="state not in ('draft', 'error')"/>
+                    <button name="action_resend" type="object" string="Send again" invisible="state != 'sent'"
+                            confirm="Send this payslip again?"/>
+                    <button name="action_download" type="object" string="Download"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('draft', 'error')"/>
+                    <button name="action_reset" type="object" string="Reset to draft" invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent"/>
+                </header>
+                <div class="alert alert-danger mb-0 rounded-0" role="alert" invisible="state != 'error'">
+                    <field name="error_message" readonly="1"/>
+                </div>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Payslip October 2026 - Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id" widget="many2one_avatar_employee" readonly="state not in ('draft', 'error')"/>
+                            <field name="department_id"/>
+                            <label for="date_from" string="Period"/>
+                            <div class="o_row">
+                                <field name="date_from" readonly="state != 'draft'"/> -
+                                <field name="date_to" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="batch_id"/>
+                        </group>
+                        <group>
+                            <field name="pdf_file" filename="pdf_filename" readonly="state not in ('draft', 'error')"/>
+                            <field name="pdf_filename" invisible="1"/>
+                            <field name="sent_to" invisible="not sent_to"/>
+                            <field name="sent_date" invisible="not sent_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Preview" name="preview">
+                            <field name="pdf_file" widget="pdf_viewer" readonly="1"/>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="Internal notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payslip_document" model="ir.actions.act_window">
+        <field name="name">Payslips</field>
+        <field name="res_model">hr.payslip.document</field>
+        <field name="path">payslip-documents</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No payslips yet</p>
+            <p>Create a batch for the month and import the PDFs from your payroll provider.</p>
+        </field>
+    </record>
+
+    <record id="hr_payslip_document_view_list_my" model="ir.ui.view">
+        <field name="name">hr.payslip.document.list.my</field>
+        <field name="model">hr.payslip.document</field>
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <list string="My payslips" create="false" edit="false" delete="false">
+                <field name="period_label" string="Period"/>
+                <field name="date_from" optional="hide"/>
+                <field name="sent_date" string="Received on"/>
+                <field name="pdf_filename"/>
+                <button name="action_download" type="object" string="Download" icon="download" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_my_payslips" model="ir.actions.act_window">
+        <field name="name">My payslips</field>
+        <field name="res_model">hr.payslip.document</field>
+        <field name="path">my-payslips</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="hr_payslip_document_view_list_my"/>
+        <field name="domain">[('user_id', '=', uid), ('state', '=', 'sent')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No payslips yet</p>
+            <p>Your payslips appear here when they are sent to you.</p>
+        </field>
+    </record>
+
+    <record id="action_server_send_payslips" model="ir.actions.server">
+        <field name="name">Send by e-mail</field>
+        <field name="model_id" ref="model_hr_payslip_document"/>
+        <field name="binding_model_id" ref="model_hr_payslip_document"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.filtered(lambda d: d.state in ('draft', 'error')).action_send()</field>
+        <field name="group_ids" eval="[Command.link(ref('group_payslip_officer'))]"/>
+    </record>
+</odoo>

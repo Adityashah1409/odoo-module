@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.payslip</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="hr.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='hr']" position="inside">
+                <block title="Payslip distribution" name="payslip_setting_container">
+                    <setting id="payslip_email_mode" string="Send payslips to"
+                             help="Address used for every employee who has no own choice.">
+                        <field name="payslip_email_mode" widget="radio"/>
+                    </setting>
+                    <setting id="payslip_pdf_password" string="Protect payslip PDFs"
+                             help="The e-mailed PDF is encrypted; the e-mail tells the employee the password format.">
+                        <field name="payslip_pdf_password" widget="radio"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
