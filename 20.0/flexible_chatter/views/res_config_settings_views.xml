@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.flexible.chatter</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="discuss" position="inside">
+                <setting id="flexible_chatter_setting" string="Chatter layout"
+                         help="Default position and width of the chatter, for users who did not choose their own.">
+                    <div class="mt-2">
+                        <field name="flexible_chatter_position" widget="radio" options="{'horizontal': true}"/>
+                    </div>
+                    <div invisible="flexible_chatter_position == 'bottom'">
+                        <label for="flexible_chatter_width" class="o_light_label me-2"/>
+                        <field name="flexible_chatter_width" class="oe_inline o_input_4ch"/>
+                        <span class="text-muted ms-1">(20-65, 0 = Odoo's width)</span>
+                    </div>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

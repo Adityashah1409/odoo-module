@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="before">
+            <button t-if="chatterPrefs.hidden" type="button"
+                    class="o_flexible_chatter_bar o_collapsed btn btn-light d-flex align-items-center justify-content-center gap-2 w-100"
+                    title="Show the chatter" t-on-click="toggleChatterHidden">
+                <i class="fa fa-comments-o" role="img"/>
+                <span class="o_flexible_chatter_bar_label">Show chatter</span>
+            </button>
+        </xpath>
+        <xpath expr="//button[@aria-label='Search Messages']" position="after">
+            <Dropdown position="'bottom-end'">
+                <button class="o_flexible_chatter_menu btn btn-link text-action px-1" title="Chatter layout"
+                        aria-label="Chatter layout">
+                    <i class="fa fa-columns" role="img"/>
+                </button>
+                <t t-set-slot="content">
+                    <h6 class="dropdown-header">Chatter position</h6>
+                    <t t-foreach="chatterPositions" t-as="pos" t-key="pos.id">
+                        <DropdownItem onSelected="() => this.setChatterPosition(pos.id)"
+                                      class="'o_flexible_chatter_position o_flexible_chatter_position_' + pos.id">
+                            <i class="fa fa-fw me-1" t-att-class="chatterPrefs.position === pos.id ? 'fa-check' : ''"/>
+                            <t t-esc="pos.label"/>
+                        </DropdownItem>
+                    </t>
+                    <div class="dropdown-divider"/>
+                    <DropdownItem t-if="chatterPrefs.width" onSelected="() => this.resetChatterWidth()"
+                                  class="'o_flexible_chatter_reset_width'">
+                        <i class="fa fa-fw fa-arrows-h me-1"/>Default width (now <t t-esc="chatterPrefs.width"/>%)
+                    </DropdownItem>
+                    <DropdownItem onSelected="() => this.toggleChatterHidden()" class="'o_flexible_chatter_hide'">
+                        <i class="fa fa-fw fa-eye-slash me-1"/>Hide the chatter
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+        </xpath>
+    </t>
+</templates>

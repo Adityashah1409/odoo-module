@@ -1,0 +1,73 @@
+html.o_flexible_chatter_width .o-mail-Form-chatter.o-aside {
+    width: var(--o-flexible-chatter-width) !important;
+    flex: 0 0 var(--o-flexible-chatter-width) !important;
+    min-width: 0;
+}
+
+// drag handle on the left edge of the chatter on the side
+.o-mail-Form-chatter.o-aside {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 6px;
+        z-index: 5;
+        cursor: col-resize;
+        transition: background-color 0.15s;
+    }
+
+    &:hover::before {
+        background-color: rgba($o-action, 0.25);
+    }
+}
+
+html.o_flexible_chatter_resizing,
+html.o_flexible_chatter_resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+// folded chatter: only the "Show chatter" bar
+.o-mail-Chatter:has(> .o_flexible_chatter_bar.o_collapsed) > :not(.o_flexible_chatter_bar) {
+    display: none !important;
+}
+
+.o-mail-Form-chatter.o-aside:has(.o_flexible_chatter_bar.o_collapsed) {
+    width: 44px !important;
+    flex: 0 0 44px !important;
+    min-width: 0;
+
+    &::before {
+        display: none;
+    }
+
+    .o_flexible_chatter_bar {
+        height: 100%;
+        flex-direction: column;
+        border-radius: 0;
+
+        .o_flexible_chatter_bar_label {
+            writing-mode: vertical-rl;
+        }
+    }
+}
+
+.o_flexible_chatter_bar {
+    border: 1px dashed $border-color;
+}
+
+// "On the side" below Odoo's extra-large breakpoint: put the form and the chatter side by side
+.o_form_renderer.flex-column:has(> .o-mail-Form-chatter.o-aside) {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    height: 100%;
+
+    > .o_form_sheet_bg {
+        min-width: 0;
+        overflow: auto;
+    }
+}
