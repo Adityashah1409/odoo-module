@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_destination_meeting_room" model="visitor.destination">
+        <field name="name">Meeting room Atlas</field>
+        <field name="note">1st floor, right of the lifts</field>
+    </record>
+    <record id="demo_destination_reception" model="visitor.destination">
+        <field name="name">Reception</field>
+        <field name="note">Ground floor</field>
+    </record>
+    <record id="demo_visit_1" model="visitor.visit">
+        <field name="visitor_name">Nora Vermeulen</field>
+        <field name="visitor_company">Delta Logistics</field>
+        <field name="email">nora.vermeulen@example.com</field>
+        <field name="host_id" ref="hr.employee_admin"/>
+        <field name="visit_type_id" ref="visit_type_meeting"/>
+        <field name="category_id" ref="visit_category_regular"/>
+        <field name="destination_id" ref="demo_destination_meeting_room"/>
+        <field name="purpose">Contract review</field>
+        <field name="planned_date" eval="(DateTime.today() + relativedelta(days=1, hour=9)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>

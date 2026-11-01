@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="visitor_visit_type_view_list" model="ir.ui.view">
+        <field name="name">visitor.visit.type.list</field>
+        <field name="model">visitor.visit.type</field>
+        <field name="arch" type="xml">
+            <list string="Visit types" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="expected_hours" widget="float_time"/>
+                <field name="kiosk"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visitor_visit_type" model="ir.actions.act_window">
+        <field name="name">Visit types</field>
+        <field name="res_model">visitor.visit.type</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="visitor_visit_category_view_list" model="ir.ui.view">
+        <field name="name">visitor.visit.category.list</field>
+        <field name="model">visitor.visit.category</field>
+        <field name="arch" type="xml">
+            <list string="Visitor categories" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="escort"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visitor_visit_category" model="ir.actions.act_window">
+        <field name="name">Visitor categories</field>
+        <field name="res_model">visitor.visit.category</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="visitor_destination_view_list" model="ir.ui.view">
+        <field name="name">visitor.destination.list</field>
+        <field name="model">visitor.destination</field>
+        <field name="arch" type="xml">
+            <list string="Destinations" editable="bottom">
+                <field name="name"/>
+                <field name="note"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_visitor_destination" model="ir.actions.act_window">
+        <field name="name">Destinations</field>
+        <field name="res_model">visitor.destination</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

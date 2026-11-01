@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.visitor</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Visitors" string="Visitors" name="visitor_management"
+                     groups="visitor_management.group_visitor_manager">
+                    <block title="Visitors" name="visitor_setting_container">
+                        <setting id="visitor_notify_host" string="Notify the host"
+                                 help="The host gets a message (inbox or e-mail) when the visitor checks in.">
+                            <field name="visitor_notify_host"/>
+                        </setting>
+                        <setting id="visitor_max_hours" string="Automatic check-out"
+                                 help="Visitors forgotten on site are checked out after this many hours (0 = never).">
+                            <field name="visitor_max_hours" widget="float_time" class="o_light_label"/>
+                        </setting>
+                    </block>
+                    <block title="Kiosk" name="visitor_kiosk_container">
+                        <setting id="visitor_kiosk" string="Self check-in kiosk"
+                                 help="Open this page on a tablet at the reception. Anyone with the link can check in, so keep it on the kiosk only.">
+                            <field name="visitor_kiosk_url" widget="CopyClipboardChar" readonly="1"/>
+                            <div class="mt-2">
+                                <button name="action_visitor_new_kiosk_url" type="object" string="New link"
+                                        icon="refresh" class="btn-link ps-0"
+                                        confirm="The current kiosk link will stop working. Continue?"/>
+                            </div>
+                        </setting>
+                        <setting id="visitor_kiosk_message" string="Welcome text" help="Shown on the kiosk home screen.">
+                            <field name="visitor_kiosk_message" placeholder="Welcome! Please check in."/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_visitor_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'visitor_management', 'bin_size': False}</field>
+    </record>
+</odoo>

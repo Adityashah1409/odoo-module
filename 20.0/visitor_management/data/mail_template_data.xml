@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_visitor_invitation" model="mail.template">
+            <field name="name">Visitor: invitation</field>
+            <field name="model_id" ref="model_visitor_visit"/>
+            <field name="subject">Your visit to {{ object.company_id.name }}{{ object.planned_date and (' on ' + format_datetime(object.planned_date, tz=object.host_id.tz or user.tz, dt_format='medium')) or '' }}</field>
+            <field name="email_from">{{ (object.host_id.work_email or user.email_formatted) }}</field>
+            <field name="email_to">{{ (not object.partner_id and object.email) or '' }}</field>
+            <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+            <field name="description">Sent to an expected visitor with the pass code</field>
+            <field name="body_html" type="html">
+<div style="margin: 0; padding: 0;">
+    <p>Hello <t t-out="object.visitor_name or ''">Nora</t>,</p>
+    <p>
+        You are expected at <strong t-out="object.company_id.name or ''">YourCompany</strong>
+        <t t-if="object.planned_date">on <strong t-out="format_datetime(object.planned_date, tz=object.host_id.tz or user.tz, dt_format='medium')">tomorrow 9:00</strong></t>
+        <t t-if="object.host_id">to meet <strong t-out="object.host_id.name or ''">Mitchell Admin</strong></t>.
+    </p>
+    <p>When you arrive, check in at the reception kiosk with this pass code:</p>
+    <p style="font-size: 28px; font-weight: bold; letter-spacing: 6px; font-family: monospace;" t-out="object.pass_code or ''">K7M2QX</p>
+    <p t-if="object.destination_id">
+        Meeting place: <t t-out="object.destination_id.name or ''">Meeting room</t>
+        <t t-if="object.destination_id.note"> (<t t-out="object.destination_id.note or ''">1st floor</t>)</t>
+    </p>
+    <p t-if="object.company_id.street or object.company_id.city">
+        Address: <t t-out="', '.join(x for x in [object.company_id.street, object.company_id.zip, object.company_id.city] if x)">Street, City</t>
+    </p>
+    <p>See you soon,<br/><t t-out="object.host_id.name or user.name or ''">Mitchell Admin</t></p>
+</div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
