@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cod_code_box" name="Cash on delivery code">
+        <t t-set="cod_order" t-value="order.sudo()"/>
+        <div t-if="cod_order.cod_otp and cod_order.cod_state == 'draft'"
+             class="o_cod_code_box alert alert-success d-flex flex-wrap align-items-center gap-3 mb-4" role="status">
+            <i class="fa fa-money fa-2x" title="Cash on delivery"/>
+            <div class="flex-grow-1">
+                <div><strong>Cash on delivery:</strong> please have
+                    <strong t-out="cod_order.amount_total" t-options="{'widget': 'monetary', 'display_currency': cod_order.currency_id}"/>
+                    ready.</div>
+                <div class="small">Give this code to the delivery person when you pay. Keep it private.</div>
+            </div>
+            <div class="o_cod_code fs-2 fw-bold font-monospace px-3 py-1 bg-white rounded border" t-out="cod_order.cod_otp"/>
+        </div>
+    </template>
+
+    <template id="confirmation_cod" inherit_id="website_sale.confirmation" name="Confirmation: cash on delivery code">
+        <xpath expr="//div[@id='order_name']" position="after">
+            <t t-call="website_sale_cod.cod_code_box"/>
+        </xpath>
+    </template>
+
+    <template id="portal_cod" inherit_id="sale.sale_order_portal_content" name="Portal: cash on delivery code">
+        <xpath expr="//div[@id='introduction']" position="before">
+            <t t-if="sale_order and report_type == 'html'">
+                <t t-call="website_sale_cod.cod_code_box">
+                    <t t-set="order" t-value="sale_order"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

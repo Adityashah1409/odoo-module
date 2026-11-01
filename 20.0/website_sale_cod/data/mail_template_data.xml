@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_cod_code" model="mail.template">
+        <field name="name">Cash on delivery: delivery code</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="subject">{{ object.name }}: your delivery code</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="description">Sent to the customer when a cash on delivery order is confirmed</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p>Hello <t t-out="object.partner_id.name or ''">Anna</t>,</p>
+    <p>Your order <strong t-out="object.name or ''">S00042</strong> is confirmed and will be paid in cash at delivery.</p>
+    <p>Amount to pay: <strong t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 120.00</strong></p>
+    <p>Give this code to the delivery person when you pay:</p>
+    <p style="font-size: 28px; letter-spacing: 6px; font-weight: bold; margin: 16px 0;" t-out="object.cod_otp or ''">482913</p>
+    <p>Keep it private: the driver can only confirm your delivery with it.</p>
+    <p>Thank you,<br/><t t-out="object.company_id.name or ''">My Company</t></p>
+</div>
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

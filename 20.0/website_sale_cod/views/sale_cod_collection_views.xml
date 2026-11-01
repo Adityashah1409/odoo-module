@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_cod_collection_view_list" model="ir.ui.view">
+        <field name="name">sale.cod.collection.list</field>
+        <field name="model">sale.cod.collection</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'cancel'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="order_ref"/>
+                <field name="customer_name"/>
+                <field name="delivery_address" optional="hide"/>
+                <field name="driver_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="amount_due" sum="Total"/>
+                <field name="amount_collected" sum="Collected" optional="show"/>
+                <field name="date_collected" optional="show"/>
+                <field name="date_deposited" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'collected'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sale_cod_collection_view_kanban" model="ir.ui.view">
+        <field name="name">sale.cod.collection.kanban</field>
+        <field name="model">sale.cod.collection</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" group_create="0" group_delete="0" group_edit="0" records_draggable="0"
+                    quick_create="0" create="0">
+                <field name="currency_id"/>
+                <progressbar field="state" colors='{"draft": "info", "collected": "warning", "done": "success", "cancel": "muted"}'
+                             sum_field="amount_due"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex mb-1">
+                            <field name="name" class="fw-bold"/>
+                            <field name="amount_due" widget="monetary" class="ms-auto fw-bold"/>
+                        </div>
+                        <field name="customer_name"/>
+                        <field name="delivery_address" class="text-muted small text-truncate"/>
+                        <footer class="pt-1">
+                            <field name="order_ref" class="text-muted small"/>
+                            <field name="driver_id" widget="many2one_avatar_user" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="sale_cod_collection_view_form" model="ir.ui.view">
+        <field name="name">sale.cod.collection.form</field>
+        <field name="model">sale.cod.collection</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_collect_wizard" type="object" string="Collect" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_deposit" type="object" string="Cash deposited" class="btn-primary"
+                            invisible="state != 'collected'" groups="sales_team.group_sale_manager"
+                            confirm="The invoice is posted and paid with the collected cash. Continue?"/>
+                    <button name="action_new_code" type="object" string="Send a new code"
+                            invisible="state != 'draft'" groups="sales_team.group_sale_salesman"/>
+                    <button name="action_cancel_wizard" type="object" string="Cancel"
+                            invisible="state not in ('draft', 'collected')" groups="sales_team.group_sale_salesman"/>
+                    <button name="action_reset" type="object" string="Reset to collect" invisible="state != 'cancel'"
+                            groups="sales_team.group_sale_salesman"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,collected,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_order" type="object" class="oe_stat_button" icon="shopping_cart"
+                                groups="sales_team.group_sale_salesman">
+                            <field name="order_ref" widget="statinfo" string="Order"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Delivery">
+                            <field name="customer_name"/>
+                            <field name="delivery_address"/>
+                            <field name="customer_phone" widget="phone"/>
+                            <field name="driver_id" widget="many2one_avatar_user" options="{'no_create': True}"/>
+                        </group>
+                        <group string="Cash">
+                            <field name="amount_due"/>
+                            <field name="amount_collected" invisible="state == 'draft'"/>
+                            <field name="date_collected" invisible="not date_collected"/>
+                            <field name="date_deposited" invisible="not date_deposited"/>
+                            <field name="otp_attempts" invisible="not otp_attempts"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="payment_id" invisible="not payment_id" groups="account.group_account_invoice"/>
+                            <field name="invoice_ids" widget="many2many_tags" invisible="not invoice_ids" groups="account.group_account_invoice"/>
+                        </group>
+                    </group>
+                    <group string="Cancellation" invisible="state != 'cancel'">
+                        <field name="cancel_reason" nolabel="1" colspan="2"/>
+                    </group>
+                    <field name="note" placeholder="Notes for the delivery (door code, floor, …)"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_cod_collection_view_search" model="ir.ui.view">
+        <field name="name">sale.cod.collection.search</field>
+        <field name="model">sale.cod.collection</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="order_ref"/>
+                <field name="partner_id"/>
+                <field name="driver_id"/>
+                <filter name="to_collect" string="To collect" domain="[('state', '=', 'draft')]"/>
+                <filter name="to_deposit" string="To deposit" domain="[('state', '=', 'collected')]"/>
+                <filter name="mine" string="My deliveries" domain="[('driver_id', '=', uid)]"/>
+                <separator/>
+                <filter name="date_collected" string="Collected on" date="date_collected"/>
+                <group>
+                    <filter name="by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="by_driver" string="Delivery person" context="{'group_by': 'driver_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sale_cod_collection" model="ir.actions.act_window">
+        <field name="name">COD Collections</field>
+        <field name="res_model">sale.cod.collection</field>
+        <field name="path">cod-collections</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No cash on delivery order yet</p>
+            <p>Every eShop order paid with Cash on Delivery gets a collection here: the driver confirms it with the
+                customer's code, the cash is then deposited and the invoice paid.</p>
+        </field>
+    </record>
+</odoo>

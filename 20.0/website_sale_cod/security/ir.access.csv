@@ -1,0 +1,8 @@
+id,name,model_id,group_id/id,operation,domain
+rule_cod_collection_driver,COD collection: delivery person,sale.cod.collection,website_sale_cod.group_cod_driver,ru,"['|', ('driver_id', '=', user.id), ('driver_id', '=', False)]"
+rule_cod_collection_sales,COD collection: sales,sale.cod.collection,sales_team.group_sale_salesman,cru,
+rule_cod_collection_sales_1,COD collection: sales,sale.cod.collection,sales_team.group_sale_manager,crud,
+rule_cod_collection_company,COD collection: companies,sale.cod.collection,,crud,"[('company_id', 'in', company_ids)]"
+access_cod_collect_wizard_driver,sale.cod.collect.wizard driver,sale.cod.collect.wizard,website_sale_cod.group_cod_driver,cru,
+access_cod_collect_wizard_salesman,sale.cod.collect.wizard salesman,sale.cod.collect.wizard,sales_team.group_sale_salesman,cru,
+access_cod_cancel_wizard_salesman,sale.cod.cancel.wizard salesman,sale.cod.cancel.wizard,sales_team.group_sale_salesman,cru,

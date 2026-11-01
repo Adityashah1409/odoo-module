@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_cod_root" name="COD Deliveries" web_icon="website_sale_cod,static/description/icon.png"
+              groups="website_sale_cod.group_cod_driver,sales_team.group_sale_salesman" sequence="45"/>
+    <menuitem id="menu_cod_collections" name="Collections" parent="menu_cod_root" action="action_sale_cod_collection"/>
+    <menuitem id="menu_sale_cod_collections" name="COD Collections" parent="sale.sale_order_menu"
+              action="action_sale_cod_collection" sequence="40" groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_website_cod_collections" name="COD Collections" parent="website_sale.menu_orders"
+              action="action_sale_cod_collection" sequence="40" groups="sales_team.group_sale_salesman"/>
+</odoo>

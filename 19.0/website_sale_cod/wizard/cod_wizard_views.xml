@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_cod_collect_wizard_view_form" model="ir.ui.view">
+        <field name="name">sale.cod.collect.wizard.form</field>
+        <field name="model">sale.cod.collect.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-danger" role="alert" invisible="not error">
+                    <field name="error"/>
+                </div>
+                <group>
+                    <field name="collection_id" readonly="1"/>
+                    <field name="amount_due"/>
+                    <field name="code" invisible="not otp_required" required="otp_required"
+                           placeholder="Code given by the customer" class="o_cod_code fs-3"/>
+                    <field name="amount" required="1"/>
+                    <field name="driver_id" options="{'no_create': True}"/>
+                    <field name="note" placeholder="Optional"/>
+                    <field name="otp_required" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" type="object" string="Confirm collection" class="btn-primary"/>
+                    <button special="cancel" string="Discard"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_cod_cancel_wizard_view_form" model="ir.ui.view">
+        <field name="name">sale.cod.cancel.wizard.form</field>
+        <field name="model">sale.cod.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason" widget="radio"/>
+                    <field name="details" placeholder="What happened?"/>
+                    <field name="collection_ids" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_cancel" type="object" string="Cancel collection" class="btn-primary"/>
+                    <button special="cancel" string="Discard"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

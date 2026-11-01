@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_cod" model="ir.ui.view">
+        <field name="name">sale.order.form.cod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_cod_collections" type="object" class="oe_stat_button" icon="fa-money"
+                        invisible="not cod_collection_count">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value"><field name="cod_state"/></span>
+                        <span class="o_stat_text">Cash on delivery</span>
+                    </div>
+                    <field name="cod_collection_count" invisible="1"/>
+                </button>
+            </div>
+            <xpath expr="//group[@name='sale_header']" position="after">
+                <div class="alert alert-info d-flex align-items-center gap-3 mb-0" role="status" invisible="not cod_otp"
+                     groups="sales_team.group_sale_salesman">
+                    <i class="fa fa-money fa-2x" title="Cash on delivery"/>
+                    <div>Cash on delivery. Delivery code of the customer: <b><field name="cod_otp" class="d-inline"/></b></div>
+                    <button name="action_cod_regenerate_code" type="object" string="Send a new code" class="btn-link ms-auto"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_cod" model="ir.ui.view">
+        <field name="name">sale.order.search.cod</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <filter name="cash_on_delivery" string="Cash on delivery" domain="[('is_cod', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_cod_collection" model="ir.actions.report">
+        <field name="name">COD Receipt</field>
+        <field name="model">sale.cod.collection</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">website_sale_cod.report_cod_collection</field>
+        <field name="report_file">website_sale_cod.report_cod_collection</field>
+        <field name="print_report_name">'COD receipt - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_sale_cod_collection"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_cod_collection">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Cash on delivery receipt <span t-field="doc.name"/></h2>
+                        <div class="row mt-4 mb-4">
+                            <div class="col-6">
+                                <strong>Customer</strong>
+                                <div t-out="doc.customer_name"/>
+                                <div t-out="doc.delivery_address" class="text-muted" style="white-space: pre-line"/>
+                                <div t-if="doc.customer_phone" t-out="doc.customer_phone"/>
+                            </div>
+                            <div class="col-6">
+                                <div><strong>Order:</strong> <span t-field="doc.order_ref"/></div>
+                                <div><strong>Status:</strong> <span t-field="doc.state"/></div>
+                                <div t-if="doc.driver_id"><strong>Delivery person:</strong> <span t-field="doc.driver_id"/></div>
+                                <div t-if="doc.date_collected"><strong>Collected on:</strong> <span t-field="doc.date_collected"/></div>
+                                <div t-if="doc.date_deposited"><strong>Deposited on:</strong> <span t-field="doc.date_deposited"/></div>
+                            </div>
+                        </div>
+                        <table class="table table-sm o_main_table">
+                            <thead><tr><th>Description</th><th class="text-end">Amount</th></tr></thead>
+                            <tbody>
+                                <tr><td>Amount to collect</td><td class="text-end"><span t-field="doc.amount_due"/></td></tr>
+                                <tr><td>Amount collected</td><td class="text-end"><span t-field="doc.amount_collected"/></td></tr>
+                            </tbody>
+                        </table>
+                        <div class="row mt-5">
+                            <div class="col-6">Customer signature<br/><br/>____________________</div>
+                            <div class="col-6">Delivery person signature<br/><br/>____________________</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
