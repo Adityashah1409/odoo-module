@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_provider_form_cod" model="ir.ui.view">
+        <field name="name">payment.provider.form.cod</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <page name="configuration" position="after">
+                <page string="Cash on Delivery" name="cash_on_delivery" invisible="custom_mode != 'cash_on_delivery'">
+                    <group>
+                        <group string="When is it offered?" name="cod_rules">
+                            <field name="cod_min_amount"/>
+                            <field name="cod_excluded_categ_ids" widget="many2many_tags"/>
+                            <div class="text-muted small" colspan="2">
+                                Countries, currencies and the maximum amount are in the Configuration tab;
+                                the delivery methods that accept cash are set on each delivery method
+                                (<i>Cash on Delivery</i> option).
+                            </div>
+                        </group>
+                        <group string="Delivery code" name="cod_code">
+                            <field name="cod_otp"/>
+                            <field name="cod_otp_length" invisible="not cod_otp"/>
+                        </group>
+                        <group string="Deposit" name="cod_deposit">
+                            <field name="cod_journal_id" options="{'no_create': True}"/>
+                            <field name="cod_invoice_on_deposit"/>
+                        </group>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
