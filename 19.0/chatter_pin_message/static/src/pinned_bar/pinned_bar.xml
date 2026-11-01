@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="chatter_pin_message.PinnedBar">
+        <div t-if="pinned.length" class="o_chatter_pinned_bar mx-3 mt-2 mb-1 rounded border">
+            <button type="button" class="o_chatter_pinned_toggle btn w-100 d-flex align-items-center gap-2 text-start px-3 py-2"
+                    t-on-click="toggle" t-att-aria-expanded="state.open ? 'true' : 'false'">
+                <i class="fa fa-thumb-tack text-danger" title="Pinned"/>
+                <span class="fw-bold text-nowrap" t-esc="title"/>
+                <span t-if="!state.open" class="text-muted text-truncate small o_chatter_pinned_latest">
+                    <t t-esc="pinned[0].authorName"/>: <t t-out="pinned[0].inlineBody"/>
+                </span>
+                <i class="ms-auto fa" t-att-class="state.open ? 'fa-chevron-up' : 'fa-chevron-down'" title="Show"/>
+            </button>
+            <div t-if="state.open" class="o_chatter_pinned_list px-3 pb-2">
+                <div t-foreach="pinned" t-as="message" t-key="message.id"
+                     class="o_chatter_pinned_item d-flex gap-2 py-2 border-top">
+                    <img class="o_chatter_pinned_avatar rounded flex-shrink-0" t-att-src="message.author?.avatarUrl"
+                         alt="Avatar" width="32" height="32"/>
+                    <div class="flex-grow-1 min-w-0">
+                        <div class="small">
+                            <strong t-esc="message.authorName"/>
+                            <span class="text-muted ms-1" t-esc="message.dateSimpleWithDay"/>
+                            <span t-if="message.isNote" class="badge text-bg-light ms-1">Note</span>
+                        </div>
+                        <div class="o_chatter_pinned_body" t-out="message.inlineBody"/>
+                        <div class="text-muted o-xsmaller mt-1" t-esc="pinnedByText(message)"/>
+                    </div>
+                    <div class="d-flex flex-column align-items-end gap-1 flex-shrink-0">
+                        <button type="button" class="btn btn-sm btn-light o_chatter_pinned_jump"
+                                t-on-click="() => this.onClickJump(message)">Jump</button>
+                        <button type="button" class="btn btn-sm btn-link text-muted p-0 o_chatter_pinned_unpin"
+                                t-on-click="() => this.onClickUnpin(message)" title="Unpin">
+                            <i class="fa fa-times"/> Unpin
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

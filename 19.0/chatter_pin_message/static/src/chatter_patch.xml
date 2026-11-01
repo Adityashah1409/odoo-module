@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Chatter-content')]/t/t[1]" position="before">
+            <ChatterPinnedBar t-if="state.thread?.isChatterPinnable" thread="state.thread"
+                              t-key="state.thread.localId"/>
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[@name='header']//small[hasclass('o-mail-Message-date')]" position="after">
+            <i t-if="message.pinned_at and message.thread?.isChatterPinnable"
+               class="o_chatter_pin_icon fa fa-thumb-tack text-danger ms-1 o-xsmaller" title="Pinned"/>
+        </xpath>
+    </t>
+</templates>

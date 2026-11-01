@@ -1,0 +1,24 @@
+.o_chatter_pinned_bar {
+    background-color: rgba($danger, 0.04);
+    border-color: rgba($danger, 0.25) !important;
+
+    .o_chatter_pinned_toggle {
+        border: 0;
+    }
+
+    .o_chatter_pinned_latest {
+        min-width: 0;
+    }
+
+    .o_chatter_pinned_avatar {
+        object-fit: cover;
+    }
+
+    .o_chatter_pinned_body {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+    }
+}
