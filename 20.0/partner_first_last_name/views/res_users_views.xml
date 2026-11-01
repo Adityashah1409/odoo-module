@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_names" model="ir.ui.view">
+        <field name="name">res.users.form.names</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h1[field[@name='name']]" position="after">
+                <div class="o_partner_names row g-2 my-1 w-sm-75">
+                    <div class="col-4">
+                        <label for="first_name" class="o_form_label d-block small text-muted mb-0"/>
+                        <field name="first_name" placeholder="John"/>
+                    </div>
+                    <div class="col-4" invisible="not partner_names_show_middle">
+                        <label for="middle_name" class="o_form_label d-block small text-muted mb-0"/>
+                        <field name="middle_name" placeholder="Paul"/>
+                    </div>
+                    <div class="col-4">
+                        <label for="last_name" class="o_form_label d-block small text-muted mb-0"/>
+                        <field name="last_name" placeholder="Smith"/>
+                    </div>
+                    <field name="partner_names_show_middle" invisible="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
