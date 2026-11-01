@@ -1,0 +1,4 @@
+id,name,model_id,group_id/id,operation,domain
+access_mail_cc_rule_user,mail.cc.rule user,mail.cc.rule,base.group_user,r,
+access_mail_cc_rule_system,mail.cc.rule system,mail.cc.rule,base.group_system,crud,
+rule_mail_cc_rule_company,Cc / Bcc rules: companies,mail.cc.rule,,crud,"[('company_id', 'in', company_ids + [False])]"
